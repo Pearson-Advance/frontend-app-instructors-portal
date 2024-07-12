@@ -1,0 +1,6 @@
+@import 'assets/colors.scss';
+
+.page-wrapper {
+  min-height: calc(100vh - 222px);
+  background-color: $bg-main-color;
+}

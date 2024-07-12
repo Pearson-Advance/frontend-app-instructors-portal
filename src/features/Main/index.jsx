@@ -2,13 +2,17 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+import { Container } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
 
 import { Header } from 'features/Main/Header';
 import { Footer } from 'features/Main/Footer';
+import { Sidebar } from 'features/Main/Sidebar';
 
 import { fetchInstitutionData } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
+
+import './index.scss';
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -27,11 +31,16 @@ const Main = () => {
   return (
     <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
       <Header />
-      <Switch>
-        <Route path="/" exact>
-          <div><p>{JSON.stringify(institutionsInfo.institution)}</p></div>
-        </Route>
-      </Switch>
+      <main className="d-flex page-wrapper">
+        <Sidebar />
+        <Container>
+          <Switch>
+            <Route path="/dashboard" exact>
+              <div><p>{JSON.stringify(institutionsInfo.institution)}</p></div>
+            </Route>
+          </Switch>
+        </Container>
+      </main>
       <Footer />
     </BrowserRouter>
   );
