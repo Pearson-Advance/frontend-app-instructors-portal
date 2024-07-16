@@ -1,11 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+
 import { getConfig } from '@edx/frontend-platform';
-
 import { Container, Col, Row } from '@edx/paragon';
-import WeeklySchedule from 'features/Dashboard/WeeklySchedule';
 
-import 'features/Dashboard/DashboardPage/index.scss';
+import WeeklySchedule from 'features/Dashboard/WeeklySchedule';
 
 const DashboardPage = () => {
   const userName = useSelector((state) => state.main.username);

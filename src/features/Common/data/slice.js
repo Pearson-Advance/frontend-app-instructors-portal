@@ -14,24 +14,19 @@ export const commonSlice = createSlice({
   name: 'common',
   initialState,
   reducers: {
-    fetchAllClassesDataRequest: (state) => {
-      state.allClasses.status = RequestStatus.LOADING;
+    updateRequestAllClassStatus: (state, { payload }) => {
+      state.allClasses.status = payload;
     },
-    fetchAllClassesDataSuccess: (state, { payload }) => {
+    updateAllClasses: (state, { payload }) => {
       state.allClasses.data = payload;
-      state.allClasses.count = payload?.length;
       state.allClasses.status = RequestStatus.SUCCESS;
-    },
-    fetchAllClassesDataFailed: (state) => {
-      state.allClasses.status = RequestStatus.ERROR;
     },
   },
 });
 
 export const {
-  fetchAllClassesDataRequest,
-  fetchAllClassesDataSuccess,
-  fetchAllClassesDataFailed,
+  updateRequestAllClassStatus,
+  updateAllClasses,
 } = commonSlice.actions;
 
 export const { reducer } = commonSlice;
