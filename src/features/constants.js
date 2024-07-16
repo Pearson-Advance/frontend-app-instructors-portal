@@ -20,3 +20,10 @@ export const initialStateService = {
   status: RequestStatus.LOADING,
   error: null,
 };
+
+/**
+ * Number for initial page.
+ * @readonly
+ * @number
+ */
+export const initialPage = 1;
