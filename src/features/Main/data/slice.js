@@ -8,6 +8,7 @@ const initialState = {
   institutions: {
     ...initialStateService,
   },
+  username: '',
 };
 
 export const mainSlice = createSlice({
@@ -24,6 +25,9 @@ export const mainSlice = createSlice({
     updateActiveTab: (state, { payload }) => {
       state.activeTab = payload;
     },
+    updateUsername: (state, { payload }) => {
+      state.username = payload;
+    },
   },
 });
 
@@ -31,6 +35,7 @@ export const {
   updateSelectedInstitution,
   updateSelectedInstitutions,
   updateActiveTab,
+  updateUsername,
 } = mainSlice.actions;
 
 export const { reducer } = mainSlice;

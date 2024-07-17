@@ -1,7 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { AppContext } from '@edx/frontend-platform/react';
+import { renderWithProviders } from 'test-utils';
 
 import { Header } from 'features/Main/Header';
 
@@ -24,7 +25,7 @@ describe('Header', () => {
   };
 
   test('Should render the header correctly', () => {
-    const { getByText } = render(
+    const { getByText } = renderWithProviders(
       <AppContext.Provider value={{ authenticatedUser, config }}>
         <Header />
       </AppContext.Provider>,
@@ -38,7 +39,7 @@ describe('Header', () => {
   });
 
   test('Should toggle the account menu on button click', () => {
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText } = renderWithProviders(
       <AppContext.Provider value={{ authenticatedUser, config }}>
         <Header />
       </AppContext.Provider>,
@@ -55,7 +56,7 @@ describe('Header', () => {
   });
 
   test('Should have correct href attributes for the links', () => {
-    const { getByText, getByRole } = render(
+    const { getByText, getByRole } = renderWithProviders(
       <AppContext.Provider value={{ authenticatedUser, config }}>
         <Header />
       </AppContext.Provider>,

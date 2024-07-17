@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter, Route, Switch, Redirect,
+} from 'react-router-dom';
 
 import { Container } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
@@ -8,6 +10,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { Header } from 'features/Main/Header';
 import { Footer } from 'features/Main/Footer';
 import { Sidebar } from 'features/Main/Sidebar';
+import DashboardPage from 'features/Dashboard/DashboardPage';
 
 import { fetchInstitutionData } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
@@ -28,6 +31,10 @@ const Main = () => {
     }
   }, [dispatch, institutionsInfo.institutions]);
 
+  const routes = [
+    { path: '/dashboard', component: DashboardPage, exact: true },
+  ];
+
   return (
     <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
       <Header />
@@ -35,9 +42,19 @@ const Main = () => {
         <Sidebar />
         <Container>
           <Switch>
-            <Route path="/dashboard" exact>
-              <div><p>{JSON.stringify(institutionsInfo.institution)}</p></div>
+            <Route exact path="/">
+              <Redirect to="/dashboard" />
             </Route>
+            {routes.map(({ path, exact, component: Component }) => (
+              <Route
+                key={path}
+                path={path}
+                exact={exact}
+                render={() => (
+                  <Component />
+                )}
+              />
+            ))}
           </Switch>
         </Container>
       </main>
