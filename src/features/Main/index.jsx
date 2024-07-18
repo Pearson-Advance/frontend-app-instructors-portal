@@ -11,6 +11,8 @@ import { Header } from 'features/Main/Header';
 import { Footer } from 'features/Main/Footer';
 import { Sidebar } from 'features/Main/Sidebar';
 import DashboardPage from 'features/Dashboard/DashboardPage';
+import StudentsPage from 'features/Students/StudentsPage';
+import ActiveTabUpdater from 'features/Main/ActiveTabUpdater';
 
 import { fetchInstitutionData } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
@@ -33,6 +35,7 @@ const Main = () => {
 
   const routes = [
     { path: '/dashboard', component: DashboardPage, exact: true },
+    { path: '/students', component: StudentsPage, exact: true },
   ];
 
   return (
@@ -51,7 +54,9 @@ const Main = () => {
                 path={path}
                 exact={exact}
                 render={() => (
-                  <Component />
+                  <ActiveTabUpdater path={path}>
+                    <Component />
+                  </ActiveTabUpdater>
                 )}
               />
             ))}
