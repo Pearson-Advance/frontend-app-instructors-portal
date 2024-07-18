@@ -49,7 +49,7 @@ const columns = [
   {
     Header: 'Exam Ready',
     accessor: 'examReady',
-    Cell: ({ row }) => (row.values.examReady ? 'yes' : 'no'),
+    Cell: ({ row }) => (row.values.examReady ? 'Yes' : 'No'),
   },
 ];
 

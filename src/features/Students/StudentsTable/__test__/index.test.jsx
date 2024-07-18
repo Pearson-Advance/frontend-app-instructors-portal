@@ -84,8 +84,8 @@ describe('Student Table', () => {
     expect(component.container).toHaveTextContent('class 1');
     expect(component.container).toHaveTextContent('class 2');
 
-    expect(component.container).toHaveTextContent('yes');
-    expect(component.container).toHaveTextContent('no');
+    expect(component.container).toHaveTextContent('Yes');
+    expect(component.container).toHaveTextContent('No');
 
     expect(screen.queryByText('No students found.')).toBeNull();
   });
