@@ -11,12 +11,12 @@ import 'features/Dashboard/AssignedClasses/index.scss';
 const AssignedClasses = () => {
   const classes = useSelector((state) => state.common.allClasses.data);
   const [classCards, setClassCards] = useState([]);
-  const numberOfClasses = 3;
+  const displayClassLimit = 3;
 
   useEffect(() => {
-    // Display only the first 'NumberOfClasses' on the homepage.
-    if (classes.length > numberOfClasses) {
-      setClassCards(classes.slice(0, numberOfClasses));
+    // Display only the first 'displayClassLimit' on the homepage.
+    if (classes.length > displayClassLimit) {
+      setClassCards(classes.slice(0, displayClassLimit));
     } else {
       setClassCards(classes);
     }
@@ -28,13 +28,13 @@ const AssignedClasses = () => {
       <div className="d-flex cards-container">
         {classCards.map(classInfo => <ClassCard data={classInfo} key={classInfo?.classId} />)}
       </div>
-      {classes.length > numberOfClasses && (
+      {classes.length > displayClassLimit && (
         <div className="d-flex justify-content-center">
-          <Button text className="view-all-btn">View all</Button>
+          <Button text className="view-all-btn" disabled>View all</Button>
         </div>
       )}
       {classes.length === 0 && (
-      <div className="empty-content">No classes found</div>
+      <p className="empty-content">No classes found</p>
       )}
     </Col>
   );

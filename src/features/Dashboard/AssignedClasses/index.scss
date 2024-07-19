@@ -39,19 +39,10 @@
     border-bottom: 1px solid $gray-20;
   }
 
-  .view-all-btn.btn-primary:not(:disabled):not(.disabled):active  {
+  .view-all-btn.btntpz.btn-text.btn-primary {
     text-decoration: underline;
-
-    &:hover,
-    &:active,
-    &:focus,
-    &:focus-visible {
-      color: $primary;
-      background: transparent;
-      border: none;
-      outline: none;
-      text-decoration: underline;
-    }
+    color: $gray-70;
+    background-color: transparent;
   }
 
   .title-instr-assign {
