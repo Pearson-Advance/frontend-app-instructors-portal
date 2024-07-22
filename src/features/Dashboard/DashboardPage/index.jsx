@@ -1,14 +1,24 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { Container, Col, Row } from '@edx/paragon';
 
 import WeeklySchedule from 'features/Dashboard/WeeklySchedule';
+import AssignedClasses from 'features/Dashboard/AssignedClasses';
+
+import { fetchAllClassesData } from 'features/Common/data';
 
 const DashboardPage = () => {
+  const dispatch = useDispatch();
   const userName = useSelector((state) => state.main.username);
   const imageDashboard = getConfig().IMAGE_DASHBOARD_INSTRUCTORS_URL;
+
+  useEffect(() => {
+    if (userName) {
+      dispatch(fetchAllClassesData(userName));
+    }
+  }, [userName, dispatch]);
 
   return (
     <Container size="xl" className="px-4 pt-3">
@@ -27,6 +37,8 @@ const DashboardPage = () => {
           </Col>
         )}
       </Row>
+      <AssignedClasses />
+
     </Container>
   );
 };
