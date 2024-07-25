@@ -8,6 +8,11 @@ const initialState = {
     status: RequestStatus.INITIAL,
     error: null,
   },
+  allCourses: {
+    data: [],
+    status: RequestStatus.INITIAL,
+    error: null,
+  },
 };
 
 export const commonSlice = createSlice({
@@ -21,12 +26,21 @@ export const commonSlice = createSlice({
       state.allClasses.data = payload;
       state.allClasses.status = RequestStatus.SUCCESS;
     },
+    updateRequestAllCoursesStatus: (state, { payload }) => {
+      state.allClasses.status = payload;
+    },
+    updateAllCourses: (state, { payload }) => {
+      state.allCourses.data = payload;
+      state.allCourses.status = RequestStatus.SUCCESS;
+    },
   },
 });
 
 export const {
   updateRequestAllClassStatus,
   updateAllClasses,
+  updateRequestAllCoursesStatus,
+  updateAllCourses,
 } = commonSlice.actions;
 
 export const { reducer } = commonSlice;

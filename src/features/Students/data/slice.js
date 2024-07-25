@@ -11,6 +11,7 @@ const initialState = {
     numPages: 0,
     count: 0,
   },
+  filters: {},
 };
 
 export const studentsSlice = createSlice({
@@ -33,6 +34,9 @@ export const studentsSlice = createSlice({
       state.table.numPages = numPages;
       state.table.count = count;
     },
+    updateFilters: (state, { payload }) => {
+      state.filters = payload;
+    },
   },
 });
 
@@ -41,6 +45,7 @@ export const {
   updateStudentsRequestStatus,
   updateStudentsTable,
   resetStudentsTable,
+  updateFilters,
 } = studentsSlice.actions;
 
 export const { reducer } = studentsSlice;

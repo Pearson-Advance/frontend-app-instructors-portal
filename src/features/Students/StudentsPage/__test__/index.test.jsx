@@ -50,7 +50,26 @@ const mockStore = {
 };
 
 describe('StudentsPage', () => {
-  it('renders students data and pagination', async () => {
+  test('Should render the student filters', () => {
+    const { getByPlaceholderText, getByText } = renderWithProviders(
+      <MemoryRouter initialEntries={['/students']}>
+        <Route path="/students">
+          <StudentsPage />,
+        </Route>
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    waitFor(() => {
+      expect(getByPlaceholderText('Student name')).toBeInTheDocument();
+      expect(getByText('Course')).toBeInTheDocument();
+      expect(getByText('Class')).toBeInTheDocument();
+      expect(getByText('Exam ready')).toBeInTheDocument();
+      expect(getByText('Apply')).toBeInTheDocument();
+    });
+  });
+
+  test('Should render students data and pagination', async () => {
     const component = renderWithProviders(
       <MemoryRouter initialEntries={['/students']}>
         <Route path="/students">
