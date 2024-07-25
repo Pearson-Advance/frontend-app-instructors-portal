@@ -25,7 +25,7 @@ const columns = [
     accessor: 'className',
     Cell: ({ row }) => (
       <Link
-        to="/"
+        to={`/classes/${encodeURIComponent(row.values.className)}?previous=students`}
         className="text-truncate link"
       >
         {row.values.className}
