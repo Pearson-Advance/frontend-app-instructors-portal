@@ -16,11 +16,13 @@ function getClassesByInstructor(userName, options = {}) {
     limit: false,
     page: '',
   };
+
   const params = {
     instructor: userName,
     ...defaultParams,
     ...options,
   };
+
   return getAuthenticatedHttpClient().get(
     `${getConfig().COURSE_OPERATIONS_API_V2_BASE_URL}/classes/`,
     { params },

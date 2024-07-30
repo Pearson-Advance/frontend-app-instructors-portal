@@ -13,6 +13,7 @@ import { Sidebar } from 'features/Main/Sidebar';
 import DashboardPage from 'features/Dashboard/DashboardPage';
 import StudentsPage from 'features/Students/StudentsPage';
 import ActiveTabUpdater from 'features/Main/ActiveTabUpdater';
+import ClassesPage from 'features/Classes/ClassesPage';
 import ClassDetailPage from 'features/Classes/ClassDetailPage';
 
 import { fetchInstitutionData } from 'features/Main/data/thunks';
@@ -38,6 +39,7 @@ const Main = () => {
     { path: '/dashboard', component: DashboardPage, exact: true },
     { path: '/students', component: StudentsPage, exact: true },
     { path: '/classes/:classId', component: ClassDetailPage, exact: true },
+    { path: '/classes', component: ClassesPage, exact: true },
   ];
 
   return (
