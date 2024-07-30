@@ -38,6 +38,7 @@ const Main = () => {
   const routes = [
     { path: '/dashboard', component: DashboardPage, exact: true },
     { path: '/students', component: StudentsPage, exact: true },
+    { path: '/classes', component: ClassesPage, exact: true },
     { path: '/classes/:classId', component: ClassDetailPage, exact: true },
     { path: '/classes', component: ClassesPage, exact: true },
   ];
