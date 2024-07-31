@@ -1,0 +1,41 @@
+@import 'assets/colors.scss';
+@import 'assets/variables.scss';
+
+article.instructor-wrapper {
+  padding: 1.8rem;
+  color: $gray-70;
+  overflow: hidden;
+  border: 1px solid $gray-20;
+  border-radius: $border-radius-1;
+  box-shadow: 0px 3px 12px 0px $gray-30;
+  background-color: $white;
+  font-size: 0.89rem;
+  min-width: auto;
+  max-width: none;
+
+  .text-color {
+    color: inherit;
+  }
+
+  .progress-enrolled {
+    width: 90%;
+  }
+}
+
+.instructor-details {
+  width: 40%;
+}
+
+.back-arrow.btn.btntpz {
+  color: $gray-70;
+}
+
+@media screen and (max-width: 575px) {
+  article.instructor-wrapper {
+    height: auto;
+  }
+
+  .instructor-details {
+    width: 100%;
+  }
+}
