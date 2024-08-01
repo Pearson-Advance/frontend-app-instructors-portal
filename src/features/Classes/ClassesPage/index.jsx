@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Container, Pagination } from '@edx/paragon';
 
 import Table from 'features/Main/Table';
+import ClassesFilters from 'features/Classes/ClassesFilters';
 
 import { getClasses } from 'features/Classes/data';
 import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slice';
@@ -14,6 +15,7 @@ const ClassesPage = () => {
   const dispatch = useDispatch();
   const classes = useSelector((state) => state.classes.table);
   const instructorUserName = useSelector((state) => state.main.username);
+  const filters = useSelector((state) => state.classes.filters);
   const COLUMNS = useMemo(() => columns, []);
 
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -22,12 +24,13 @@ const ClassesPage = () => {
 
   useEffect(() => {
     if (instructorUserName) {
-      dispatch(getClasses(instructorUserName, { page: currentPage, limit: true }));
+      dispatch(getClasses(instructorUserName, { page: currentPage, limit: true, ...filters }));
     }
 
     return () => {
       dispatch(resetClassesTable());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instructorUserName, dispatch, currentPage]);
 
   const handlePagination = (targetPage) => {
@@ -39,14 +42,15 @@ const ClassesPage = () => {
     <Container size="xl" className="px-4">
       <h3 className="title-page h2">Classes</h3>
       <section className="page-content-container">
+        <ClassesFilters />
         <Table
           isLoading={isLoading}
           columns={COLUMNS}
           count={classes.count}
           data={classes.data}
           emptyText="No classes found."
-          rowClassName="justify-content-center my-4 my-3"
-          colProps={{ xs: 11, className: 'px-0' }}
+          rowClassName="justify-content-center my-4 my-3 mx-0"
+          colProps={{ xs: 12, className: 'px-4' }}
         />
         {classes.numPages > 1 && (
         <Pagination
