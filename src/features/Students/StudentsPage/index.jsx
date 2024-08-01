@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { Container, Pagination } from '@edx/paragon';
+import {
+  Container,
+  Pagination,
+} from '@edx/paragon';
 
 import { fetchStudentsData } from 'features/Students/data';
 import { resetStudentsTable, updateCurrentPage } from 'features/Students/data/slice';
 
 import StudentsTable from 'features/Students/StudentsTable';
+import StudentsFilters from 'features/Students/StudentsFilters';
 
 import { initialPage } from 'features/constants';
 
 const StudentsPage = () => {
   const dispatch = useDispatch();
   const username = useSelector((state) => state.main.username);
+  const filters = useSelector((state) => state.students.filters);
   const students = useSelector((state) => state.students);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   useEffect(() => {
     if (username) {
-      dispatch(fetchStudentsData(username, { page: currentPage }));
+      dispatch(fetchStudentsData(username, { page: currentPage, ...filters }));
     }
 
     return () => {
       dispatch(resetStudentsTable());
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, dispatch, currentPage]);
 
   const handlePagination = (targetPage) => {
@@ -35,6 +40,7 @@ const StudentsPage = () => {
     <Container size="xl" className="px-4">
       <h2 className="title-page">Students</h2>
       <div className="page-content-container">
+        <StudentsFilters />
         <StudentsTable />
         {students.table.numPages > 1 && (
           <Pagination
