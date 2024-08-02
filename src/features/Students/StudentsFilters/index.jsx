@@ -38,7 +38,7 @@ const StudentsFilters = () => {
   const courses = useSelector((state) => state.common.allCourses.data)
     .map((course) => ({ label: course.masterCourseName, value: course.masterCourseName }));
   const classes = useSelector((state) => state.common.allClasses.data)
-    .map((course) => ({ label: course.masterCourseName, value: course.masterCourseName }));
+    .map((classElement) => ({ label: classElement.className, value: classElement.className }));
 
   const [studentsData, setStudentsData] = useState({
     ...initialStudentState,
