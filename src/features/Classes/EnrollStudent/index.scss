@@ -1,0 +1,26 @@
+@import 'assets/colors.scss';
+
+.sub-title {
+  color: $gray-70;
+  font-size: 12px;
+}
+
+.body-container {
+  min-height: 193px;
+
+  .student-email .pgn__form-control-floating-label {
+    display: block;
+  }
+
+  .student-email .form-control {
+    height: 44px;
+  }
+}
+
+.toast-message {
+  white-space: pre-wrap;
+}
+
+div.toast-container {
+  z-index: 20;
+}
