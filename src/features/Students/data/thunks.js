@@ -1,8 +1,10 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
-  updateStudentsRequestStatus,
+  updateStudent,
   updateStudentsTable,
+  updateStudentsRequestStatus,
+  updateStudentProfileRequestStatus,
 } from 'features/Students/data/slice';
 import {
   getStudentsbyInstructor,
@@ -24,6 +26,26 @@ function fetchStudentsData(userName, options = {}) {
   };
 }
 
+function fetchStudentProfile(userName, options = {}) {
+  return async (dispatch) => {
+    dispatch(updateStudentProfileRequestStatus(RequestStatus.LOADING));
+
+    try {
+      const response = camelCaseObject(await getStudentsbyInstructor(userName, options));
+      const studentInfo = {
+        ...response.data.results[0] || {},
+      };
+
+      dispatch(updateStudent(studentInfo));
+      dispatch(updateStudentProfileRequestStatus(RequestStatus.INITIAL));
+    } catch (error) {
+      logError(error);
+      dispatch(updateStudentProfileRequestStatus(RequestStatus.ERROR));
+    }
+  };
+}
+
 export {
   fetchStudentsData,
+  fetchStudentProfile,
 };

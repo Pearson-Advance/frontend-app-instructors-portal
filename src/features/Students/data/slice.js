@@ -12,6 +12,9 @@ const initialState = {
     count: 0,
   },
   filters: {},
+  student: {
+    status: RequestStatus.INITIAL,
+  },
 };
 
 export const studentsSlice = createSlice({
@@ -27,6 +30,9 @@ export const studentsSlice = createSlice({
     updateStudentsRequestStatus: (state, { payload }) => {
       state.table.status = payload;
     },
+    updateStudentProfileRequestStatus: (state, { payload }) => {
+      state.student.status = payload;
+    },
     updateStudentsTable: (state, { payload }) => {
       const { results, count, numPages } = payload;
       state.table.status = RequestStatus.SUCCESS;
@@ -37,11 +43,20 @@ export const studentsSlice = createSlice({
     updateFilters: (state, { payload }) => {
       state.filters = payload;
     },
+    updateStudent: (state, { payload }) => {
+      state.student = payload;
+    },
+    resetStudent: (state) => {
+      state.student = initialState.student;
+    },
   },
 });
 
 export const {
+  updateStudent,
+  resetStudent,
   updateCurrentPage,
+  updateStudentProfileRequestStatus,
   updateStudentsRequestStatus,
   updateStudentsTable,
   resetStudentsTable,

@@ -1,0 +1,48 @@
+@import 'assets/colors.scss';
+
+nav.nav-tabs {
+  border-bottom: 2px solid $primary;
+}
+
+a.nav-item.nav-link.active {
+  border-bottom-width: 5px;
+}
+
+.text-uppercase,
+.text-base {
+  text-transform: uppercase;
+  color: $gray-70;
+  letter-spacing: 1px;
+}
+
+.text-uppercase {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.text-base {
+  text-transform: capitalize;
+}
+
+.text-primary {
+  color: $primary;
+}
+
+.student-image {
+  $size: 72px;
+
+  min-height: $size;
+  min-width: $size;
+  max-width: $size;
+  max-height: $size;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.wrapper-loading {
+  min-height: 250px;
+}
+
+.info-divider {
+  border-top: 1px solid $gray-20;
+}
