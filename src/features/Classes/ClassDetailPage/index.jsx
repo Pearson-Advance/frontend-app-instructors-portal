@@ -7,6 +7,7 @@ import Table from 'features/Main/Table';
 import { Button } from 'react-paragon-topaz';
 import { Container, Pagination } from '@edx/paragon';
 
+import { useInstitutionIdQueryParam } from 'hooks';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
 import EnrollStudent from 'features/Classes/EnrollStudent';
 
@@ -29,6 +30,7 @@ const ClassDetailPage = () => {
   const previousPage = queryParams.get('previous') || 'classes';
   const students = useSelector((state) => state.students.table);
   const username = useSelector((state) => state.main.username);
+  const institution = useSelector((state) => state.main.institution);
   const [classInfo] = useSelector((state) => state.common.allClasses?.data);
   const COLUMNS = useMemo(() => columns, []);
 
@@ -39,12 +41,14 @@ const ClassDetailPage = () => {
   const classNameDecoded = decodeURIComponent(classInfo?.className || '');
 
   const classLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/home`;
+  const addQueryParam = useInstitutionIdQueryParam();
 
   useEffect(() => {
     if (username && classNameDecoded) {
       const params = {
         page: currentPage,
         class_name: classNameDecoded,
+        institution_id: institution?.id,
       };
       // Leaves a gap time space to prevent being override by ActiveTabUpdater component
       setTimeout(() => dispatch(updateActiveTab(previousPage)), 100);
@@ -54,24 +58,25 @@ const ClassDetailPage = () => {
     return () => {
       dispatch(resetStudentsTable());
     };
-  }, [username, dispatch, currentPage, classNameDecoded, previousPage]);
+  }, [username, dispatch, currentPage, classNameDecoded, previousPage, institution]);
 
   useEffect(() => {
     if (username) {
       const params = {
         class_id: classId,
         limit: false,
+        institution_id: institution?.id,
       };
       dispatch(fetchAllClassesData(username, params));
     }
-  }, [username, classId, dispatch]);
+  }, [username, classId, dispatch, institution]);
 
   const handlePagination = (targetPage) => {
     setCurrentPage(targetPage);
     dispatch(updateCurrentPage(targetPage));
   };
 
-  const handleBackButton = () => (previousPage ? history.push(`/${previousPage}`) : history.push('/classes'));
+  const handleBackButton = () => (previousPage ? history.push(addQueryParam(`/${previousPage}`)) : history.push(addQueryParam('/classes')));
 
   const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 

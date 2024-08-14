@@ -27,3 +27,9 @@ export const initialStateService = {
  * @number
  */
 export const initialPage = 1;
+
+/**
+ * Query parameter name for the institution ID.
+ * @constant {string}
+ */
+export const INSTITUTION_QUERY_ID = 'institutionId';

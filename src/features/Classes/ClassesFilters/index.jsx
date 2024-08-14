@@ -18,6 +18,7 @@ const initialRequestParams = {
 const ClassesFilters = () => {
   const dispatch = useDispatch();
   const instructorUserName = useSelector((state) => state.main.username);
+  const institution = useSelector((state) => state.main.institution);
   const filters = useSelector((state) => state.classes.filters);
   const courses = useSelector((state) => state.common.allCourses);
   const classes = useSelector((state) => state.common.allClasses);
@@ -49,6 +50,7 @@ const ClassesFilters = () => {
     const filtersParams = {
       class_id: classSelected?.value,
       course_name: courseSelected?.value,
+      institution_id: institution?.id,
     };
 
     dispatch(updateFilters(filtersParams));
@@ -57,7 +59,7 @@ const ClassesFilters = () => {
   };
 
   const handleCleanFilters = () => {
-    dispatch(getClasses(instructorUserName, { ...initialRequestParams }));
+    dispatch(getClasses(instructorUserName, { institution_id: institution?.id, ...initialRequestParams }));
     setClassSelected(null);
     setCourseSelected(null);
     dispatch(updateFilters({}));
@@ -65,10 +67,10 @@ const ClassesFilters = () => {
 
   useEffect(() => {
     if (instructorUserName) {
-      dispatch(fetchAllCourses(instructorUserName));
-      dispatch(fetchAllClassesData(instructorUserName));
+      dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
+      dispatch(fetchAllClassesData(instructorUserName, { institution_id: institution?.id }));
     }
-  }, [dispatch, instructorUserName]);
+  }, [dispatch, instructorUserName, institution]);
 
   return (
     <Form onSubmit={handleSelectFilters} className="w-100 px-4 d-flex flex-column align-items-center">

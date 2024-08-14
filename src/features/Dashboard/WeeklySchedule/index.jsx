@@ -14,6 +14,7 @@ const WeeklySchedule = () => {
   const dispatch = useDispatch();
   const username = useSelector((state) => state.main.username);
   const classesData = useSelector((state) => state.common.allClasses.data);
+  const institution = useSelector((state) => state.main.institution);
   const [classList, setClassList] = useState([]);
   const [stateDate, setStateDate] = useState([
     {
@@ -37,9 +38,9 @@ const WeeklySchedule = () => {
 
   useEffect(() => {
     if (username) {
-      dispatch(fetchAllClassesData(username));
+      dispatch(fetchAllClassesData(username, { institution_id: institution?.id }));
     }
-  }, [username, dispatch]);
+  }, [username, dispatch, institution]);
 
   useEffect(() => {
     // Display only the classes which the start date is in the selected time period

@@ -30,8 +30,10 @@ const initialStudentState = {
 const StudentsFilters = () => {
   const dispatch = useDispatch();
 
-  const instructorUserName = useSelector((state) => state.main.username);
   const filters = useSelector((state) => state.students.filters);
+  const institution = useSelector((state) => state.main.institution);
+  const instructorUserName = useSelector((state) => state.main.username);
+
   const isCoursesLoading = useSelector((state) => state.common.allCourses.status) === RequestStatus.LOADING;
   const isClassesLoading = useSelector((state) => state.common.allClasses.status) === RequestStatus.LOADING;
 
@@ -66,6 +68,7 @@ const StudentsFilters = () => {
       course_name: studentsData.course?.value,
       class_name: studentsData.class?.value,
       exam_ready: studentsData.isExamReady?.value,
+      institution_id: institution?.id,
     };
 
     dispatch(updateFilters(filterOptions));
@@ -77,20 +80,25 @@ const StudentsFilters = () => {
 
     dispatch(updateFilters({}));
     setStudentsData(initialStudentState);
-    dispatch(fetchStudentsData(instructorUserName));
+    dispatch(fetchStudentsData(instructorUserName, { institution_id: institution?.id }));
   };
 
   useEffect(() => {
     if (instructorUserName) {
-      dispatch(fetchAllCourses(instructorUserName));
+      dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
     }
-  }, [dispatch, instructorUserName]);
+  }, [dispatch, instructorUserName, institution]);
 
   useEffect(() => {
     if (instructorUserName && studentsData.course) {
-      dispatch(fetchAllClassesData(instructorUserName, { course_name: studentsData.course.value }));
+      const options = {
+        course_name: studentsData.course.value,
+        institution_id: institution?.id,
+      };
+
+      dispatch(fetchAllClassesData(instructorUserName, options));
     }
-  }, [dispatch, instructorUserName, studentsData.course]);
+  }, [dispatch, instructorUserName, studentsData.course, institution]);
 
   return (
     <section className="px-4">

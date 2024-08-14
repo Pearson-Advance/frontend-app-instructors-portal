@@ -16,6 +16,7 @@ import {
 } from 'react-router-dom';
 
 import { RequestStatus } from 'features/constants';
+import { useInstitutionIdQueryParam } from 'hooks';
 import { resetStudent } from 'features/Students/data/slice';
 import { fetchStudentProfile } from 'features/Students/data';
 
@@ -41,6 +42,7 @@ const StudentsDetails = () => {
   } = useSelector((state) => state.students.student);
 
   const dispatch = useDispatch();
+  const addQueryParam = useInstitutionIdQueryParam();
   const queryParams = new URLSearchParams(location.search);
   const previousPage = queryParams.get('previous') || 'students';
 
@@ -110,7 +112,7 @@ const StudentsDetails = () => {
                   <div className="d-flex flex-column mr-md-3">
                     <h3 className="text-uppercase">Recent courses taken</h3>
                     <Link
-                      to={`/classes/${classId}?previous=students`}
+                      to={addQueryParam(`/classes/${classId}?previous=students`)}
                       className="text-truncate link"
                     >
                       {className}

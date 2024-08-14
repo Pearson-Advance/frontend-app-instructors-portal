@@ -6,6 +6,7 @@ module.exports = createConfig('webpack-dev', {
     alias: {
       features: path.resolve(__dirname, 'src/features'),
       helpers: path.resolve(__dirname, 'src/helpers'),
+      hooks: path.resolve(__dirname, 'src/hooks'),
     },
   },
 });
