@@ -5,6 +5,7 @@ module.exports = createConfig('webpack-prod', {
   resolve: {
     alias: {
       features: path.resolve(__dirname, 'src/features'),
+      helpers: path.resolve(__dirname, 'src/helpers'),
     },
   },
 });

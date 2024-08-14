@@ -8,6 +8,7 @@ import { Button } from 'react-paragon-topaz';
 import { Container, Pagination } from '@edx/paragon';
 
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
+import EnrollStudent from 'features/Classes/EnrollStudent';
 
 import { fetchStudentsData } from 'features/Students/data';
 import { resetStudentsTable, updateCurrentPage } from 'features/Students/data/slice';
@@ -32,6 +33,7 @@ const ClassDetailPage = () => {
   const COLUMNS = useMemo(() => columns, []);
 
   const [currentPage, setCurrentPage] = useState(initialPage);
+  const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
   const isLoading = students.status === RequestStatus.LOADING;
   const classNameDecoded = decodeURIComponent(classInfo?.className || '');
@@ -71,12 +73,14 @@ const ClassDetailPage = () => {
 
   const handleBackButton = () => (previousPage ? history.push(`/${previousPage}`) : history.push('/classes'));
 
+  const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
+
   return (
     <>
       {!classInfo && (
-      <Container size="xl" className="px-4 mt-3 page-content-container d-flex justify-content-center">
-        <p>You must be an instructor in this class to see the information.</p>
-      </Container>
+        <Container size="xl" className="px-4 mt-3 page-content-container d-flex justify-content-center">
+          <p>You must be an instructor in this class to see the information.</p>
+        </Container>
       )}
       {classInfo && (
         <Container size="xl" className="px-4 mt-3">
@@ -97,6 +101,14 @@ const ClassDetailPage = () => {
             </Button>
           </div>
           <InstructorCard />
+          <div className="d-flex justify-content-end my-3 flex-wrap">
+            <Button
+              onClick={handleEnrollStudentModal}
+              className="text-decoration-none text-primary bg-white"
+            >
+              Invite student to enroll
+            </Button>
+          </div>
           <Table
             isLoading={isLoading}
             columns={COLUMNS}
@@ -117,6 +129,11 @@ const ClassDetailPage = () => {
               size="small"
             />
           )}
+          <EnrollStudent
+            isOpen={isEnrollModalOpen}
+            onClose={handleEnrollStudentModal}
+            className={classNameDecoded}
+          />
         </Container>
       )}
     </>
