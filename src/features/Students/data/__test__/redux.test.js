@@ -1,12 +1,15 @@
 import MockAdapter from 'axios-mock-adapter';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
+import { initializeStore } from 'store';
+
 import {
   fetchStudentsData,
+  fetchStudentProfile,
 } from 'features/Students/data/thunks';
 import { updateCurrentPage } from 'features/Students/data/slice';
+
 import { executeThunk } from 'test-utils';
-import { initializeStore } from 'store';
 
 let axiosMock;
 let store;
@@ -93,5 +96,19 @@ describe('Students redux tests', () => {
 
     store.dispatch(updateCurrentPage(newPage));
     expect(store.getState().students.table).toEqual(expectState);
+  });
+
+  describe('Student profile', () => {
+    test('fetch student profile with error', async () => {
+      const userName = 'student123';
+
+      axiosMock.onGet(`/students/?learner_name=${userName}`).reply(500);
+
+      await executeThunk(fetchStudentProfile(userName), store.dispatch, store.getState);
+
+      expect(store.getState().students.student).toEqual({
+        status: 'error',
+      });
+    });
   });
 });

@@ -12,6 +12,7 @@ import { Footer } from 'features/Main/Footer';
 import { Sidebar } from 'features/Main/Sidebar';
 import DashboardPage from 'features/Dashboard/DashboardPage';
 import StudentsPage from 'features/Students/StudentsPage';
+import StudentsDetails from 'features/Students/StudentsDetails';
 import ActiveTabUpdater from 'features/Main/ActiveTabUpdater';
 import ClassesPage from 'features/Classes/ClassesPage';
 import ClassDetailPage from 'features/Classes/ClassDetailPage';
@@ -38,6 +39,7 @@ const Main = () => {
   const routes = [
     { path: '/dashboard', component: DashboardPage, exact: true },
     { path: '/students', component: StudentsPage, exact: true },
+    { path: '/students/:learnerEmail', component: StudentsDetails, exact: true },
     { path: '/classes/:classId', component: ClassDetailPage, exact: true },
     { path: '/classes', component: ClassesPage, exact: true },
   ];

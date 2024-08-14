@@ -7,6 +7,14 @@ const columns = [
   {
     Header: 'Student',
     accessor: 'learnerName',
+    Cell: ({ row }) => (
+      <Link
+        to={`/students/${encodeURIComponent(row.original.learnerEmail)}?previous=students`}
+        className="text-truncate link"
+      >
+        {row.values.learnerName}
+      </Link>
+    ),
   },
   {
     Header: 'Email',
