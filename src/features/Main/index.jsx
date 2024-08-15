@@ -22,6 +22,7 @@ import ActiveTabUpdater from 'features/Main/ActiveTabUpdater';
 import ClassesPage from 'features/Classes/ClassesPage';
 import ClassDetailPage from 'features/Classes/ClassDetailPage';
 import InstitutionSelector from 'features/Main/InstitutionSelector';
+import Profile from 'features/Instructor/Profile';
 
 import { fetchInstitutionData } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
@@ -58,6 +59,7 @@ const Main = () => {
     { path: '/students/:learnerEmail', component: StudentsDetails, exact: true },
     { path: '/classes/:classId', component: ClassDetailPage, exact: true },
     { path: '/classes', component: ClassesPage, exact: true },
+    { path: '/my-profile', component: Profile, exact: true },
   ];
 
   return (
