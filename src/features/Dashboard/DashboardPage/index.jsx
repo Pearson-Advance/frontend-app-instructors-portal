@@ -13,12 +13,13 @@ const DashboardPage = () => {
   const dispatch = useDispatch();
   const userName = useSelector((state) => state.main.username);
   const imageDashboard = getConfig().IMAGE_DASHBOARD_INSTRUCTORS_URL;
+  const institution = useSelector((state) => state.main.institution);
 
   useEffect(() => {
     if (userName) {
-      dispatch(fetchAllClassesData(userName));
+      dispatch(fetchAllClassesData(userName, { institution_id: institution?.id }));
     }
-  }, [userName, dispatch]);
+  }, [userName, dispatch, institution]);
 
   return (
     <Container size="xl" className="px-4 pt-3">

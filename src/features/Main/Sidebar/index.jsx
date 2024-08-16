@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Sidebar as SidebarBase, MenuSection, MenuItem } from 'react-paragon-topaz';
 
+import { useInstitutionIdQueryParam } from 'hooks';
 import { updateActiveTab } from 'features/Main/data/slice';
 
 const menuItems = [
@@ -32,11 +33,14 @@ export const Sidebar = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const activeTab = useSelector((state) => state.main.activeTab);
+  const currentSelection = activeTab.replace(/\?institutionId=\d+/, '');
 
   const handleTabClick = (tabName) => {
     dispatch(updateActiveTab(tabName));
     history.push(`/${tabName}`);
   };
+
+  const addQueryParam = useInstitutionIdQueryParam();
 
   return (
     <SidebarBase>
@@ -46,8 +50,8 @@ export const Sidebar = () => {
               <MenuItem
                 key={link}
                 title={label}
-                path={link}
-                active={activeTab === link}
+                path={addQueryParam(link)}
+                active={currentSelection === link}
                 onClick={handleTabClick}
                 icon={icon}
               />

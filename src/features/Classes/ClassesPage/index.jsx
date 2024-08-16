@@ -14,6 +14,7 @@ import { RequestStatus, initialPage } from 'features/constants';
 const ClassesPage = () => {
   const dispatch = useDispatch();
   const classes = useSelector((state) => state.classes.table);
+  const institution = useSelector((state) => state.main.institution);
   const instructorUserName = useSelector((state) => state.main.username);
   const filters = useSelector((state) => state.classes.filters);
   const COLUMNS = useMemo(() => columns, []);
@@ -24,14 +25,19 @@ const ClassesPage = () => {
 
   useEffect(() => {
     if (instructorUserName) {
-      dispatch(getClasses(instructorUserName, { page: currentPage, limit: true, ...filters }));
+      dispatch(getClasses(instructorUserName, {
+        page: currentPage,
+        limit: true,
+        institution_id: institution?.id,
+        ...filters,
+      }));
     }
 
     return () => {
       dispatch(resetClassesTable());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instructorUserName, dispatch, currentPage]);
+  }, [instructorUserName, dispatch, currentPage, institution]);
 
   const handlePagination = (targetPage) => {
     setCurrentPage(targetPage);

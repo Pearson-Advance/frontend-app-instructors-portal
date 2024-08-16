@@ -1,5 +1,9 @@
 import { emailValidationMessages } from 'helpers';
 
+jest.mock('@edx/frontend-platform/logging', () => ({
+  logError: jest.fn(),
+}));
+
 describe('emailValidationMessages', () => {
   test('Should return invalid message for one user', () => {
     const emailList = [

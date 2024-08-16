@@ -18,18 +18,19 @@ const StudentsPage = () => {
   const username = useSelector((state) => state.main.username);
   const filters = useSelector((state) => state.students.filters);
   const students = useSelector((state) => state.students);
+  const institution = useSelector((state) => state.main.institution);
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   useEffect(() => {
     if (username) {
-      dispatch(fetchStudentsData(username, { page: currentPage, ...filters }));
+      dispatch(fetchStudentsData(username, { page: currentPage, institution_id: institution?.id, ...filters }));
     }
 
     return () => {
       dispatch(resetStudentsTable());
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username, dispatch, currentPage]);
+  }, [username, dispatch, currentPage, institution]);
 
   const handlePagination = (targetPage) => {
     setCurrentPage(targetPage);

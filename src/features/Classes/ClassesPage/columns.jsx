@@ -3,18 +3,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatUTCDate } from 'react-paragon-topaz';
 
+import { useInstitutionIdQueryParam } from 'hooks';
+
 const columns = [
   {
     Header: 'Class',
     accessor: 'className',
-    Cell: ({ row }) => (
-      <Link
-        to={`/classes/${row.original.classId}?previous=classes`}
-        className="text-truncate link"
-      >
-        {row.values.className}
-      </Link>
-    ),
+    Cell: ({ row }) => {
+      const addQueryParam = useInstitutionIdQueryParam();
+      const url = addQueryParam(`/classes/${row.original.classId}?previous=classes`);
+
+      return (
+        <Link
+          to={url}
+          className="text-truncate link"
+        >
+          {row.values.className}
+        </Link>
+      );
+    },
   },
   {
     Header: 'Course',

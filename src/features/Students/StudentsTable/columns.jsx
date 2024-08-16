@@ -1,20 +1,27 @@
 /* eslint-disable react/prop-types */
 import { ProgressBar } from '@edx/paragon';
 import { Link } from 'react-router-dom';
+
 import { formatUTCDate } from 'react-paragon-topaz';
+import { useInstitutionIdQueryParam } from 'hooks';
 
 const columns = [
   {
     Header: 'Student',
     accessor: 'learnerName',
-    Cell: ({ row }) => (
-      <Link
-        to={`/students/${encodeURIComponent(row.original.learnerEmail)}?previous=students`}
-        className="text-truncate link"
-      >
-        {row.values.learnerName}
-      </Link>
-    ),
+    Cell: ({ row }) => {
+      const addQueryParam = useInstitutionIdQueryParam();
+      const url = addQueryParam(`/students/${encodeURIComponent(row.original.learnerEmail)}?previous=students`);
+
+      return (
+        <Link
+          to={url}
+          className="text-truncate link"
+        >
+          {row.values.learnerName}
+        </Link>
+      );
+    },
   },
   {
     Header: 'Email',
@@ -31,14 +38,19 @@ const columns = [
   {
     Header: 'Class Name',
     accessor: 'className',
-    Cell: ({ row }) => (
-      <Link
-        to={`/classes/${row.original.classId}?previous=students`}
-        className="text-truncate link"
-      >
-        {row.values.className}
-      </Link>
-    ),
+    Cell: ({ row }) => {
+      const addQueryParam = useInstitutionIdQueryParam();
+      const url = addQueryParam(`/classes/${row.original.classId}?previous=students`);
+
+      return (
+        <Link
+          to={url}
+          className="text-truncate link"
+        >
+          {row.values.className}
+        </Link>
+      );
+    },
   },
   {
     Header: 'Start - End Date',
