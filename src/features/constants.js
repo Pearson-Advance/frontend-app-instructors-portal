@@ -33,3 +33,9 @@ export const initialPage = 1;
  * @constant {string}
  */
 export const INSTITUTION_QUERY_ID = 'institutionId';
+
+/**
+ * Limit of number of classes for profile.
+ * @constant {number}
+ */
+export const CLASS_LIMIT = 3;

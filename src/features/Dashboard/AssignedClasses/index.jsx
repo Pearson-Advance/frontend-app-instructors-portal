@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { Col } from '@edx/paragon';
-import { Button } from 'react-paragon-topaz';
 
+import { CLASS_LIMIT } from 'features/constants';
+import { useInstitutionIdQueryParam } from 'hooks';
 import ClassCard from 'features/Dashboard/AssignedClasses/ClassCard';
 
 import 'features/Dashboard/AssignedClasses/index.scss';
@@ -11,12 +13,14 @@ import 'features/Dashboard/AssignedClasses/index.scss';
 const AssignedClasses = () => {
   const classes = useSelector((state) => state.common.allClasses.data);
   const [classCards, setClassCards] = useState([]);
-  const displayClassLimit = 3;
+
+  const addQueryParam = useInstitutionIdQueryParam();
+  const url = addQueryParam('/classes');
 
   useEffect(() => {
     // Display only the first 'displayClassLimit' on the homepage.
-    if (classes.length > displayClassLimit) {
-      setClassCards(classes.slice(0, displayClassLimit));
+    if (classes.length > CLASS_LIMIT) {
+      setClassCards(classes.slice(0, CLASS_LIMIT));
     } else {
       setClassCards(classes);
     }
@@ -28,9 +32,14 @@ const AssignedClasses = () => {
       <div className="d-flex cards-container">
         {classCards.map(classInfo => <ClassCard data={classInfo} key={classInfo?.classId} />)}
       </div>
-      {classes.length > displayClassLimit && (
+      {classes.length > CLASS_LIMIT && (
         <div className="d-flex justify-content-center">
-          <Button text className="view-all-btn" disabled>View all</Button>
+          <Link
+            className="link p-3"
+            to={url}
+          >
+            View all
+          </Link>
         </div>
       )}
       {classes.length === 0 && (

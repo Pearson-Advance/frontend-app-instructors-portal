@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Link } from 'react-router-dom';
+import { startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
 import { Schedule, formatDateRange } from 'react-paragon-topaz';
 
-import { startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
-
+import { useInstitutionIdQueryParam } from 'hooks';
 import { fetchAllClassesData } from 'features/Common/data';
 
 import 'features/Dashboard/WeeklySchedule/index.scss';
@@ -24,6 +23,8 @@ const WeeklySchedule = () => {
       color: '#e4faff',
     },
   ]);
+
+  const addQueryParam = useInstitutionIdQueryParam();
 
   const handleDateChange = (date) => {
     const startWeekSelected = startOfWeek(date);
@@ -68,23 +69,27 @@ const WeeklySchedule = () => {
       <div className="content-schedule d-flex justify-content-between">
         <div className="container-class-schedule">
           {classList.length > 0 ? (
-            classList.map(classInfo => (
-              <div className="class-schedule" key={classInfo?.classId}>
-                <div className="class-text">
-                  <Link
-                    className="class-name"
-                    to="/"
-                  >
-                    {classInfo?.className}
-                  </Link>
-                  <p className="class-master-course">{classInfo?.masterCourseName}</p>
-                  <p className="class-descr">
-                    <i className="fa-sharp fa-regular fa-calendar-day" />
-                    {formatDateRange(classInfo?.startDate, classInfo?.endDate)}
-                  </p>
+            classList.map(classInfo => {
+              const url = addQueryParam(`/classes/${classInfo?.classId}?previous=dashboard`);
+
+              return (
+                <div className="class-schedule" key={classInfo?.classId}>
+                  <div className="class-text">
+                    <Link
+                      className="class-name"
+                      to={url}
+                    >
+                      {classInfo?.className}
+                    </Link>
+                    <p className="class-master-course">{classInfo?.masterCourseName}</p>
+                    <p className="class-descr">
+                      <i className="fa-sharp fa-regular fa-calendar-day" />
+                      {formatDateRange(classInfo?.startDate, classInfo?.endDate)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="empty-classes">No classes scheduled at this time</p>
           )}

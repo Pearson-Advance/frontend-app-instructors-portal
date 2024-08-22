@@ -12,6 +12,7 @@ import {
 } from '@edx/paragon';
 import { ProfileCard, formatUTCDate } from 'react-paragon-topaz';
 
+import { useInstitutionIdQueryParam } from 'hooks';
 import { fetchInstructorProfile } from 'features/Instructor/data';
 import { fetchAllClassesData } from 'features/Common/data';
 
@@ -31,6 +32,7 @@ const Profile = () => {
   const instructorUserName = useSelector((state) => state.main.username);
   const classes = useSelector((state) => state.common.allClasses.data);
   const institution = useSelector((state) => state.main.institution);
+  const addQueryParam = useInstitutionIdQueryParam();
 
   const isLoading = status === RequestStatus.LOADING;
 
@@ -64,15 +66,19 @@ const Profile = () => {
             {classes.length > 0 && (
               <>
                 <h3 className="text-uppercase">Courses taught</h3>
-                {classes.map(({ classId, className }) => (
-                  <Link
-                    to={`/classes/${classId}?previous=my-profile`}
-                    className="text-truncate link"
-                    key={classId}
-                  >
-                    {className}
-                  </Link>
-                ))}
+                {classes.map(({ classId, className }) => {
+                  const url = addQueryParam(`/classes/${classId}?previous=my-profile`);
+
+                  return (
+                    <Link
+                      to={url}
+                      key={classId}
+                      className="text-truncate link"
+                    >
+                      {className}
+                    </Link>
+                  );
+                })}
               </>
             )}
           </ProfileCard>
