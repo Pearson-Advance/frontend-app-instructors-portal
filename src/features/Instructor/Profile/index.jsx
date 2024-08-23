@@ -15,6 +15,8 @@ import {
 } from '@edx/paragon';
 import { ProfileCard, formatUTCDate } from 'react-paragon-topaz';
 
+import Availability from 'features/Instructor/Availability';
+
 import Table from 'features/Main/Table';
 import { getClasses } from 'features/Classes/data';
 import { fetchInstructorProfile } from 'features/Instructor/data';
@@ -129,6 +131,9 @@ const Profile = () => {
               size="small"
             />
           )}
+        </Tab>
+        <Tab eventKey="availability" title="Availiability">
+          <Availability />
         </Tab>
       </Tabs>
     </Container>
