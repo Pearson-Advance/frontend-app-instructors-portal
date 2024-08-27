@@ -1,7 +1,9 @@
 import React from 'react';
-import AssignedClasses from 'features/Dashboard/AssignedClasses';
 import '@testing-library/jest-dom/extend-expect';
+import { MemoryRouter, Route } from 'react-router-dom';
+
 import { renderWithProviders } from 'test-utils';
+import AssignedClasses from 'features/Dashboard/AssignedClasses';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -27,8 +29,13 @@ describe('Instructor Assign component', () => {
       },
     },
   };
+
   const component = renderWithProviders(
-    <AssignedClasses />,
+    <MemoryRouter initialEntries={['/']}>
+      <Route path="/">
+        <AssignedClasses />
+      </Route>
+    </MemoryRouter>,
     { preloadedState: mockStore },
   );
 
