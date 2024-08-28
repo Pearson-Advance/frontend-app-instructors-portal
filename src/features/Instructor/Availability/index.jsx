@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-
 import { Button } from 'react-paragon-topaz';
-import AddEvent from '../AddEvent';
+
+import AddEvent from 'features/Instructor/AddEvent';
 
 const Availability = () => {
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);

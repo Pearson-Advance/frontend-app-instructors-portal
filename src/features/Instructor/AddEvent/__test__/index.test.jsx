@@ -30,7 +30,9 @@ describe('Add Event modal', () => {
 
   test('should handle changes in fields', () => {
     const {
-      getByRole, getAllByRole, getByPlaceholderText,
+      getByRole,
+      getAllByRole,
+      getByPlaceholderText,
     } = renderWithProviders(
       <AddEvent isOpen onClose={() => {}} />,
       { preloadedState: {} },

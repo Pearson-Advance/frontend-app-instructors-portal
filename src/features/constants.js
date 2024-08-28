@@ -52,3 +52,25 @@ export const BADGE_VARIANTS = {
   in_progress: 'info',
   complete: 'success',
 };
+
+/**
+ * Custom styles for selector without borders.
+ *@object
+ */
+export const stylesSelectorNoBorders = {
+  control: (baseStyles, state) => ({
+    ...baseStyles,
+    border: 0,
+    boxShadow: state.isFocused ? 0 : 0,
+  }),
+  indicatorsContainer: (baseStyles) => ({
+    ...baseStyles,
+    alignItems: 'baseline',
+  }),
+  singleValue: (baseStyles) => ({
+    ...baseStyles,
+    color: '#666',
+    fontSize: '1rem',
+    fontWeight: '700',
+  }),
+};

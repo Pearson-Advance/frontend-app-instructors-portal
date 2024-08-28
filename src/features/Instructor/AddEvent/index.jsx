@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Select, Button } from 'react-paragon-topaz';
@@ -6,6 +6,8 @@ import { Select, Button } from 'react-paragon-topaz';
 import {
   ModalDialog, ModalCloseButton, Form, Col,
 } from '@edx/paragon';
+
+import { stylesSelectorNoBorders } from 'features/constants';
 
 const initialStateModal = {
   type: 'not-available',
@@ -30,37 +32,25 @@ const repeatOptions = [
 ];
 
 const AddEvent = ({ isOpen, onClose }) => {
-  const [eventData, setEventData] = useState({ ...initialStateModal });
+  const [eventData, setEventData] = useState(initialStateModal);
 
-  const customStyles = {
-    control: (baseStyles, state) => ({
-      ...baseStyles,
-      border: 0,
-      boxShadow: state.isFocused ? 0 : 0,
-    }),
-    indicatorsContainer: (baseStyles) => ({
-      ...baseStyles,
-      alignItems: 'baseline',
-    }),
-    singleValue: (baseStyles) => ({
-      ...baseStyles,
-      color: '#666',
-      fontSize: '1rem',
-      fontWeight: '700',
-    }),
+  const updateEventData = (key, value) => {
+    setEventData(prevData => ({
+      ...prevData,
+      [key]: value,
+    }));
   };
 
-  useEffect(() => {
-    if (!isOpen) {
-      setEventData(initialStateModal);
-    }
-  }, [isOpen]);
+  const resetEventDataIfClosed = () => {
+    setEventData(initialStateModal);
+    onClose();
+  };
 
   return (
     <ModalDialog
       title="New event"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={resetEventDataIfClosed}
       hasCloseButton
     >
       <ModalDialog.Header>
@@ -73,7 +63,7 @@ const AddEvent = ({ isOpen, onClose }) => {
               <Form.RadioSet
                 name="event"
                 className="d-flex align-items-end justify-content-between col-12 px-1"
-                onChange={e => setEventData({ ...eventData, type: e.target.value })}
+                onChange={e => updateEventData('type', e.target.value)}
                 isInline
                 value={eventData.type}
               >
@@ -87,16 +77,16 @@ const AddEvent = ({ isOpen, onClose }) => {
             <Form.Group className="d-flex align-items-center justify-content-between col-12">
               <Form.Switch
                 checked={eventData.allDay}
-                onChange={e => setEventData({ ...eventData, allDay: e.target.checked })}
+                onChange={e => updateEventData('allDay', e.target.checked)}
               >
                 All day
               </Form.Switch>
               <Select
                 name="repeat"
                 options={repeatOptions}
-                onChange={option => setEventData({ ...eventData, repeat: option })}
+                onChange={option => updateEventData('repeat', option)}
                 value={eventData.repeat}
-                styles={customStyles}
+                styles={stylesSelectorNoBorders}
               />
             </Form.Group>
           </Form.Row>
@@ -110,7 +100,7 @@ const AddEvent = ({ isOpen, onClose }) => {
                 name="start_date"
                 required
                 value={eventData.startDate}
-                onChange={e => setEventData({ ...eventData, startDate: e.target.value })}
+                onChange={e => updateEventData('startDate', e.target.value)}
               />
             </Form.Group>
             <Form.Group className="d-flex align-items-end justify-content-between col-12">
@@ -122,36 +112,36 @@ const AddEvent = ({ isOpen, onClose }) => {
                 name="end_date"
                 required
                 value={eventData.endDate}
-                onChange={e => setEventData({ ...eventData, endDate: e.target.value })}
+                onChange={e => updateEventData('endDate', e.target.value)}
               />
             </Form.Group>
           </Form.Row>
-          {eventData.allDay === false && (
-          <Form.Row>
-            <Form.Group as={Col}>
-              <Form.Control
-                type="time"
-                placeholder="From"
-                floatingLabel="From"
-                className="my-1 mr-0"
-                name="start_hour"
-                required
-                value={eventData.startHour}
-                onChange={e => setEventData({ ...eventData, startHour: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group as={Col}>
-              <Form.Control
-                type="time"
-                placeholder="To"
-                floatingLabel="To"
-                className="my-1 mr-0"
-                name="end_hour"
-                value={eventData.endHour}
-                onChange={e => setEventData({ ...eventData, endHour: e.target.value })}
-              />
-            </Form.Group>
-          </Form.Row>
+          {!eventData.allDay && (
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Control
+                  type="time"
+                  placeholder="From"
+                  floatingLabel="From"
+                  className="my-1 mr-0"
+                  name="start_hour"
+                  required
+                  value={eventData.startHour}
+                  onChange={e => updateEventData('startHour', e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Control
+                  type="time"
+                  placeholder="To"
+                  floatingLabel="To"
+                  className="my-1 mr-0"
+                  name="end_hour"
+                  value={eventData.endHour}
+                  onChange={e => updateEventData('endHour', e.target.value)}
+                />
+              </Form.Group>
+            </Form.Row>
           )}
           <div className="d-flex justify-content-end">
             <ModalCloseButton className="btntpz btn-text btn-tertiary mr-2">
