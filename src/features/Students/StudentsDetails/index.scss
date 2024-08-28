@@ -1,6 +1,7 @@
 @import 'assets/colors.scss';
 
-nav.nav-tabs {
+nav.nav-tabs,
+nav.nav-tabs .nav-link:hover {
   border-bottom: 2px solid $primary;
 }
 

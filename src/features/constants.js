@@ -39,3 +39,16 @@ export const INSTITUTION_QUERY_ID = 'institutionId';
  * @constant {number}
  */
 export const CLASS_LIMIT = 3;
+
+/**
+ * Variants styles for badge.
+ * @constant {Object}
+ */
+export const BADGE_VARIANTS = {
+  active: 'success',
+  inactive: 'secondary',
+  expired: 'danger',
+  pending: 'warning',
+  in_progress: 'info',
+  complete: 'success',
+};
