@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, formatUTCDate } from 'react-paragon-topaz';
-import { getConfig } from '@edx/frontend-platform';
 import { useDispatch, useSelector } from 'react-redux';
+import { getConfig } from '@edx/frontend-platform';
 import {
   Tabs,
   Tab,
   Spinner,
   Container,
+  Pagination,
 } from '@edx/paragon';
 import {
   Link,
@@ -15,22 +16,30 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { RequestStatus } from 'features/constants';
 import { useInstitutionIdQueryParam } from 'hooks';
-import { resetStudent } from 'features/Students/data/slice';
+import { RequestStatus, initialPage } from 'features/constants';
+
+import Table from 'features/Main/Table';
+
+import { getClasses } from 'features/Classes/data';
 import { fetchStudentProfile } from 'features/Students/data';
+import { resetStudent, resetStudentsTable } from 'features/Students/data/slice';
+import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slice';
+import { columns } from 'features/Students/StudentsDetails/columns';
 
 import './index.scss';
 
 const StudentsDetails = () => {
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
   const { learnerEmail } = useParams();
+  const classes = useSelector((state) => state.classes.table);
+  const institution = useSelector((state) => state.main.institution);
   const instructorUserName = useSelector((state) => state.main.username);
+
   const isLoading = useSelector((state) => state.students.student.status) === RequestStatus.LOADING;
   const hasError = useSelector((state) => state.students.student.status) === RequestStatus.ERROR;
-
-  const decodedEmail = decodeURIComponent(learnerEmail);
 
   const {
     classId,
@@ -41,7 +50,13 @@ const StudentsDetails = () => {
     learnerName = hasError ? 'Error' : 'Loading user...',
   } = useSelector((state) => state.students.student);
 
-  const dispatch = useDispatch();
+  const students = useSelector((state) => state.students.table.data);
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const decodedEmail = decodeURIComponent(learnerEmail);
+  const COLUMNS = useMemo(() => columns, []);
+
   const addQueryParam = useInstitutionIdQueryParam();
   const queryParams = new URLSearchParams(location.search);
   const previousPage = queryParams.get('previous') || 'students';
@@ -49,7 +64,14 @@ const StudentsDetails = () => {
   const handleBackButton = () => (history.push(`/${previousPage}`));
 
   const originDomain = getConfig().BASE_URL;
-  const studentImage = userImageUrl && userImageUrl.startsWith('/') ? originDomain + userImageUrl : userImageUrl;
+  const studentImage = userImageUrl && userImageUrl.startsWith('/') ? `https://${originDomain}${userImageUrl}` : userImageUrl;
+
+  const isTableLoading = classes.status === RequestStatus.LOADING;
+
+  const handlePagination = (targetPage) => {
+    setCurrentPage(targetPage);
+    dispatch(updateCurrentPage(targetPage));
+  };
 
   useEffect(() => {
     const studentParams = {
@@ -58,8 +80,31 @@ const StudentsDetails = () => {
 
     dispatch(fetchStudentProfile(instructorUserName, studentParams));
 
-    return () => dispatch(resetStudent());
+    return () => {
+      dispatch(resetStudent());
+      dispatch(resetStudentsTable());
+    };
   }, [dispatch, instructorUserName, decodedEmail]);
+
+  useEffect(() => {
+    if (instructorUserName) {
+      const requestParams = {
+        institution_id: institution?.id,
+        limit: true,
+        page: currentPage,
+        student_email: decodedEmail,
+      };
+
+      dispatch(getClasses(instructorUserName, requestParams));
+    }
+
+    return () => dispatch(resetClassesTable());
+  }, [instructorUserName, dispatch, institution, decodedEmail, currentPage]);
+
+  const mergedStudentsAndClassesData = classes.data.map(classItem => {
+    const student = students.find(stu => stu.classId === classItem.classId);
+    return student ? { ...classItem, completePercentage: student.completePercentage } : classItem;
+  });
 
   return (
     <Container size="xl" className="px-4 mt-3">
@@ -72,9 +117,31 @@ const StudentsDetails = () => {
 
       <Tabs
         variant="tabs"
-        defaultActiveKey="profile"
+        defaultActiveKey="classes-performance"
         className="mb-3 nav-tabs"
       >
+        <Tab eventKey="classes-performance" title="Classes and performance">
+          <Table
+            isLoading={isTableLoading}
+            columns={COLUMNS}
+            count={classes.count}
+            data={mergedStudentsAndClassesData}
+            emptyText="No classes found."
+            rowClassName="my-4"
+          />
+
+          {classes.numPages > 1 && (
+            <Pagination
+              paginationLabel="paginationNavigation"
+              pageCount={classes.numPages}
+              currentPage={currentPage}
+              onPageSelect={handlePagination}
+              variant="reduced"
+              className="mx-auto pagination-table"
+              size="small"
+            />
+          )}
+        </Tab>
         <Tab eventKey="profile" title="Profile">
           <section className="page-content-container p-4 d-flex flex-column">
             {

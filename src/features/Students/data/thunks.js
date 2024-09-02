@@ -36,6 +36,7 @@ function fetchStudentProfile(userName, options = {}) {
         ...response.data.results[0] || {},
       };
 
+      dispatch(updateStudentsTable(response.data));
       dispatch(updateStudent(studentInfo));
       dispatch(updateStudentProfileRequestStatus(RequestStatus.INITIAL));
     } catch (error) {
