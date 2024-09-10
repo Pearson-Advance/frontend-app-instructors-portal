@@ -5,6 +5,7 @@ import { initializeStore } from 'store';
 
 import {
   fetchInstructorProfile,
+  fetchEventsData,
 } from 'features/Instructor/data';
 
 import { executeThunk } from 'test-utils';
@@ -60,6 +61,49 @@ describe('Instructor redux tests', () => {
       await executeThunk(fetchInstructorProfile(email), store.dispatch, store.getState);
 
       expect(store.getState().instructor.info.status).toEqual('error');
+    });
+  });
+
+  describe('Instructor availability', () => {
+    test('successful fetch instructor events', async () => {
+      const instructorApiUrl = `${process.env.COURSE_OPERATIONS_API_V2_BASE_URL}/events/`;
+      const mockResponse = {
+        count: 1,
+        num_pages: 1,
+        current_page: 1,
+        results: [
+          {
+            id: 1,
+            title: 'Not available',
+            start: '2024-09-04T00:00:00Z',
+            end: '2024-09-13T00:00:00Z',
+            type: 'virtual',
+          },
+        ],
+      };
+      const dates = {
+        start_date: '2024-09-01T00:00:00.000Z',
+        ens_date: '2024-10-06T00:00:00.000Z',
+      };
+
+      axiosMock.onGet(instructorApiUrl).reply(200, mockResponse);
+
+      await executeThunk(fetchEventsData(dates), store.dispatch, store.getState);
+
+      expect(store.getState().instructor.events.status).toEqual('success');
+    });
+
+    test('fetch instructor events with error', async () => {
+      const dates = {
+        start_date: '2024-09-01T00:00:00.000Z',
+        ens_date: '2024-10-06T00:00:00.000Z',
+      };
+
+      axiosMock.onGet('/events/').reply(500);
+
+      await executeThunk(fetchEventsData(dates), store.dispatch, store.getState);
+
+      expect(store.getState().instructor.events.status).toEqual('error');
     });
   });
 });

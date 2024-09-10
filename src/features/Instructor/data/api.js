@@ -26,7 +26,15 @@ function postInstructorEvent(eventData) {
   );
 }
 
+function getEventsByInstructor(params) {
+  return getAuthenticatedHttpClient().get(
+    `${getConfig().COURSE_OPERATIONS_API_V2_BASE_URL}/events/`,
+    { params },
+  );
+}
+
 export {
   getInstructorByEmail,
   postInstructorEvent,
+  getEventsByInstructor,
 };
