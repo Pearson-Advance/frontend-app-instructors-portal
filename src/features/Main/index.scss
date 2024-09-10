@@ -3,4 +3,14 @@
 .page-wrapper {
   min-height: calc(100vh - 222px);
   background-color: $bg-main-color;
+  background-image: url('https://pearson-production-media.s3.amazonaws.com/Geo+Shape+instructor.svg');
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: 40%;
+}
+
+@media (max-width: 700px) {
+  .page-wrapper {
+    background-size: 90%;
+  }
 }
