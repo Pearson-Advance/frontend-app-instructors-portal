@@ -3,9 +3,6 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppContext } from '@edx/frontend-platform/react';
-import {
-  Link,
-} from 'react-router-dom';
 
 import {
   Tabs,
@@ -22,11 +19,9 @@ import { getClasses } from 'features/Classes/data';
 import { fetchInstructorProfile } from 'features/Instructor/data';
 import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slice';
 
-import { useInstitutionIdQueryParam } from 'hooks';
-
 import { columns } from 'features/Instructor/Profile/columns';
 
-import { RequestStatus, initialPage, CLASS_LIMIT } from 'features/constants';
+import { RequestStatus, initialPage } from 'features/constants';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -44,7 +39,6 @@ const Profile = () => {
   const instructorUserName = useSelector((state) => state.main.username);
   const classes = useSelector((state) => state.classes.table);
   const institution = useSelector((state) => state.main.institution);
-  const addQueryParam = useInstitutionIdQueryParam();
 
   const COLUMNS = useMemo(() => columns, []);
 
@@ -93,19 +87,14 @@ const Profile = () => {
             {classes.data.length > 0 && (
               <>
                 <h3 className="text-uppercase">Courses taught</h3>
-                {classes.data?.slice(0, CLASS_LIMIT).map(({ classId, className }) => {
-                  const url = addQueryParam(`/classes/${classId}?previous=my-profile`);
-
-                  return (
-                    <Link
-                      to={url}
-                      key={classId}
-                      className="text-truncate link"
-                    >
-                      {className}
-                    </Link>
-                  );
-                })}
+                {classes.data?.map(({ classId, masterCourseName }) => (
+                  <p
+                    key={classId}
+                    className="text-truncate link mb-1"
+                  >
+                    {masterCourseName}
+                  </p>
+                ))}
               </>
             )}
           </ProfileCard>
