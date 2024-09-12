@@ -37,7 +37,7 @@ export const instructorSlice = createSlice({
       state.events.data = payload;
     },
     updateDatesCalendar: (state, { payload }) => {
-      state.events.date = payload;
+      state.events.dates = payload;
     },
   },
 });

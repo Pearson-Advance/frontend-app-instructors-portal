@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { startOfMonth, endOfMonth } from 'date-fns';
-import { Button, CalendarExpanded } from 'react-paragon-topaz';
+import { Button, CalendarExpanded, formatUTCDate } from 'react-paragon-topaz';
 
 import AddEvent from 'features/Instructor/AddEvent';
 
@@ -40,8 +40,8 @@ const Availability = () => {
     if (events.length > 0) {
       const list = events.map(event => ({
         ...event,
-        start: new Date(event.start),
-        end: new Date(event.end),
+        start: new Date(formatUTCDate(event.start)),
+        end: new Date(formatUTCDate(event.end)),
       }));
       setEventsList(list);
     } else {
