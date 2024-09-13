@@ -3,9 +3,12 @@ import { camelCaseObject } from '@edx/frontend-platform';
 import {
   updateInstructorInfo,
   updateInstructorInfoStatus,
+  updateEvents,
+  updateEventsRequestStatus,
 } from 'features/Instructor/data/slice';
 import {
   getInstructorByEmail,
+  getEventsByInstructor,
 } from 'features/Instructor/data/api';
 
 import { RequestStatus } from 'features/constants';
@@ -29,6 +32,22 @@ function fetchInstructorProfile(email, options = {}) {
   };
 }
 
+function fetchEventsData(eventData) {
+  return async (dispatch) => {
+    dispatch(updateEventsRequestStatus(RequestStatus.LOADING));
+
+    try {
+      const response = camelCaseObject(await getEventsByInstructor(eventData));
+      dispatch(updateEvents(response.data.results));
+      dispatch(updateEventsRequestStatus(RequestStatus.SUCCESS));
+    } catch (error) {
+      logError(error);
+      dispatch(updateEventsRequestStatus(RequestStatus.ERROR));
+    }
+  };
+}
+
 export {
   fetchInstructorProfile,
+  fetchEventsData,
 };

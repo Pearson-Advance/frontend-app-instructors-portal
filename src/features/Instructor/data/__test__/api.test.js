@@ -1,5 +1,5 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { getInstructorByEmail, postInstructorEvent } from 'features/Instructor/data/api';
+import { getInstructorByEmail, postInstructorEvent, getEventsByInstructor } from 'features/Instructor/data/api';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
@@ -59,6 +59,30 @@ describe('Instructor services', () => {
     expect(httpClientMock.post).toHaveBeenCalledTimes(1);
     expect(httpClientMock.post).toHaveBeenCalledWith(
       'http://localhost:18000/pearson_course_operation/api/v2/events/?title=Not+available&start=2024-09-13T00%3A00%3A00.000Z&end=2024-09-13T00%3A00%3A00.000Z',
+    );
+  });
+
+  test('getEventsByInstructor', () => {
+    const httpClientMock = {
+      get: jest.fn(),
+    };
+
+    const dates = {
+      start_date: '2024-05-26T00:00:00.000Z',
+      ens_date: '2024-07-07T00:00:00.000Z',
+    };
+
+    getAuthenticatedHttpClient.mockReturnValue(httpClientMock);
+
+    getEventsByInstructor(dates);
+
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledTimes(1);
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledWith();
+
+    expect(httpClientMock.get).toHaveBeenCalledTimes(1);
+    expect(httpClientMock.get).toHaveBeenCalledWith(
+      'http://localhost:18000/pearson_course_operation/api/v2/events/',
+      { params: { ...dates } },
     );
   });
 });

@@ -18,6 +18,8 @@ jest.mock('date-fns', () => ({
   endOfWeek: jest.fn(() => null),
   isWithinInterval: jest.fn(() => true),
   format: jest.fn(() => 'Jan 23, 2024'),
+  startOfMonth: jest.fn(() => new Date(2023, 1, 23)),
+  endOfMonth: jest.fn(() => new Date(2023, 1, 23)),
 }));
 
 describe('WeeklySchedule component', () => {

@@ -28,6 +28,7 @@ const Profile = () => {
   const { authenticatedUser } = useContext(AppContext);
   const instructorEmail = authenticatedUser.email;
   const [currentPage, setCurrentPage] = useState(initialPage);
+  const [tabActive, setTabActive] = useState('profile');
 
   const {
     instructorImage,
@@ -71,7 +72,8 @@ const Profile = () => {
       </div>
       <Tabs
         variant="tabs"
-        defaultActiveKey="profile"
+        activeKey={tabActive}
+        onSelect={(tab) => setTabActive(tab)}
         className="mb-3 nav-tabs"
       >
         <Tab eventKey="profile" title="Profile">
@@ -121,8 +123,8 @@ const Profile = () => {
             />
           )}
         </Tab>
-        <Tab eventKey="availability" title="Availiability">
-          <Availability />
+        <Tab eventKey="availability" title="Availability">
+          {tabActive === 'availability' && <Availability />}
         </Tab>
       </Tabs>
     </Container>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Select, Button } from 'react-paragon-topaz';
 import {
@@ -13,6 +14,7 @@ import { setTimeInUTC, eventManager } from 'helpers';
 
 import { stylesSelectorNoBorders } from 'features/constants';
 import { postInstructorEvent } from 'features/Instructor/data/api';
+import { fetchEventsData } from 'features/Instructor/data';
 
 const generateValueLabelPairs = (options) => options.reduce((accumulator, option) => {
   accumulator[option.value] = option.label;
@@ -47,9 +49,11 @@ const repeatOptions = [
 ];
 
 const AddEvent = ({ isOpen, onClose }) => {
+  const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [eventData, setEventData] = useState(initialStateModal);
+  const datesCalendar = useSelector((state) => state.instructor.events.dates);
 
   const isButtonDisabled = eventData.startDate === '' || eventData.endDate === '';
 
@@ -91,6 +95,7 @@ const AddEvent = ({ isOpen, onClose }) => {
       setToastMessage('The creation of the event has failed, try later');
     } finally {
       setShowToast(true);
+      dispatch(fetchEventsData(datesCalendar));
     }
   };
 

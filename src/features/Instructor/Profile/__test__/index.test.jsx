@@ -27,6 +27,20 @@ const mockStore = {
       created: '2023-10-04T15:02:16Z',
       classes: 4,
     },
+    events: {
+      data: [
+        {
+          id: 1,
+          title: 'Not available',
+          start: '2024-09-04T00:00:00Z',
+          end: '2024-09-13T00:00:00Z',
+          type: 'virtual',
+        },
+      ],
+      count: 1,
+      num_pages: 1,
+      current_page: 1,
+    },
   },
   classes: {
     table: {

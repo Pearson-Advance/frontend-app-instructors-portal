@@ -26,7 +26,22 @@ function postInstructorEvent(eventData) {
   );
 }
 
+/**
+ * Get events list by instructor.
+ *
+ * @param {object} - An object with the start and end date range for the calendar
+ *                   Dates in format ISO
+ * @returns {Promise} - A promise that resolves with the response of the GET request.
+ */
+function getEventsByInstructor(params) {
+  return getAuthenticatedHttpClient().get(
+    `${getConfig().COURSE_OPERATIONS_API_V2_BASE_URL}/events/`,
+    { params },
+  );
+}
+
 export {
   getInstructorByEmail,
   postInstructorEvent,
+  getEventsByInstructor,
 };
