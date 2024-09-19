@@ -7,8 +7,10 @@ import AddEvent from 'features/Instructor/AddEvent';
 
 import { fetchEventsData } from 'features/Instructor/data';
 import { updateDatesCalendar } from 'features/Instructor/data/slice';
+import { deleteEvent } from 'features/Instructor/data/api';
 
 import 'features/Instructor/Availability/index.scss';
+import { logError } from '@edx/frontend-platform/logging';
 
 const initialState = {
   start_date: startOfMonth(new Date()).toISOString(),
@@ -30,6 +32,16 @@ const Availability = () => {
       end_date: range.end.toISOString(),
     });
   }, [setRangeDates]);
+
+  const handleDeleteClass = async (event) => {
+    try {
+      await deleteEvent(event.id);
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch(fetchEventsData(rangeDates));
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchEventsData(rangeDates));
@@ -66,6 +78,7 @@ const Availability = () => {
         <CalendarExpanded
           eventsList={eventsList}
           onRangeChange={getRangeDate}
+          onDelete={handleDeleteClass}
         />
       </div>
     </article>
