@@ -1,5 +1,7 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { getInstructorByEmail, postInstructorEvent, getEventsByInstructor } from 'features/Instructor/data/api';
+import {
+  getInstructorByEmail, postInstructorEvent, getEventsByInstructor, deleteEvent,
+} from 'features/Instructor/data/api';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
@@ -83,6 +85,27 @@ describe('Instructor services', () => {
     expect(httpClientMock.get).toHaveBeenCalledWith(
       'http://localhost:18000/pearson_course_operation/api/v2/events/',
       { params: { ...dates } },
+    );
+  });
+
+  test('delete event', () => {
+    const httpClientMock = {
+      delete: jest.fn(),
+    };
+
+    const eventId = 1;
+
+    getAuthenticatedHttpClient.mockReturnValue(httpClientMock);
+
+    deleteEvent(eventId);
+
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledTimes(1);
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledWith();
+
+    expect(httpClientMock.delete).toHaveBeenCalledTimes(1);
+    expect(httpClientMock.delete).toHaveBeenCalledWith(
+      'http://localhost:18000/pearson_course_operation/api/v2/events/',
+      { params: { event_id: eventId } },
     );
   });
 });
