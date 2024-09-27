@@ -3,6 +3,7 @@ import { renderWithProviders } from 'test-utils';
 import '@testing-library/jest-dom/extend-expect';
 
 import Availability from 'features/Instructor/Availability';
+import { fireEvent } from '@testing-library/react';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -52,5 +53,16 @@ describe('Availavility', () => {
     expect(getByText('Thursday')).toBeInTheDocument();
     expect(getByText('Friday')).toBeInTheDocument();
     expect(getByText('Saturday')).toBeInTheDocument();
+  });
+
+  test('should render new event modal', () => {
+    const { getByText } = renderWithProviders(
+      <Availability />,
+      { preloadedState: mockStore },
+    );
+
+    const newEventBtn = getByText('New event');
+    fireEvent.click(newEventBtn);
+    expect(getByText('New Event')).toBeInTheDocument();
   });
 });

@@ -40,9 +40,9 @@ export const setTimeInUTC = (date, timeString) => {
 
   if (timeString) {
     const [hours, minutes] = timeString.split(':').map(Number);
-    newDate.setUTCHours(hours);
-    newDate.setUTCMinutes(minutes);
-    newDate.setUTCSeconds(0);
+    newDate.setHours(hours);
+    newDate.setMinutes(minutes);
+    newDate.setSeconds(0);
   }
 
   return newDate?.toISOString();
@@ -67,3 +67,12 @@ export const eventManager = (callback) => {
     }
   };
 };
+
+/**
+ * Transform string to date type
+ *
+ * @param {string} date - The string with format 'YYYY-MM-DD' to transform
+ * @returns {Date} - The Date in format 'YYYY/MM/DD'
+ */
+// eslint-disable-next-line no-useless-escape
+export const stringToDateType = (date) => new Date(date.replace(/-/g, '\/'));

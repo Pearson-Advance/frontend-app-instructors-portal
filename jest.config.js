@@ -1,4 +1,5 @@
 const { createConfig } = require('@edx/frontend-build');
+process.env.TZ = 'UTC';
 
 module.exports = createConfig('jest', {
   moduleDirectories: ['node_modules', 'src'],

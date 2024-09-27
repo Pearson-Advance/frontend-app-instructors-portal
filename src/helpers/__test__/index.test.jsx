@@ -1,4 +1,6 @@
-import { emailValidationMessages, setTimeInUTC, eventManager } from 'helpers';
+import {
+  emailValidationMessages, setTimeInUTC, eventManager, stringToDateType,
+} from 'helpers';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -116,5 +118,13 @@ describe('eventManager', () => {
     await manager(events[1]);
     expect(mockCallback).toHaveBeenCalledWith(events[1]);
     expect(mockCallback).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('stringToDateType', () => {
+  test('Should transform string to date', () => {
+    const date = '2024-09-01';
+    const result = stringToDateType(date);
+    expect(result).toEqual(new Date(2024, 8, 1));
   });
 });
