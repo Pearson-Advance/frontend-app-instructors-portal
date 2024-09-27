@@ -1,21 +1,34 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startOfMonth, endOfMonth } from 'date-fns';
-import { Button, CalendarExpanded, formatUTCDate } from 'react-paragon-topaz';
-
-import AddEvent from 'features/Instructor/AddEvent';
+import { startOfMonth, endOfMonth, endOfDay } from 'date-fns';
+import { Button, CalendarExpanded, AddEventModal } from 'react-paragon-topaz';
+import { logError } from '@edx/frontend-platform/logging';
 
 import { fetchEventsData } from 'features/Instructor/data';
+import { postInstructorEvent, deleteEvent } from 'features/Instructor/data/api';
 import { updateDatesCalendar } from 'features/Instructor/data/slice';
-import { deleteEvent } from 'features/Instructor/data/api';
+
+import { setTimeInUTC, stringToDateType } from 'helpers';
 
 import 'features/Instructor/Availability/index.scss';
-import { logError } from '@edx/frontend-platform/logging';
+
+const generateValueLabelPairs = (options) => options.reduce((accumulator, option) => {
+  accumulator[option.value] = option.label;
+  return accumulator;
+}, {});
+
+const typeEventOptions = [
+  { label: 'Not available', value: 'not-available' },
+  { label: 'Available', value: 'available' },
+  { label: 'Prep Time', value: 'prep-time' },
+];
 
 const initialState = {
   start_date: startOfMonth(new Date()).toISOString(),
   end_date: endOfMonth(new Date()).toISOString(),
 };
+
+const eventTitles = generateValueLabelPairs(typeEventOptions);
 
 const Availability = () => {
   const dispatch = useDispatch();
@@ -43,6 +56,23 @@ const Availability = () => {
     }
   };
 
+  const handleSaveEvent = async (eventData) => {
+    try {
+      const eventDataRequest = {
+        title: eventTitles[eventData.type || 'available'],
+        availability: Object.entries(eventTitles).find(([, value]) => value === eventTitles[eventData.type || 'available'])?.[0],
+        start: setTimeInUTC(stringToDateType(eventData.startDate), eventData.startHour),
+        end: setTimeInUTC(stringToDateType(eventData.endDate), eventData.endHour),
+        repeat: eventData.repeat.value,
+      };
+      await postInstructorEvent(eventDataRequest);
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch(fetchEventsData(rangeDates));
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchEventsData(rangeDates));
     dispatch(updateDatesCalendar(rangeDates));
@@ -50,11 +80,19 @@ const Availability = () => {
 
   useEffect(() => {
     if (events.length > 0) {
-      const list = events.map(event => ({
-        ...event,
-        start: new Date(formatUTCDate(event.start)),
-        end: new Date(formatUTCDate(event.end)),
-      }));
+      const list = events.map(event => {
+        let endDate = new Date(event.end);
+
+        if (endDate.getHours() < 1 && endDate.getMinutes() < 1) {
+          endDate = endOfDay(endDate);
+        }
+
+        return {
+          ...event,
+          start: new Date(event.start),
+          end: endDate,
+        };
+      });
       setEventsList(list);
     } else {
       setEventsList([]);
@@ -63,9 +101,10 @@ const Availability = () => {
 
   return (
     <article>
-      <AddEvent
+      <AddEventModal
         isOpen={isAddEventOpen}
         onClose={handleAddEventModal}
+        onSave={handleSaveEvent}
       />
       <div className="d-flex justify-content-between align-items-baseline bg-primary px-3 py-2 rounded-top">
         <h4 className="text-white">Availability</h4>
