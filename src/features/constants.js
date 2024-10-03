@@ -74,3 +74,9 @@ export const stylesSelectorNoBorders = {
     fontWeight: '700',
   }),
 };
+
+/**
+ * Text for unauthorized user.
+ * @constant {string}
+ */
+export const unauthorizedText = 'You do not have access to CertPREP Instructor. If you believe you should have access please contact your administrator.';

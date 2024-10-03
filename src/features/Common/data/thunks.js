@@ -29,6 +29,7 @@ function fetchAllClassesData(userName, options = {}) {
         await getClassesByInstructor(userName, options),
       );
       dispatch(updateAllClasses(response.data));
+      dispatch(updateRequestAllClassStatus(RequestStatus.SUCCESS));
     } catch (error) {
       dispatch(updateRequestAllClassStatus(RequestStatus.ERROR));
       logError(error);

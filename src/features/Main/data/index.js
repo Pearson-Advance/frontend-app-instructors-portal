@@ -1,2 +1,2 @@
 export { reducer } from 'features/Main/data/slice';
-export { fetchInstitutionData } from 'features/Main/data/thunks';
+export { fetchInstitutionData, fetchClassAuthorization } from 'features/Main/data/thunks';
