@@ -9,7 +9,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { Container } from '@edx/paragon';
+import { Container, Spinner } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
 
 import { Header } from 'features/Main/Header';
@@ -23,11 +23,12 @@ import ClassesPage from 'features/Classes/ClassesPage';
 import ClassDetailPage from 'features/Classes/ClassDetailPage';
 import InstitutionSelector from 'features/Main/InstitutionSelector';
 import Profile from 'features/Instructor/Profile';
+import UnauthorizedPage from 'features/Main/UnauthorizedPage';
 
-import { fetchInstitutionData } from 'features/Main/data/thunks';
+import { fetchInstitutionData, fetchClassAuthorization } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
 
-import { INSTITUTION_QUERY_ID } from 'features/constants';
+import { INSTITUTION_QUERY_ID, RequestStatus } from 'features/constants';
 
 import './index.scss';
 
@@ -37,12 +38,23 @@ const Main = () => {
 
   const dispatch = useDispatch();
   const institutions = useSelector((state) => state.main.institutions.data);
+  const username = useSelector((state) => state.main.username);
+  const classes = useSelector((state) => state.main.classes);
+
+  const isLoadingClasses = classes.status === RequestStatus.LOADING || classes.status === RequestStatus.INITIAL;
+  const isUnauthorizedUser = classes.error === 403;
 
   const searchParams = new URLSearchParams(location.search);
 
   useEffect(() => {
     dispatch(fetchInstitutionData());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (username) {
+      dispatch(fetchClassAuthorization(username));
+    }
+  }, [dispatch, username]);
 
   useEffect(() => {
     if (institutions?.length === 1) {
@@ -66,29 +78,43 @@ const Main = () => {
     <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
       <Header />
       <main className="d-flex page-wrapper">
-        <Sidebar />
-        <Container>
-          <Container size="xl" className="px-4">
-            {institutions?.length > 1 && (<InstitutionSelector />)}
-          </Container>
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/dashboard" />
-            </Route>
-            {routes.map(({ path, exact, component: Component }) => (
-              <Route
-                key={path}
-                path={path}
-                exact={exact}
-                render={() => (
-                  <ActiveTabUpdater path={path}>
-                    <Component />
-                  </ActiveTabUpdater>
-                )}
-              />
-            ))}
-          </Switch>
-        </Container>
+        {isLoadingClasses && (
+          <div className="w-100 h-100 d-flex justify-content-center align-items-center mt-4">
+            <Spinner
+              animation="border"
+              className="me-3"
+              screenReaderText="loading"
+            />
+          </div>
+        )}
+        {!isLoadingClasses && isUnauthorizedUser && <UnauthorizedPage />}
+        {!isLoadingClasses && !isUnauthorizedUser && (
+          <>
+            <Sidebar />
+            <Container>
+              <Container size="xl" className="px-4">
+                {institutions?.length > 1 && (<InstitutionSelector />)}
+              </Container>
+              <Switch>
+                <Route exact path="/">
+                  <Redirect to="/dashboard" />
+                </Route>
+                {routes.map(({ path, exact, component: Component }) => (
+                  <Route
+                    key={path}
+                    path={path}
+                    exact={exact}
+                    render={() => (
+                      <ActiveTabUpdater path={path}>
+                        <Component />
+                      </ActiveTabUpdater>
+                    )}
+                  />
+                ))}
+              </Switch>
+            </Container>
+          </>
+        )}
       </main>
       <Footer />
     </BrowserRouter>

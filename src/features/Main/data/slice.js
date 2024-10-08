@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { initialStateService } from 'features/constants';
+import { initialStateService, RequestStatus } from 'features/constants';
 
 const initialState = {
   activeTab: 'dashboard',
@@ -9,6 +9,11 @@ const initialState = {
     ...initialStateService,
   },
   username: '',
+  classes: {
+    data: [],
+    status: RequestStatus.INITIAL,
+    error: null,
+  },
 };
 
 export const mainSlice = createSlice({
@@ -28,6 +33,16 @@ export const mainSlice = createSlice({
     updateUsername: (state, { payload }) => {
       state.username = payload;
     },
+    updateRequestClassStatus: (state, { payload }) => {
+      state.classes.status = payload;
+    },
+    updateClasses: (state, { payload }) => {
+      state.classes.data = payload;
+      state.classes.status = RequestStatus.SUCCESS;
+    },
+    updateClassError: (state, { payload }) => {
+      state.classes.error = payload;
+    },
   },
 });
 
@@ -36,6 +51,9 @@ export const {
   updateSelectedInstitutions,
   updateActiveTab,
   updateUsername,
+  updateRequestClassStatus,
+  updateClasses,
+  updateClassError,
 } = mainSlice.actions;
 
 export const { reducer } = mainSlice;
