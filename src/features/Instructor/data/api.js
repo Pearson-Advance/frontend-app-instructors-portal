@@ -56,9 +56,23 @@ function deleteEvent(eventId) {
   );
 }
 
+/**
+ * Edit event.
+ *
+ * @param {number} - Event id to be edited
+ * @returns {Promise} - A promise that resolves with the response of the PATCH request.
+ */
+function editEvent(eventData) {
+  const params = new URLSearchParams(eventData).toString();
+  return getAuthenticatedHttpClient().patch(
+    `${getConfig().COURSE_OPERATIONS_API_V2_BASE_URL}/events/?${params}`,
+  );
+}
+
 export {
   getInstructorByEmail,
   postInstructorEvent,
   getEventsByInstructor,
   deleteEvent,
+  editEvent,
 };

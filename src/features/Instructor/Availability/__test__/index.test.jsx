@@ -56,13 +56,13 @@ describe('Availavility', () => {
   });
 
   test('should render new event modal', () => {
-    const { getByText } = renderWithProviders(
+    const { getByText, getAllByText } = renderWithProviders(
       <Availability />,
       { preloadedState: mockStore },
     );
 
     const newEventBtn = getByText('New event');
     fireEvent.click(newEventBtn);
-    expect(getByText('New Event')).toBeInTheDocument();
+    expect(getAllByText('New event')).toHaveLength(2);
   });
 });

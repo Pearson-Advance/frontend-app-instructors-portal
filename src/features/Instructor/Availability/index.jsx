@@ -5,7 +5,7 @@ import { Button, CalendarExpanded, AddEventModal } from 'react-paragon-topaz';
 import { logError } from '@edx/frontend-platform/logging';
 
 import { fetchEventsData } from 'features/Instructor/data';
-import { postInstructorEvent, deleteEvent } from 'features/Instructor/data/api';
+import { postInstructorEvent, deleteEvent, editEvent } from 'features/Instructor/data/api';
 import { updateDatesCalendar } from 'features/Instructor/data/slice';
 
 import { setTimeInUTC, stringToDateType } from 'helpers';
@@ -56,16 +56,26 @@ const Availability = () => {
     }
   };
 
-  const handleSaveEvent = async (eventData) => {
+  const handleEvent = async (eventData, isEdit = false) => {
     try {
-      const eventDataRequest = {
+      const endTypeDate = stringToDateType(eventData.endDate);
+      let eventDataRequest = {
         title: eventTitles[eventData.type || 'available'],
         availability: Object.entries(eventTitles).find(([, value]) => value === eventTitles[eventData.type || 'available'])?.[0],
         start: setTimeInUTC(stringToDateType(eventData.startDate), eventData.startHour),
-        end: setTimeInUTC(stringToDateType(eventData.endDate), eventData.endHour),
-        repeat: eventData.repeat.value,
+        end: setTimeInUTC(endOfDay(endTypeDate), eventData.endHour),
+        recurrence: eventData.recurrence.value,
       };
-      await postInstructorEvent(eventDataRequest);
+
+      if (isEdit) {
+        eventDataRequest = {
+          ...eventDataRequest,
+          event_id: eventData.id,
+        };
+        await editEvent(eventDataRequest);
+      } else {
+        await postInstructorEvent(eventDataRequest);
+      }
     } catch (error) {
       logError(error);
     } finally {
@@ -80,19 +90,11 @@ const Availability = () => {
 
   useEffect(() => {
     if (events.length > 0) {
-      const list = events.map(event => {
-        let endDate = new Date(event.end);
-
-        if (endDate.getHours() < 1 && endDate.getMinutes() < 1) {
-          endDate = endOfDay(endDate);
-        }
-
-        return {
-          ...event,
-          start: new Date(event.start),
-          end: endDate,
-        };
-      });
+      const list = events.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+      }));
       setEventsList(list);
     } else {
       setEventsList([]);
@@ -104,7 +106,7 @@ const Availability = () => {
       <AddEventModal
         isOpen={isAddEventOpen}
         onClose={handleAddEventModal}
-        onSave={handleSaveEvent}
+        onSave={handleEvent}
       />
       <div className="d-flex justify-content-between align-items-baseline bg-primary px-3 py-2 rounded-top">
         <h4 className="text-white">Availability</h4>
@@ -118,6 +120,7 @@ const Availability = () => {
           eventsList={eventsList}
           onRangeChange={getRangeDate}
           onDelete={handleDeleteClass}
+          onEdit={(eventData) => handleEvent(eventData, true)}
         />
       </div>
     </article>

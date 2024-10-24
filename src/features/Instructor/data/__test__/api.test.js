@@ -1,6 +1,6 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import {
-  getInstructorByEmail, postInstructorEvent, getEventsByInstructor, deleteEvent,
+  getInstructorByEmail, postInstructorEvent, getEventsByInstructor, deleteEvent, editEvent,
 } from 'features/Instructor/data/api';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
@@ -106,6 +106,31 @@ describe('Instructor services', () => {
     expect(httpClientMock.delete).toHaveBeenCalledWith(
       'http://localhost:18000/pearson_course_operation/api/v2/events/',
       { params: { event_id: eventId } },
+    );
+  });
+
+  test('Edit event', () => {
+    const httpClientMock = {
+      patch: jest.fn(),
+    };
+
+    const eventDataRequest = {
+      event_id: 1,
+      title: 'Not available',
+      start: '2024-09-13T00:00:00.000Z',
+      end: '2024-09-13T00:00:00.000Z',
+    };
+
+    getAuthenticatedHttpClient.mockReturnValue(httpClientMock);
+
+    editEvent(eventDataRequest);
+
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledTimes(1);
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledWith();
+
+    expect(httpClientMock.patch).toHaveBeenCalledTimes(1);
+    expect(httpClientMock.patch).toHaveBeenCalledWith(
+      'http://localhost:18000/pearson_course_operation/api/v2/events/?event_id=1&title=Not+available&start=2024-09-13T00%3A00%3A00.000Z&end=2024-09-13T00%3A00%3A00.000Z',
     );
   });
 });
