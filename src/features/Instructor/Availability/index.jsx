@@ -46,7 +46,22 @@ const Availability = () => {
     });
   }, [setRangeDates]);
 
-  const handleDeleteClass = async (event) => {
+  const handleDeleteEvent = async (event) => {
+    try {
+      const params = event?.recurrence ? {
+        delete_occurrence: true,
+        start_occurrence: event?.start,
+      } : {};
+
+      await deleteEvent(event.id, params);
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch(fetchEventsData(rangeDates));
+    }
+  };
+
+  const handleDeleteMultipleEvents = async (event) => {
     try {
       await deleteEvent(event.id);
     } catch (error) {
@@ -119,8 +134,9 @@ const Availability = () => {
         <CalendarExpanded
           eventsList={eventsList}
           onRangeChange={getRangeDate}
-          onDelete={handleDeleteClass}
           onEdit={(eventData) => handleEvent(eventData, true)}
+          onDelete={handleDeleteEvent}
+          onDeleteMultiple={handleDeleteMultipleEvents}
         />
       </div>
     </article>
