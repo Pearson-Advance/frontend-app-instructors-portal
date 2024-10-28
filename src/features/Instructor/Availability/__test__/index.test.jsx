@@ -3,7 +3,7 @@ import { renderWithProviders } from 'test-utils';
 import '@testing-library/jest-dom/extend-expect';
 
 import Availability from 'features/Instructor/Availability';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -28,7 +28,7 @@ const mockStore = {
   },
 };
 
-describe('Availavility', () => {
+describe('Availability', () => {
   test('Should render availability section', () => {
     const { getByText } = renderWithProviders(
       <Availability />,
@@ -64,5 +64,9 @@ describe('Availavility', () => {
     const newEventBtn = getByText('New event');
     fireEvent.click(newEventBtn);
     expect(getAllByText('New event')).toHaveLength(2);
+
+    waitFor(() => {
+      expect(getByText('New Event')).toBeInTheDocument();
+    });
   });
 });
