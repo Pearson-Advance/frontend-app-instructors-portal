@@ -9,6 +9,7 @@ import { postInstructorEvent, deleteEvent, editEvent } from 'features/Instructor
 import { updateDatesCalendar } from 'features/Instructor/data/slice';
 
 import { setTimeInUTC, stringToDateType } from 'helpers';
+import { AVAILABILITY_VALUES } from 'features/constants';
 
 import 'features/Instructor/Availability/index.scss';
 
@@ -18,9 +19,9 @@ const generateValueLabelPairs = (options) => options.reduce((accumulator, option
 }, {});
 
 const typeEventOptions = [
-  { label: 'Not available', value: 'not-available' },
-  { label: 'Available', value: 'available' },
-  { label: 'Prep Time', value: 'prep-time' },
+  { label: 'Not available', value: AVAILABILITY_VALUES.notAvailable },
+  { label: 'Available', value: AVAILABILITY_VALUES.available },
+  { label: 'Prep Time', value: AVAILABILITY_VALUES.prepTime },
 ];
 
 const initialState = {
@@ -75,8 +76,8 @@ const Availability = () => {
     try {
       const endTypeDate = stringToDateType(eventData.endDate);
       let eventDataRequest = {
-        title: eventTitles[eventData.type || 'available'],
-        availability: Object.entries(eventTitles).find(([, value]) => value === eventTitles[eventData.type || 'available'])?.[0],
+        title: eventTitles[eventData.availability || 'available'],
+        availability: eventData.availability || 'available',
         start: setTimeInUTC(stringToDateType(eventData.startDate), eventData.startHour),
         end: setTimeInUTC(endOfDay(endTypeDate), eventData.endHour),
         recurrence: eventData.recurrence.value,
@@ -91,6 +92,28 @@ const Availability = () => {
       } else {
         await postInstructorEvent(eventDataRequest);
       }
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch(fetchEventsData(rangeDates));
+    }
+  };
+
+  const handleEditSingleRecurrence = async (eventData) => {
+    try {
+      const endTypeDate = stringToDateType(eventData.endDate);
+      const eventDataRequest = {
+        title: eventTitles[eventData.availability || 'available'],
+        availability: eventData.availability || 'available',
+        start: setTimeInUTC(stringToDateType(eventData.startDate), eventData.startHour),
+        end: setTimeInUTC(endOfDay(endTypeDate), eventData.endHour),
+        recurrence: eventData.recurrence.value,
+        event_id: eventData.id,
+        edit_occurrence: true,
+        original_start: setTimeInUTC(eventData?.originalStart),
+      };
+
+      await editEvent(eventDataRequest);
     } catch (error) {
       logError(error);
     } finally {
@@ -137,6 +160,7 @@ const Availability = () => {
           onEdit={(eventData) => handleEvent(eventData, true)}
           onDelete={handleDeleteEvent}
           onDeleteMultiple={handleDeleteMultipleEvents}
+          onEditSinglRec={handleEditSingleRecurrence}
         />
       </div>
     </article>
