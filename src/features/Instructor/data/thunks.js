@@ -32,18 +32,46 @@ function fetchInstructorProfile(email, options = {}) {
   };
 }
 
-function fetchEventsData(eventData) {
+function fetchEventsData(eventData, currentEvents = []) {
   return async (dispatch) => {
     dispatch(updateEventsRequestStatus(RequestStatus.LOADING));
 
-    try {
-      const response = camelCaseObject(await getEventsByInstructor(eventData));
-      dispatch(updateEvents(response.data.results));
-      dispatch(updateEventsRequestStatus(RequestStatus.SUCCESS));
-    } catch (error) {
-      logError(error);
-      dispatch(updateEventsRequestStatus(RequestStatus.ERROR));
-    }
+    let allEvents = currentEvents;
+    let page = 1;
+
+    const fetchAllPages = async () => {
+      try {
+        const response = camelCaseObject(await getEventsByInstructor({ ...eventData, page }));
+        const { results, next: existNextPage } = response.data;
+
+        const uniqueResults = results
+          .filter(newEvent => !allEvents.some(existingEvent => existingEvent.id === newEvent.id
+              && existingEvent.start === newEvent.start
+              && existingEvent.end === newEvent.end))
+          .map(newEvent => ({
+            ...newEvent,
+            elementId: `${Date.now()}_${Math.floor(Math.random() * 1e6)}`,
+          }));
+
+        allEvents = [...allEvents, ...uniqueResults];
+        dispatch(updateEvents(allEvents));
+
+        if (existNextPage) {
+          page += 1;
+          // eslint-disable-next-line no-promise-executor-return
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          return fetchAllPages();
+        }
+
+        dispatch(updateEventsRequestStatus(RequestStatus.SUCCESS));
+        return allEvents;
+      } catch (error) {
+        dispatch(updateEventsRequestStatus(RequestStatus.ERROR));
+        return logError(error);
+      }
+    };
+
+    return fetchAllPages();
   };
 }
 
