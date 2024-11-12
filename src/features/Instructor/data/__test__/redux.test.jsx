@@ -93,6 +93,56 @@ describe('Instructor redux tests', () => {
       expect(store.getState().instructor.events.status).toEqual('success');
     });
 
+    test('Should fetch multiple pages of instructor events', async () => {
+      const instructorApiUrl = `${process.env.COURSE_OPERATIONS_API_V2_BASE_URL}/events/`;
+
+      const mockResponsePage1 = {
+        count: 2,
+        num_pages: 2,
+        next: '/events?page=2',
+        current_page: 1,
+        results: [
+          {
+            id: 1,
+            title: 'Not available',
+            start: '2024-09-04T00:00:00Z',
+            end: '2024-09-13T00:00:00Z',
+            type: 'virtual',
+          },
+        ],
+      };
+
+      const mockResponsePage2 = {
+        count: 2,
+        num_pages: 2,
+        next: null,
+        current_page: 2,
+        results: [
+          {
+            id: 2,
+            title: 'Available',
+            start: '2024-09-14T00:00:00Z',
+            end: '2024-09-20T00:00:00Z',
+            type: 'virtual',
+          },
+        ],
+      };
+
+      const dates = {
+        start_date: '2024-09-01T00:00:00.000Z',
+        end_date: '2024-10-06T00:00:00.000Z',
+      };
+
+      axiosMock.onGet(instructorApiUrl).replyOnce(200, mockResponsePage1);
+      axiosMock.onGet(instructorApiUrl).replyOnce(200, mockResponsePage2);
+
+      await executeThunk(fetchEventsData(dates), store.dispatch, store.getState);
+
+      expect(store.getState().instructor.events.status).toEqual('success');
+
+      expect(axiosMock.history.get.length).toBe(2);
+    });
+
     test('fetch instructor events with error', async () => {
       const dates = {
         start_date: '2024-09-01T00:00:00.000Z',
