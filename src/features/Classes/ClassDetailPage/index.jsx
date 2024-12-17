@@ -5,7 +5,10 @@ import { getConfig } from '@edx/frontend-platform';
 
 import Table from 'features/Main/Table';
 import { Button } from 'react-paragon-topaz';
-import { Container, Pagination } from '@edx/paragon';
+import {
+  Container, Dropdown, Icon, IconButton, Pagination,
+} from '@edx/paragon';
+import { MoreVert } from '@edx/paragon/icons';
 
 import { useInstitutionIdQueryParam } from 'hooks';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
@@ -41,6 +44,7 @@ const ClassDetailPage = () => {
   const classNameDecoded = decodeURIComponent(classInfo?.className || '');
 
   const classLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/home`;
+  const gradebookUrl = getConfig().GRADEBOOK_MICROFRONTEND_URL || getConfig().LMS_BASE_URL;
   const addQueryParam = useInstitutionIdQueryParam();
 
   useEffect(() => {
@@ -80,6 +84,10 @@ const ClassDetailPage = () => {
 
   const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 
+  const handleGradebookButton = () => {
+    window.open(`${gradebookUrl}/${classId}`, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <>
       {!classInfo && (
@@ -106,7 +114,21 @@ const ClassDetailPage = () => {
             </Button>
           </div>
           <InstructorCard />
-          <div className="d-flex justify-content-end my-3 flex-wrap">
+          <div className="d-flex justify-content-end my-3 align-items-center ">
+            <Dropdown className="dropdowntpz mx-3">
+              <Dropdown.Toggle
+                as={IconButton}
+                src={MoreVert}
+                iconAs={Icon}
+                variant="primary"
+              />
+              <Dropdown.Menu align="right">
+                <Dropdown.Item onClick={handleGradebookButton}>
+                  <i className="fa-regular fa-book mr-3" />
+                  Gradebook
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
             <Button
               onClick={handleEnrollStudentModal}
               className="text-decoration-none text-primary bg-white"
