@@ -6,7 +6,11 @@ import { getConfig } from '@edx/frontend-platform';
 import Table from 'features/Main/Table';
 import { Button } from 'react-paragon-topaz';
 import {
-  Container, Dropdown, Icon, IconButton, Pagination,
+  Container,
+  Dropdown,
+  Icon,
+  IconButton,
+  Pagination,
 } from '@edx/paragon';
 import { MoreVert } from '@edx/paragon/icons';
 
@@ -115,12 +119,19 @@ const ClassDetailPage = () => {
           </div>
           <InstructorCard />
           <div className="d-flex justify-content-end my-3 align-items-center ">
+            <Button
+              onClick={handleEnrollStudentModal}
+              className="text-decoration-none text-primary bg-white"
+            >
+              Invite student to enroll
+            </Button>
             <Dropdown className="dropdowntpz mx-3">
               <Dropdown.Toggle
                 as={IconButton}
                 src={MoreVert}
                 iconAs={Icon}
                 variant="primary"
+                aria-label="More options"
               />
               <Dropdown.Menu align="right">
                 <Dropdown.Item onClick={handleGradebookButton}>
@@ -129,12 +140,6 @@ const ClassDetailPage = () => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            <Button
-              onClick={handleEnrollStudentModal}
-              className="text-decoration-none text-primary bg-white"
-            >
-              Invite student to enroll
-            </Button>
           </div>
           <Table
             isLoading={isLoading}
