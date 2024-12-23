@@ -7,12 +7,8 @@ import Table from 'features/Main/Table';
 import { Button } from 'react-paragon-topaz';
 import {
   Container,
-  Dropdown,
-  Icon,
-  IconButton,
   Pagination,
 } from '@edx/paragon';
-import { MoreVert } from '@edx/paragon/icons';
 
 import { useInstitutionIdQueryParam } from 'hooks';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
@@ -23,6 +19,7 @@ import { resetStudentsTable, updateCurrentPage } from 'features/Students/data/sl
 import { updateActiveTab } from 'features/Main/data/slice';
 import { fetchAllClassesData } from 'features/Common/data';
 
+import ActionsDropdown from 'features/Main/ActionsDropdown';
 import { columns } from 'features/Classes/ClassDetailPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
 
@@ -89,8 +86,17 @@ const ClassDetailPage = () => {
   const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 
   const handleGradebookButton = () => {
-    window.open(`${gradebookUrl}/${classId}`, '_blank', 'noopener,noreferrer');
+    const decodedClassId = decodeURIComponent(classId);
+    window.open(`${gradebookUrl}/gradebook/${decodedClassId}`, '_blank', 'noopener,noreferrer');
   };
+
+  const extraOptions = [
+    {
+      handleClick: handleGradebookButton,
+      iconSrc: <i className="fa-regular fa-book mr-3" />,
+      label: 'Gradebook',
+    },
+  ];
 
   return (
     <>
@@ -125,21 +131,7 @@ const ClassDetailPage = () => {
             >
               Invite student to enroll
             </Button>
-            <Dropdown className="dropdowntpz mx-3">
-              <Dropdown.Toggle
-                as={IconButton}
-                src={MoreVert}
-                iconAs={Icon}
-                variant="primary"
-                aria-label="More options"
-              />
-              <Dropdown.Menu align="right">
-                <Dropdown.Item onClick={handleGradebookButton}>
-                  <i className="fa-regular fa-book mr-3" />
-                  Gradebook
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <ActionsDropdown options={extraOptions} />
           </div>
           <Table
             isLoading={isLoading}
