@@ -113,7 +113,7 @@ describe('ClassDetailPage', () => {
   test('renders the Gradebook option in the dropdown', () => {
     const component = renderClassDetailPage();
 
-    const dropdownToggle = component.getByRole('button', { name: /More options/i });
+    const dropdownToggle = component.getByLabelText('menu for actions');
     fireEvent.click(dropdownToggle);
 
     expect(component.getByText('Gradebook')).toBeInTheDocument();
@@ -122,7 +122,7 @@ describe('ClassDetailPage', () => {
   test('opens Gradebook in a new tab', async () => {
     const component = renderClassDetailPage();
 
-    const dropdownToggle = component.getByRole('button', { name: /More options/i });
+    const dropdownToggle = component.getByLabelText('menu for actions');
     fireEvent.click(dropdownToggle);
 
     const gradebookItem = component.getByText('Gradebook');
@@ -130,7 +130,7 @@ describe('ClassDetailPage', () => {
 
     await waitFor(() => {
       expect(window.open).toHaveBeenCalledWith(
-        `http://localhost:18000/${classId}`,
+        `http://localhost:18000/gradebook/${classId}`,
         '_blank',
         'noopener,noreferrer',
       );
