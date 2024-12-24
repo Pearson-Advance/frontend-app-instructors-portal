@@ -1,11 +1,16 @@
 import React from 'react';
-import { waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 
 import { renderWithProviders } from 'test-utils';
-
 import ClassDetailPage from 'features/Classes/ClassDetailPage';
+
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: jest.fn(() => ({
+    GRADEBOOK_MICROFRONTEND_URL: 'http://localhost:18000',
+  })),
+}));
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -65,18 +70,33 @@ const mockStore = {
   },
 };
 
-describe('ClassesPage', () => {
-  test('renders classes data and pagination', async () => {
-    const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/classes/test%20ccx1?']}>
-        <Route path="/classes/:className">
-          <ClassDetailPage />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+const { classId } = mockStore.common.allClasses.data[0];
 
-    waitFor(() => {
+/**
+ * Helper function to render the component with default props and mocked state.
+ */
+const renderClassDetailPage = () => renderWithProviders(
+  <MemoryRouter initialEntries={[`/classes/${classId}`]}>
+    <Route path="/classes/:classId">
+      <ClassDetailPage />
+    </Route>
+  </MemoryRouter>,
+  { preloadedState: mockStore },
+);
+
+describe('ClassDetailPage', () => {
+  beforeAll(() => {
+    jest.spyOn(window, 'open').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('renders class details', async () => {
+    const component = renderClassDetailPage();
+
+    await waitFor(() => {
       expect(component.container).toHaveTextContent('Class details: test ccx1');
       expect(component.container).toHaveTextContent('No');
       expect(component.container).toHaveTextContent('Student');
@@ -86,7 +106,34 @@ describe('ClassesPage', () => {
       expect(component.container).toHaveTextContent('Exam ready');
       expect(component.container).toHaveTextContent('Demo Course 1');
       expect(component.container).toHaveTextContent('Apr 3, 2024');
-      expect(component.container).toHaveTextContent('Enrollemnts: enrolled 3, maximum 200');
+      expect(component.container).toHaveTextContent('Enrollment:enrolled 3, maximum 200');
+    });
+  });
+
+  test('renders the Gradebook option in the dropdown', () => {
+    const component = renderClassDetailPage();
+
+    const dropdownToggle = component.getByLabelText('menu for actions');
+    fireEvent.click(dropdownToggle);
+
+    expect(component.getByText('Gradebook')).toBeInTheDocument();
+  });
+
+  test('opens Gradebook in a new tab', async () => {
+    const component = renderClassDetailPage();
+
+    const dropdownToggle = component.getByLabelText('menu for actions');
+    fireEvent.click(dropdownToggle);
+
+    const gradebookItem = component.getByText('Gradebook');
+    fireEvent.click(gradebookItem);
+
+    await waitFor(() => {
+      expect(window.open).toHaveBeenCalledWith(
+        `http://localhost:18000/gradebook/${classId}`,
+        '_blank',
+        'noopener,noreferrer',
+      );
     });
   });
 });

@@ -5,7 +5,10 @@ import { getConfig } from '@edx/frontend-platform';
 
 import Table from 'features/Main/Table';
 import { Button } from 'react-paragon-topaz';
-import { Container, Pagination } from '@edx/paragon';
+import {
+  Container,
+  Pagination,
+} from '@edx/paragon';
 
 import { useInstitutionIdQueryParam } from 'hooks';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
@@ -16,6 +19,7 @@ import { resetStudentsTable, updateCurrentPage } from 'features/Students/data/sl
 import { updateActiveTab } from 'features/Main/data/slice';
 import { fetchAllClassesData } from 'features/Common/data';
 
+import ActionsDropdown from 'features/Main/ActionsDropdown';
 import { columns } from 'features/Classes/ClassDetailPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
 
@@ -41,6 +45,7 @@ const ClassDetailPage = () => {
   const classNameDecoded = decodeURIComponent(classInfo?.className || '');
 
   const classLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/home`;
+  const gradebookUrl = getConfig().GRADEBOOK_MICROFRONTEND_URL || getConfig().LMS_BASE_URL;
   const addQueryParam = useInstitutionIdQueryParam();
 
   useEffect(() => {
@@ -80,6 +85,19 @@ const ClassDetailPage = () => {
 
   const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 
+  const handleGradebookButton = () => {
+    const decodedClassId = decodeURIComponent(classId);
+    window.open(`${gradebookUrl}/gradebook/${decodedClassId}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const extraOptions = [
+    {
+      handleClick: handleGradebookButton,
+      iconSrc: <i className="fa-regular fa-book mr-3" />,
+      label: 'Gradebook',
+    },
+  ];
+
   return (
     <>
       {!classInfo && (
@@ -106,13 +124,14 @@ const ClassDetailPage = () => {
             </Button>
           </div>
           <InstructorCard />
-          <div className="d-flex justify-content-end my-3 flex-wrap">
+          <div className="d-flex justify-content-end my-3 align-items-center ">
             <Button
               onClick={handleEnrollStudentModal}
               className="text-decoration-none text-primary bg-white"
             >
               Invite student to enroll
             </Button>
+            <ActionsDropdown options={extraOptions} />
           </div>
           <Table
             isLoading={isLoading}
