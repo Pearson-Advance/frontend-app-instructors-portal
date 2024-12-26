@@ -42,17 +42,17 @@ const ClassDetailPage = () => {
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
   const isLoading = students.status === RequestStatus.LOADING;
-  const classNameDecoded = decodeURIComponent(classInfo?.className || '');
+  const className = (classInfo?.className || '');
 
   const classLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/home`;
   const gradebookUrl = getConfig().GRADEBOOK_MICROFRONTEND_URL || getConfig().LMS_BASE_URL;
   const addQueryParam = useInstitutionIdQueryParam();
 
   useEffect(() => {
-    if (username && classNameDecoded) {
+    if (username && className) {
       const params = {
         page: currentPage,
-        class_name: classNameDecoded,
+        class_name: className,
         institution_id: institution?.id,
       };
       // Leaves a gap time space to prevent being override by ActiveTabUpdater component
@@ -63,7 +63,7 @@ const ClassDetailPage = () => {
     return () => {
       dispatch(resetStudentsTable());
     };
-  }, [username, dispatch, currentPage, classNameDecoded, previousPage, institution]);
+  }, [username, dispatch, currentPage, className, previousPage, institution]);
 
   useEffect(() => {
     if (username) {
@@ -86,8 +86,7 @@ const ClassDetailPage = () => {
   const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 
   const handleGradebookButton = () => {
-    const decodedClassId = decodeURIComponent(classId);
-    window.open(`${gradebookUrl}/gradebook/${decodedClassId}`, '_blank', 'noopener,noreferrer');
+    window.open(`${gradebookUrl}/gradebook/${classId}`, '_blank', 'noopener,noreferrer');
   };
 
   const extraOptions = [
@@ -112,7 +111,7 @@ const ClassDetailPage = () => {
               <Button onClick={handleBackButton} className="mr-3 link back-arrow" variant="tertiary">
                 <i className="fa-solid fa-arrow-left" />
               </Button>
-              <h3 className="h2 mb-0 course-title">Class details: {classNameDecoded}</h3>
+              <h3 className="h2 mb-0 course-title">Class details: {className}</h3>
             </div>
             <Button
               as="a"
@@ -156,7 +155,7 @@ const ClassDetailPage = () => {
           <EnrollStudent
             isOpen={isEnrollModalOpen}
             onClose={handleEnrollStudentModal}
-            className={classNameDecoded}
+            className={className}
           />
         </Container>
       )}
