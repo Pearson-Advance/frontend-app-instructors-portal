@@ -90,3 +90,10 @@ export const AVAILABILITY_VALUES = {
   available: 'available',
   prepTime: 'prep_time',
 };
+
+/**
+ * Number for maximum records in tables.
+ * @readonly
+ * @number
+ */
+export const MAX_TABLE_RECORDS = 200;
