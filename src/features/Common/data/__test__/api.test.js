@@ -1,5 +1,6 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getClassesByInstructor } from 'features/Common/data/api';
+import { MAX_TABLE_RECORDS } from 'features/constants';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
@@ -41,6 +42,7 @@ describe('Common api services', () => {
           instructor,
           limit: false,
           page: '',
+          page_size: MAX_TABLE_RECORDS,
         },
       },
     );

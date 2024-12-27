@@ -1,6 +1,8 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 
+import { MAX_TABLE_RECORDS } from 'features/constants';
+
 /* Fetch classes by instructor username with optional filters and pagination.
  *
  * @param {string} username - The username of the instructor.
@@ -15,6 +17,7 @@ function getClassesByInstructor(userName, options = {}) {
   const defaultParams = {
     limit: false,
     page: '',
+    page_size: MAX_TABLE_RECORDS,
   };
 
   const params = {
@@ -43,6 +46,7 @@ function getCoursesByInstructor(userName, options = {}) {
   const defaultParams = {
     limit: false,
     page: '',
+    page_size: MAX_TABLE_RECORDS,
   };
 
   const params = {
