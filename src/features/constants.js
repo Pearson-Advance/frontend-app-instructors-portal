@@ -82,16 +82,6 @@ export const stylesSelectorNoBorders = {
 export const unauthorizedText = 'You do not have access to CertPREP Instructor. If you believe you should have access please contact your administrator.';
 
 /**
- * Values for availability.
- * @constant {Object}
- */
-export const AVAILABILITY_VALUES = {
-  notAvailable: 'not_available',
-  available: 'available',
-  prepTime: 'prep_time',
-};
-
-/**
  * Number for maximum records in tables.
  * @readonly
  * @number
