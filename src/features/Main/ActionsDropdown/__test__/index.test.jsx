@@ -5,8 +5,8 @@ import ActionsDropdown from '..';
 
 describe('ActionsDropdown', () => {
   const optionsMock = [
-    { handleClick: jest.fn(), label: 'Option 1' },
-    { handleClick: jest.fn(), label: 'Option 2' },
+    { handleClick: jest.fn(), label: 'Option 1', visible: true },
+    { handleClick: jest.fn(), label: 'Option 2', visible: true },
   ];
 
   test('Should render the dropdown toggle button', () => {

@@ -64,6 +64,7 @@ const mockStore = {
           maxStudents: 200,
           startDate: '2024-04-03T00:00:00Z',
           endDate: null,
+          labSummaryUrl: 'https: //',
         },
       ],
     },
@@ -110,13 +111,14 @@ describe('ClassDetailPage', () => {
     });
   });
 
-  test('renders the Gradebook option in the dropdown', () => {
+  test('renders extra options in the dropdown', () => {
     const component = renderClassDetailPage();
 
     const dropdownToggle = component.getByLabelText('menu for actions');
     fireEvent.click(dropdownToggle);
 
     expect(component.getByText('Gradebook')).toBeInTheDocument();
+    expect(component.getByText('Lab summary')).toBeInTheDocument();
   });
 
   test('opens Gradebook in a new tab', async () => {

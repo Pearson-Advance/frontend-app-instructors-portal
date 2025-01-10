@@ -65,6 +65,7 @@ const columns = [
     Cell: ({ row }) => {
       const {
         classId,
+        labSummaryUrl,
       } = row.original;
 
       const gradebookUrl = getConfig().GRADEBOOK_MICROFRONTEND_URL || getConfig().LMS_BASE_URL;
@@ -73,11 +74,23 @@ const columns = [
         const decodedClassId = decodeURIComponent(classId);
         window.open(`${gradebookUrl}/gradebook/${decodedClassId}`, '_blank', 'noopener,noreferrer');
       };
+
+      const handleLabButton = () => {
+        window.open(labSummaryUrl, '_blank', 'noopener,noreferrer');
+      };
+
       const extraOptions = [
         {
           handleClick: handleGradebookButton,
           iconSrc: <i className="fa-regular fa-book mr-3" />,
           label: 'Gradebook',
+          visible: true,
+        },
+        {
+          handleClick: handleLabButton,
+          iconSrc: <i className="fa-regular fa-rectangle-list mr-3" />,
+          label: 'Lab summary',
+          visible: !!labSummaryUrl,
         },
       ];
 

@@ -89,11 +89,22 @@ const ClassDetailPage = () => {
     window.open(`${gradebookUrl}/gradebook/${classId}`, '_blank', 'noopener,noreferrer');
   };
 
+  const handleLabButton = () => {
+    window.open(classInfo?.labSummaryUrl, '_blank', 'noopener,noreferrer');
+  };
+
   const extraOptions = [
     {
       handleClick: handleGradebookButton,
       iconSrc: <i className="fa-regular fa-book mr-3" />,
       label: 'Gradebook',
+      visible: true,
+    },
+    {
+      handleClick: handleLabButton,
+      iconSrc: <i className="fa-regular fa-rectangle-list mr-3" />,
+      label: 'Lab summary',
+      visible: !!classInfo?.labSummaryUrl,
     },
   ];
 

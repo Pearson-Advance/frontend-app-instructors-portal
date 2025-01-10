@@ -77,7 +77,7 @@ const Main = () => {
   return (
     <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
       <Header />
-      <main className="d-flex page-wrapper">
+      <main className="d-flex pageWrapper">
         {isLoadingClasses && (
           <div className="w-100 h-100 d-flex justify-content-center align-items-center mt-4">
             <Spinner

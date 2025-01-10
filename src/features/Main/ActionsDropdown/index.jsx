@@ -12,6 +12,7 @@ import Option from './Option';
  *   - `iconSrc`: The URL of the icon to show for the option.
  *   - `handleClick`: The function to call when the option is clicked.
  *   - `label`: The text to display for the option.
+ *   - `visible`: Whether the option is visible
  * @param {boolean} props.vertIcon Whether to use the vertical "more" icon.
  *
  * @returns {ReactElement} The rendered dropdown menu.
@@ -29,9 +30,12 @@ const ActionsDropdown = ({ options, vertIcon }) => (
       alt="menu for actions"
     />
     <Dropdown.Menu>
-      {options.map((option) => (
-        <Option key={option.label} {...option} />
-      ))}
+      {options.map((option) => {
+        if (option.visible) {
+          return <Option key={option.label} {...option} />;
+        }
+        return null;
+      })}
     </Dropdown.Menu>
   </Dropdown>
 );
@@ -41,6 +45,7 @@ ActionsDropdown.propTypes = {
     iconSrc: PropTypes.string,
     handleClick: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
+    visible: PropTypes.bool,
   })).isRequired,
   vertIcon: PropTypes.bool,
 };
