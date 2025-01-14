@@ -1,6 +1,6 @@
 @import 'assets/colors.scss';
 
-.page-wrapper {
+.pageWrapper {
   min-height: calc(100vh - 222px);
   background-color: $bg-main-color;
   background-image: url('https://pearson-production-media.s3.amazonaws.com/Geo+Shape+instructor.svg');
@@ -10,7 +10,7 @@
 }
 
 @media (max-width: 700px) {
-  .page-wrapper {
+  .pageWrapper {
     background-size: 90%;
   }
 }
