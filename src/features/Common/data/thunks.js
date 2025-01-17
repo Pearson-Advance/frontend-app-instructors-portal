@@ -1,5 +1,6 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
+import { sortAlphabetically } from 'react-paragon-topaz';
 
 import {
   updateRequestAllClassStatus,
@@ -28,7 +29,9 @@ function fetchAllClassesData(userName, options = {}) {
       const response = camelCaseObject(
         await getClassesByInstructor(userName, options),
       );
-      dispatch(updateAllClasses(response.data));
+      const sortedData = sortAlphabetically(response.data, 'className');
+
+      dispatch(updateAllClasses(sortedData));
       dispatch(updateRequestAllClassStatus(RequestStatus.SUCCESS));
     } catch (error) {
       dispatch(updateRequestAllClassStatus(RequestStatus.ERROR));
