@@ -43,11 +43,13 @@ const Availability = () => {
   const processAndSubmitEvent = async (eventData, isEdit = false) => {
     try {
       const endTypeDate = stringToDateType(eventData.endDate);
+      const endRecurrenceTypeDate = stringToDateType(eventData.endDateRecurrence);
       let eventDataRequest = {
         title: eventData.title,
         start: setTimeInUTC(stringToDateType(eventData.startDate), eventData.startHour),
         end: setTimeInUTC(endOfDay(endTypeDate), eventData.endHour),
         recurrence: eventData.recurrence.value,
+        recurrence_end: setTimeInUTC(endOfDay(endRecurrenceTypeDate)),
       };
 
       if (isEdit) {
