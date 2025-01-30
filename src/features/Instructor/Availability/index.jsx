@@ -44,12 +44,14 @@ const Availability = () => {
     try {
       const endTypeDate = stringToDateType(eventData.endDate);
       const endRecurrenceTypeDate = stringToDateType(eventData.endDateRecurrence);
+      const isValidRecurrence = endRecurrenceTypeDate instanceof Date && !Number.isNaN(endRecurrenceTypeDate.getTime());
+
       let eventDataRequest = {
         title: eventData.title,
         start: setTimeInUTC(stringToDateType(eventData.startDate), eventData.startHour),
         end: setTimeInUTC(endOfDay(endTypeDate), eventData.endHour),
         recurrence: eventData.recurrence.value,
-        recurrence_end: setTimeInUTC(endOfDay(endRecurrenceTypeDate)),
+        recurrence_end: isValidRecurrence ? setTimeInUTC(endOfDay(endRecurrenceTypeDate)) : '',
       };
 
       if (isEdit) {
