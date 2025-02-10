@@ -31,7 +31,7 @@ describe('Header', () => {
       </AppContext.Provider>,
     );
 
-    const titleApp = getByText('CertPREP Instructor');
+    const titleApp = getByText('Pearson Skilling Instructor');
     const userName = getByText('User');
 
     expect(userName).toBeInTheDocument();
