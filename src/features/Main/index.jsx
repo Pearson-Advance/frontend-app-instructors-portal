@@ -12,6 +12,8 @@ import {
 import { Container, Spinner } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
 
+import { Banner } from 'react-paragon-topaz';
+
 import { Header } from 'features/Main/Header';
 import { Footer } from 'features/Main/Footer';
 import { Sidebar } from 'features/Main/Sidebar';
@@ -35,11 +37,13 @@ import './index.scss';
 const Main = () => {
   const history = useHistory();
   const location = useLocation();
-
   const dispatch = useDispatch();
+
   const institutions = useSelector((state) => state.main.institutions.data);
   const username = useSelector((state) => state.main.username);
   const classes = useSelector((state) => state.main.classes);
+
+  const bannerText = getConfig().MAINTENANCE_BANNER_TEXT || '';
 
   const isLoadingClasses = classes.status === RequestStatus.LOADING || classes.status === RequestStatus.INITIAL;
   const isUnauthorizedUser = classes.error === 403;
@@ -77,6 +81,9 @@ const Main = () => {
   return (
     <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
       <Header />
+      {bannerText && (
+        <Banner variant="warning" iconWarning text={bannerText} />
+      )}
       <main className="d-flex pageWrapper">
         {isLoadingClasses && (
           <div className="w-100 h-100 d-flex justify-content-center align-items-center mt-4">
