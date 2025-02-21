@@ -3,11 +3,12 @@ import { columns } from 'features/Students/StudentsTable/columns';
 describe('getColumns', () => {
   test('returns an array of columns with correct properties', () => {
     expect(columns).toBeInstanceOf(Array);
-    expect(columns).toHaveLength(6);
+    expect(columns).toHaveLength(7);
 
     const [
       nameColumn,
       emailColumn,
+      institutionColumn,
       classNameColumn,
       dateColumn,
       progressColumn,
@@ -19,6 +20,9 @@ describe('getColumns', () => {
 
     expect(emailColumn).toHaveProperty('Header', 'Email');
     expect(emailColumn).toHaveProperty('accessor', 'learnerEmail');
+
+    expect(institutionColumn).toHaveProperty('Header', 'Institution');
+    expect(institutionColumn).toHaveProperty('accessor', 'institutionName');
 
     expect(classNameColumn).toHaveProperty('Header', 'Class Name');
     expect(classNameColumn).toHaveProperty('accessor', 'className');

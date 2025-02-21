@@ -30,6 +30,10 @@ const columns = [
     accessor: 'masterCourseName',
   },
   {
+    Header: 'Institution',
+    accessor: 'institutionName',
+  },
+  {
     Header: 'Start date',
     accessor: 'startDate',
     Cell: ({ row }) => {

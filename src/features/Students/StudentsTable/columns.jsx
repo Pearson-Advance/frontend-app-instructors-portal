@@ -36,6 +36,10 @@ const columns = [
     ),
   },
   {
+    Header: 'Institution',
+    accessor: 'institutionName',
+  },
+  {
     Header: 'Class Name',
     accessor: 'className',
     Cell: ({ row }) => {
