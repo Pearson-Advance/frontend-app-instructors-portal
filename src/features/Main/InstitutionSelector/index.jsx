@@ -9,7 +9,7 @@ import { Select, formatSelectOptions } from 'react-paragon-topaz';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { INSTITUTION_QUERY_ID } from 'features/constants';
+import { INSTITUTION_QUERY_ID, allInstitutionsOption } from 'features/constants';
 
 import { updateSelectedInstitution } from 'features/Main/data/slice';
 
@@ -45,7 +45,7 @@ const InstitutionSelector = () => {
       const institutionId = searchParams.get(INSTITUTION_QUERY_ID);
 
       const options = formatSelectOptions(institutions);
-      setInstitutionOptions(options);
+      setInstitutionOptions([allInstitutionsOption, ...options]);
 
       if (institutionId) {
         const institutionByQuery = options.filter((option) => option?.id === parseInt(institutionId, 10));

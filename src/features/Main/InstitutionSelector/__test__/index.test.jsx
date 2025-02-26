@@ -63,4 +63,31 @@ describe('InstitutionSelector', () => {
 
     expect(getByText('Institution 1')).toBeInTheDocument();
   });
+
+  test('Should render all my institutions option', () => {
+    const preloadedState = {
+      main: {
+        institutions: {
+          data: [
+            { id: 1, name: 'Institution 1' },
+            { id: 2, name: 'Institution 2' },
+          ],
+        },
+        institution: null,
+      },
+    };
+
+    const { getByText, getByTestId } = renderWithProviders(
+      <Router history={history}>
+        <InstitutionSelector />
+      </Router>,
+      { preloadedState },
+    );
+
+    expect(getByText('Select an institution')).toBeInTheDocument();
+
+    fireEvent.change(getByTestId('select'), { target: { value: 'all_institutions' } });
+
+    expect(getByText('All my institutions')).toBeInTheDocument();
+  });
 });

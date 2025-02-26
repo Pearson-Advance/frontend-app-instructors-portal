@@ -87,3 +87,12 @@ export const unauthorizedText = 'You do not have access to CertPREP Instructor. 
  * @number
  */
 export const MAX_TABLE_RECORDS = 200;
+
+/**
+ * All institutions option.
+ * @constant {Object}
+ */
+export const allInstitutionsOption = {
+  label: 'All my institutions',
+  value: 'all_institutions',
+};
