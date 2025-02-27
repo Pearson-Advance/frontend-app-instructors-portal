@@ -22,6 +22,7 @@ const Availability = () => {
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [rangeDates, setRangeDates] = useState(initialState);
   const events = useSelector((state) => state.instructor.events.data);
+  const institution = useSelector((state) => state.main.institution);
 
   const [eventsList, setEventsList] = useState([]);
 
@@ -62,13 +63,13 @@ const Availability = () => {
 
         await editEvent(eventDataRequest);
 
-        dispatch(fetchEventsData(rangeDates));
+        dispatch(fetchEventsData({ ...rangeDates, institution_id: institution?.id }));
       } else {
         const { data: newEvent } = await postInstructorEvent(eventDataRequest);
         dispatch(updateEvents([...events, newEvent]));
 
         if (eventDataRequest.recurrence) {
-          dispatch(fetchEventsData(rangeDates, events));
+          dispatch(fetchEventsData({ ...rangeDates, institution_id: institution?.id }, events));
         }
       }
     } catch (error) {
@@ -127,9 +128,13 @@ const Availability = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchEventsData(rangeDates));
+    const params = {
+      institution_id: institution?.id,
+      ...rangeDates,
+    };
+    dispatch(fetchEventsData(params));
     dispatch(updateDatesCalendar(rangeDates));
-  }, [rangeDates, dispatch]);
+  }, [rangeDates, dispatch, institution]);
 
   useEffect(() => {
     if (events.length > 0) {
