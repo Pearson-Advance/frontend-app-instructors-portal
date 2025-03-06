@@ -11,7 +11,7 @@ import { updateUsername } from 'features/Main/data/slice';
 export const Header = () => {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
-  const userName = authenticatedUser.username;
+  const userName = authenticatedUser.name || authenticatedUser.username;
   const questionsLink = () => `${getConfig().HEADER_QUESTIONS_LINK}`;
   const platformName = getConfig().PLATFORM_NAME ? getConfig().PLATFORM_NAME : 'Pearson Skilling Instructor';
   dispatch(updateUsername(userName));
