@@ -121,7 +121,7 @@ const StudentsFilters = () => {
         <Form.Row className="col-12">
           <Form.Group as={Col}>
             <Form.Control
-              type={`${studentsData.checkboxSelection === 'name' ? 'text' : 'email'}`}
+              type="text"
               floatingLabel={`Student ${studentsData.checkboxSelection === 'name' ? 'name' : 'email'}`}
               name="instructor_name"
               placeholder={`Student ${studentsData.checkboxSelection === 'name' ? 'name' : 'email'}`}
