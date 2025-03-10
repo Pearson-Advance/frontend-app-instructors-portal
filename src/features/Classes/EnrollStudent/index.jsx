@@ -28,6 +28,7 @@ const EnrollStudent = ({ isOpen, onClose, className }) => {
   const { classId } = useParams();
 
   const username = useSelector((state) => state.main.username);
+  const institution = useSelector((state) => state.main.institution);
 
   const [showToast, setShowToast] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -47,6 +48,7 @@ const EnrollStudent = ({ isOpen, onClose, className }) => {
     formData.append('action', 'enroll');
     formData.append('auto_enroll', 'true');
     formData.append('email_students', 'true');
+    formData.append('institution_id', institution?.id);
 
     try {
       setLoading(true);
@@ -75,11 +77,12 @@ const EnrollStudent = ({ isOpen, onClose, className }) => {
         class_name: className,
         limit: true,
         page: initialPage,
+        institution_id: institution?.id,
       };
 
       dispatch(fetchStudentsData(username, params));
 
-      dispatch(fetchAllClassesData(username, { class_id: classId }));
+      dispatch(fetchAllClassesData(username, { class_id: classId, institution_id: institution?.id }));
 
       setShowToast(true);
       return onClose();

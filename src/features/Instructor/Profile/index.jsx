@@ -53,7 +53,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (instructorEmail) {
-      dispatch(fetchInstructorProfile(instructorEmail));
+      dispatch(fetchInstructorProfile(instructorEmail, { institution_id: institution?.id }));
     }
   }, [instructorEmail, dispatch, instructorUserName, institution]);
 

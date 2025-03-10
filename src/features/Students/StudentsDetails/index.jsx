@@ -76,6 +76,7 @@ const StudentsDetails = () => {
   useEffect(() => {
     const studentParams = {
       learner_email: decodedEmail,
+      institution_id: institution?.id,
     };
 
     dispatch(fetchStudentProfile(instructorUserName, studentParams));
@@ -84,7 +85,7 @@ const StudentsDetails = () => {
       dispatch(resetStudent());
       dispatch(resetStudentsTable());
     };
-  }, [dispatch, instructorUserName, decodedEmail]);
+  }, [dispatch, instructorUserName, decodedEmail, institution?.id]);
 
   useEffect(() => {
     if (instructorUserName) {
