@@ -10,11 +10,6 @@ import { getClasses } from 'features/Classes/data';
 
 import { RequestStatus, initialPage } from 'features/constants';
 
-const initialRequestParams = {
-  limit: true,
-  page: initialPage,
-};
-
 const ClassesFilters = () => {
   const dispatch = useDispatch();
   const instructorUserName = useSelector((state) => state.main.username);
@@ -41,6 +36,12 @@ const ClassesFilters = () => {
   );
 
   const isButtonDisabled = courseSelected === null && classSelected === null;
+
+  const initialRequestParams = {
+    limit: true,
+    page: initialPage,
+    institution_id: institution?.id,
+  };
 
   const handleSelectFilters = async (e) => {
     e.preventDefault();
