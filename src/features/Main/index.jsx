@@ -12,7 +12,7 @@ import {
 import { Container, Spinner } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
 
-import { Banner } from 'react-paragon-topaz';
+import { Banner, getUserRoles, USER_ROLES } from 'react-paragon-topaz';
 
 import { Header } from 'features/Main/Header';
 import { Footer } from 'features/Main/Footer';
@@ -38,6 +38,7 @@ const Main = () => {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
+  const roles = getUserRoles();
 
   const institutions = useSelector((state) => state.main.institutions.data);
   const username = useSelector((state) => state.main.username);
@@ -46,7 +47,7 @@ const Main = () => {
   const bannerText = getConfig().MAINTENANCE_BANNER_TEXT || '';
 
   const isLoadingClasses = classes.status === RequestStatus.LOADING || classes.status === RequestStatus.INITIAL;
-  const isUnauthorizedUser = classes.error === 403;
+  const isAuthorizedUser = roles.includes(USER_ROLES.INSTRUCTOR);
 
   const searchParams = new URLSearchParams(location.search);
 
@@ -94,8 +95,8 @@ const Main = () => {
             />
           </div>
         )}
-        {!isLoadingClasses && isUnauthorizedUser && <UnauthorizedPage />}
-        {!isLoadingClasses && !isUnauthorizedUser && (
+        {!isLoadingClasses && !isAuthorizedUser && <UnauthorizedPage />}
+        {!isLoadingClasses && isAuthorizedUser && (
           <>
             <Sidebar />
             <Container>
