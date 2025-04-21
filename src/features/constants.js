@@ -76,12 +76,6 @@ export const stylesSelectorNoBorders = {
 };
 
 /**
- * Text for unauthorized user.
- * @constant {string}
- */
-export const unauthorizedText = 'You do not have access to CertPREP Instructor. If you believe you should have access please contact your administrator.';
-
-/**
  * Number for maximum records in tables.
  * @readonly
  * @number

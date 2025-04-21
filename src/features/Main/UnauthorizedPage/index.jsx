@@ -2,12 +2,12 @@ import React from 'react';
 
 import { Container } from '@edx/paragon';
 
-import { unauthorizedText } from 'features/constants';
+import { getMessageUnauthorized } from 'helpers';
 
 const UnauthorizedPage = () => (
   <Container className="px-0 container-pages">
     <Container size="md" className="p-4 my-4 page-content-container text-center font-weight-bold">
-      <p>{unauthorizedText}</p>
+      {getMessageUnauthorized()}
     </Container>
   </Container>
 );

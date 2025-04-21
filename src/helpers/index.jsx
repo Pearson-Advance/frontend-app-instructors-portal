@@ -1,3 +1,5 @@
+import { getConfig } from '@edx/frontend-platform';
+
 /**
  * Email validation messages for enrollment students.
  *
@@ -76,3 +78,19 @@ export const eventManager = (callback) => {
  */
 // eslint-disable-next-line no-useless-escape
 export const stringToDateType = (date) => new Date(date.replace(/-/g, '\/'));
+
+/**
+ * Message for unauthorized user.
+ * @constant {string}
+ */
+export const getMessageUnauthorized = () => {
+  const LMS_URL = getConfig().LMS_BASE_URL;
+  return (
+    <p>
+      Oops! You&apos;ve landed on the Instructor Portal but have no Instructor role.
+      If you are an admin, you may administer students, instructors, and classes in the Pearson Skilling Suite Admin Portal at{' '}
+      <a href={LMS_URL} target="_blank" rel="noopener noreferrer">{LMS_URL}</a>.{' '}
+      If you are an instructor, please contact your administrator for access to the Instructor Portal.
+    </p>
+  );
+};
