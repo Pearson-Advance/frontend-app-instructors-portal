@@ -22,10 +22,17 @@ import { emailValidationMessages } from 'helpers';
 
 import 'features/Classes/EnrollStudent/index.scss';
 
-const EnrollStudent = ({ isOpen, onClose, className }) => {
+const EnrollStudent = ({
+  isOpen,
+  onClose,
+  className,
+  customClassId,
+}) => {
   const dispatch = useDispatch();
 
-  const { classId } = useParams();
+  const { classId: paramsClassId } = useParams();
+
+  const classId = customClassId || paramsClassId;
 
   const username = useSelector((state) => state.main.username);
   const institution = useSelector((state) => state.main.institution);
@@ -165,6 +172,11 @@ EnrollStudent.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
+  customClassId: PropTypes.string,
+};
+
+EnrollStudent.defaultProps = {
+  customClassId: '',
 };
 
 export default EnrollStudent;
