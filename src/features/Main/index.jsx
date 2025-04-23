@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   BrowserRouter,
@@ -11,6 +11,7 @@ import {
 
 import { Container, Spinner } from '@edx/paragon';
 import { getConfig } from '@edx/frontend-platform';
+import { AppContext } from '@edx/frontend-platform/react';
 
 import { Banner, getUserRoles, USER_ROLES } from 'react-paragon-topaz';
 
@@ -27,6 +28,7 @@ import InstitutionSelector from 'features/Main/InstitutionSelector';
 import Profile from 'features/Instructor/Profile';
 import UnauthorizedPage from 'features/Main/UnauthorizedPage';
 
+import { fetchInstructorProfile } from 'features/Instructor/data';
 import { fetchInstitutionData, fetchClassAuthorization } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
 
@@ -39,8 +41,10 @@ const Main = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const roles = getUserRoles();
+  const { authenticatedUser } = useContext(AppContext);
 
   const institutions = useSelector((state) => state.main.institutions.data);
+  const institution = useSelector((state) => state.main.institution);
   const username = useSelector((state) => state.main.username);
   const classes = useSelector((state) => state.main.classes);
 
@@ -50,6 +54,7 @@ const Main = () => {
   const isAuthorizedUser = roles.includes(USER_ROLES.INSTRUCTOR);
 
   const searchParams = new URLSearchParams(location.search);
+  const instructorEmail = authenticatedUser.email;
 
   useEffect(() => {
     dispatch(fetchInstitutionData());
@@ -60,6 +65,12 @@ const Main = () => {
       dispatch(fetchClassAuthorization(username));
     }
   }, [dispatch, username]);
+
+  useEffect(() => {
+    if (instructorEmail) {
+      dispatch(fetchInstructorProfile(instructorEmail, { institution_id: institution?.id }));
+    }
+  }, [instructorEmail, dispatch, institution]);
 
   useEffect(() => {
     if (institutions?.length === 1) {

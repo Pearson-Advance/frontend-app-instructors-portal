@@ -36,6 +36,10 @@ const ClassDetailPage = () => {
   const username = useSelector((state) => state.main.username);
   const institution = useSelector((state) => state.main.institution);
   const [classInfo] = useSelector((state) => state.common.allClasses?.data);
+
+  // Set to 'true' by default to maintain normal behavior.
+  const enableEnrollmentPrivilege = getConfig()?.SHOW_INSTRUCTOR_FEATURES || true;
+  const { hasEnrollmentPrivilege = enableEnrollmentPrivilege } = useSelector((state) => state.instructor.info);
   const COLUMNS = useMemo(() => columns, []);
 
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -136,12 +140,16 @@ const ClassDetailPage = () => {
           </div>
           <InstructorCard />
           <div className="d-flex justify-content-end my-3 align-items-center ">
-            <Button
-              onClick={handleEnrollStudentModal}
-              className="text-decoration-none text-primary bg-white"
-            >
-              Invite student to enroll
-            </Button>
+            {
+              hasEnrollmentPrivilege && (
+                <Button
+                  onClick={handleEnrollStudentModal}
+                  className="text-decoration-none text-primary bg-white"
+                >
+                  Invite student to enroll
+                </Button>
+              )
+            }
             <ActionsDropdown options={extraOptions} />
           </div>
           <Table
