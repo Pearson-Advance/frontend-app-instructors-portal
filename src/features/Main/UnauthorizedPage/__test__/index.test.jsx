@@ -6,6 +6,7 @@ import UnauthorizedPage from 'features/Main/UnauthorizedPage';
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
     LMS_BASE_URL: 'http://localhost:18000',
+    INSTITUTION_PORTAL_PATH: '/certprep',
   })),
 }));
 
@@ -16,7 +17,7 @@ describe('Unauthorized Component', () => {
     expect(getByText(/Pearson Skilling Suite Admin Portal/i)).toBeInTheDocument();
 
     // Check the link is rendered correctly
-    const link = getByRole('link', { name: 'http://localhost:18000' });
-    expect(link).toHaveAttribute('href', 'http://localhost:18000');
+    const link = getByRole('link', { name: 'http://localhost:18000/certprep' });
+    expect(link).toHaveAttribute('href', 'http://localhost:18000/certprep');
   });
 });

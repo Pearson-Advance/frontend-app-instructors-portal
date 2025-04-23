@@ -85,11 +85,14 @@ export const stringToDateType = (date) => new Date(date.replace(/-/g, '\/'));
  */
 export const getMessageUnauthorized = () => {
   const LMS_URL = getConfig().LMS_BASE_URL;
+  const { INSTITUTION_PORTAL_PATH } = getConfig();
+  const skillingURL = INSTITUTION_PORTAL_PATH ? LMS_URL + INSTITUTION_PORTAL_PATH : LMS_URL;
+
   return (
     <p>
       Oops! You&apos;ve landed on the Instructor Portal but have no Instructor role.
       If you are an admin, you may administer students, instructors, and classes in the Pearson Skilling Suite Admin Portal at{' '}
-      <a href={LMS_URL} target="_blank" rel="noopener noreferrer">{LMS_URL}</a>.{' '}
+      <a href={skillingURL} target="_blank" rel="noopener noreferrer">{skillingURL}</a>.{' '}
       If you are an instructor, please contact your administrator for access to the Instructor Portal.
     </p>
   );
