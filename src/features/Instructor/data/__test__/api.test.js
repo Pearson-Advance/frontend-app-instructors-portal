@@ -36,7 +36,13 @@ describe('Instructor services', () => {
     expect(httpClientMock.get).toHaveBeenCalledTimes(1);
     expect(httpClientMock.get).toHaveBeenCalledWith(
       'http://localhost:18000/pearson_course_operation/api/v2/instructors/',
-      { params: { instructor_email: email, limit: false } },
+      {
+        params: {
+          instructor_email: email,
+          limit: false,
+          instructor_portal: true,
+        },
+      },
     );
   });
 

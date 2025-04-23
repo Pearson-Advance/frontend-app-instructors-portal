@@ -16,6 +16,7 @@ function getStudentsbyInstructor(userName, options = {}) {
   const defaultParams = {
     page: initialPage,
     page_size: MAX_TABLE_RECORDS,
+    instructor_portal: true,
   };
 
   const params = {

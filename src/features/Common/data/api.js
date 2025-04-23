@@ -18,6 +18,7 @@ function getClassesByInstructor(userName, options = {}) {
     limit: false,
     page: '',
     page_size: MAX_TABLE_RECORDS,
+    instructor_portal: true,
   };
 
   const params = {
@@ -47,6 +48,7 @@ function getCoursesByInstructor(userName, options = {}) {
     limit: false,
     page: '',
     page_size: MAX_TABLE_RECORDS,
+    instructor_portal: true,
   };
 
   const params = {

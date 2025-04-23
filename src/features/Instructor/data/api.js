@@ -4,6 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 function getInstructorByEmail(email, options = {}) {
   const defaultParams = {
     limit: false,
+    instructor_portal: true,
   };
 
   const params = {

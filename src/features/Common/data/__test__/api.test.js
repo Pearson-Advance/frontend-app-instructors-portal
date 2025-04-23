@@ -43,6 +43,7 @@ describe('Common api services', () => {
           limit: false,
           page: '',
           page_size: MAX_TABLE_RECORDS,
+          instructor_portal: true,
         },
       },
     );
