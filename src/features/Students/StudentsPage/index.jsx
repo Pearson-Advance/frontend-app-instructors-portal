@@ -23,7 +23,12 @@ const StudentsPage = () => {
 
   useEffect(() => {
     if (username) {
-      dispatch(fetchStudentsData(username, { page: currentPage, institution_id: institution?.id, ...filters }));
+      dispatch(fetchStudentsData(username, {
+        page: currentPage,
+        institution_id: institution?.id,
+        limit: true,
+        ...filters,
+      }));
     }
 
     return () => {

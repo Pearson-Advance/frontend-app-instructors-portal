@@ -1,7 +1,7 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 import { getStudentsbyInstructor } from 'features/Students/data/api';
-import { MAX_TABLE_RECORDS } from 'features/constants';
+import { defaultParamsService } from 'features/constants';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedHttpClient: jest.fn(),
@@ -37,7 +37,8 @@ describe('getStudentsbyInstructor', () => {
       'http://localhost:18000/pearson_course_operation/api/v2/students/',
       {
         params: {
-          instructor, page: 1, page_size: MAX_TABLE_RECORDS, instructor_portal: true,
+          instructor,
+          ...defaultParamsService,
         },
       },
     );
