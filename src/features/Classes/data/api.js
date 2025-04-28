@@ -1,8 +1,8 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 
-function handleEnrollments(data, courseId) {
-  const ENROLLMENT_API_URL = `${getConfig().LMS_BASE_URL}/courses/${courseId}/instructor/api/students_update_enrollment`;
+function handleEnrollments(data, classId) {
+  const ENROLLMENT_API_URL = `${getConfig().LMS_BASE_URL}/courses/${classId}/instructor/api/students_update_enrollment`;
 
   return getAuthenticatedHttpClient().post(
     ENROLLMENT_API_URL,

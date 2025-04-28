@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatUTCDate } from 'react-paragon-topaz';
+import { useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 
 import { useInstitutionIdQueryParam } from 'hooks';
+
+import EnrollStudent from 'features/Classes/EnrollStudent';
 import ActionsDropdown from 'features/Main/ActionsDropdown';
 
 const columns = [
@@ -68,11 +71,15 @@ const columns = [
     disableSortBy: true,
     Cell: ({ row }) => {
       const {
+        className,
         classId,
         labSummaryUrl,
       } = row.original;
 
       const gradebookUrl = getConfig().GRADEBOOK_MICROFRONTEND_URL || getConfig().LMS_BASE_URL;
+      const { hasEnrollmentPrivilege = false } = useSelector((state) => state.instructor.info);
+
+      const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
       const handleGradebookButton = () => {
         const decodedClassId = decodeURIComponent(classId);
@@ -82,6 +89,8 @@ const columns = [
       const handleLabButton = () => {
         window.open(labSummaryUrl, '_blank', 'noopener,noreferrer');
       };
+
+      const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 
       const extraOptions = [
         {
@@ -96,9 +105,25 @@ const columns = [
           label: 'Lab summary',
           visible: !!labSummaryUrl,
         },
+        {
+          handleClick: handleEnrollStudentModal,
+          iconSrc: <i className="fa-solid fa-user-plus mr-2" />,
+          label: 'Enroll student',
+          visible: hasEnrollmentPrivilege,
+        },
       ];
 
-      return <ActionsDropdown options={extraOptions} vertIcon={false} />;
+      return (
+        <>
+          <EnrollStudent
+            isOpen={isEnrollModalOpen}
+            onClose={handleEnrollStudentModal}
+            className={className}
+            customClassId={classId}
+          />
+          <ActionsDropdown options={extraOptions} vertIcon={false} />
+        </>
+      );
     },
   },
 ];
