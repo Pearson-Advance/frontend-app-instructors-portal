@@ -1,7 +1,7 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 
-import { initialPage, MAX_TABLE_RECORDS } from 'features/constants';
+import { defaultParamsService } from 'features/constants';
 
 /* Fetch students by instructor username with optional filters
  *
@@ -13,14 +13,9 @@ import { initialPage, MAX_TABLE_RECORDS } from 'features/constants';
  */
 
 function getStudentsbyInstructor(userName, options = {}) {
-  const defaultParams = {
-    page: initialPage,
-    page_size: MAX_TABLE_RECORDS,
-  };
-
   const params = {
     instructor: userName,
-    ...defaultParams,
+    ...defaultParamsService,
     ...options,
   };
 

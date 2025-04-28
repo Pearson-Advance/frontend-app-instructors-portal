@@ -1,7 +1,7 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 
-import { MAX_TABLE_RECORDS } from 'features/constants';
+import { defaultParamsService } from 'features/constants';
 
 /* Fetch classes by instructor username with optional filters and pagination.
  *
@@ -14,15 +14,9 @@ import { MAX_TABLE_RECORDS } from 'features/constants';
  */
 
 function getClassesByInstructor(userName, options = {}) {
-  const defaultParams = {
-    limit: false,
-    page: '',
-    page_size: MAX_TABLE_RECORDS,
-  };
-
   const params = {
     instructor: userName,
-    ...defaultParams,
+    ...defaultParamsService,
     ...options,
   };
 
@@ -43,15 +37,9 @@ function getClassesByInstructor(userName, options = {}) {
  * @returns {Promise} - A promise that resolves to the response from the API.
  */
 function getCoursesByInstructor(userName, options = {}) {
-  const defaultParams = {
-    limit: false,
-    page: '',
-    page_size: MAX_TABLE_RECORDS,
-  };
-
   const params = {
     instructor: userName,
-    ...defaultParams,
+    ...defaultParamsService,
     ...options,
   };
 

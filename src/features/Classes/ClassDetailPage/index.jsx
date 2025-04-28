@@ -54,6 +54,7 @@ const ClassDetailPage = () => {
         page: currentPage,
         class_name: className,
         institution_id: institution?.id,
+        limit: true,
       };
       // Leaves a gap time space to prevent being override by ActiveTabUpdater component
       setTimeout(() => dispatch(updateActiveTab(previousPage)), 100);

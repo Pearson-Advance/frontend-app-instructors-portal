@@ -90,3 +90,17 @@ export const allInstitutionsOption = {
   label: 'All my institutions',
   value: 'all_institutions',
 };
+
+/**
+ * Default query parameters for service requests.
+ * @property {boolean} limit - Indicates if pagination is applied.
+ * @property {string|number} page - Current page number for pagination.
+ * @property {number} page_size - Number of records per page.
+ * @property {boolean} instructor_portal - Flag to indicate if the request is from the Instructor Portal.
+ */
+export const defaultParamsService = {
+  limit: false,
+  page: initialPage,
+  page_size: MAX_TABLE_RECORDS,
+  instructor_portal: true,
+};
