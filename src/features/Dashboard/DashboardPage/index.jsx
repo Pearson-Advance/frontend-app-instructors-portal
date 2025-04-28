@@ -16,7 +16,7 @@ const DashboardPage = () => {
   const institution = useSelector((state) => state.main.institution);
 
   useEffect(() => {
-    if (userName) {
+    if (userName && institution?.id) {
       dispatch(fetchAllClassesData(userName, { institution_id: institution?.id }));
     }
   }, [userName, dispatch, institution]);

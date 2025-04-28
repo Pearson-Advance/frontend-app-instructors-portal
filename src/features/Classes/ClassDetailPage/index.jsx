@@ -53,7 +53,7 @@ const ClassDetailPage = () => {
   const addQueryParam = useInstitutionIdQueryParam();
 
   useEffect(() => {
-    if (username && className) {
+    if (username && className && institution?.id) {
       const params = {
         page: currentPage,
         class_name: className,
@@ -71,7 +71,7 @@ const ClassDetailPage = () => {
   }, [username, dispatch, currentPage, className, previousPage, institution]);
 
   useEffect(() => {
-    if (username) {
+    if (username && institution?.id) {
       const params = {
         class_id: classId,
         limit: false,

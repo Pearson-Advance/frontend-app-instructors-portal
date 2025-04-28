@@ -24,7 +24,7 @@ const ClassesPage = () => {
   const isLoading = classes.status === RequestStatus.LOADING;
 
   useEffect(() => {
-    if (instructorUserName) {
+    if (instructorUserName && institution?.id) {
       dispatch(getClasses(instructorUserName, {
         page: currentPage,
         limit: true,

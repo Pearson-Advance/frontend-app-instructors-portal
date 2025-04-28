@@ -38,7 +38,7 @@ const WeeklySchedule = () => {
   };
 
   useEffect(() => {
-    if (username) {
+    if (username && institution?.id) {
       dispatch(fetchAllClassesData(username, { institution_id: institution?.id }));
     }
   }, [username, dispatch, institution]);

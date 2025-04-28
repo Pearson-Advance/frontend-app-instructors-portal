@@ -51,7 +51,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (instructorEmail) {
+    if (instructorEmail && institution?.id) {
       dispatch(getClasses(instructorUserName, { institution_id: institution?.id, limit: true, page: currentPage }));
     }
 
