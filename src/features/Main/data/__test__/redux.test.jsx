@@ -4,7 +4,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from 'store';
 import { executeThunk } from 'test-utils';
-import { fetchClassAuthorization } from 'features/Main/data';
+import { fetchInstitutionData } from 'features/Main/data';
 
 let axiosMock;
 let store;
@@ -28,54 +28,30 @@ describe('Main redux actions', () => {
     axiosMock.reset();
   });
 
-  describe('Classes', () => {
-    test('Should successful fetch classes data', async () => {
-      const classesApiUrl = `${process.env.COURSE_OPERATIONS_API_V2_BASE_URL}/classes/`;
+  describe('Institutions', () => {
+    test('Successful fetch instructors data', async () => {
+      const institutionApiUrl = `${process.env.COURSE_OPERATIONS_API_V2_BASE_URL}/institutions/?limit=false`;
       const mockResponse = [
         {
-          classId: 'ccx-v1:demo+demo1+2020+ccx1',
-          className: 'ccx 1',
-          masterCourseName: 'Demo Course 1',
-          instructors: [],
-          numberOfStudents: 0,
-          numberOfPendingStudents: 0,
-          maxStudents: 20,
-          startDate: '2024-01-23T21:50:51Z',
-          endDate: null,
+          id: 1,
+          name: 'Institution1',
+          shortName: 'Inst1',
+          active: true,
         },
       ];
-      const instructor = 'instructor01';
-      axiosMock.onGet(classesApiUrl)
+      axiosMock.onGet(institutionApiUrl)
         .reply(200, mockResponse);
 
-      expect(store.getState().main.classes.status)
-        .toEqual('initial');
+      expect(store.getState().main.institutions.status)
+        .toEqual('loading');
 
-      await executeThunk(fetchClassAuthorization(instructor), store.dispatch, store.getState);
+      await executeThunk(fetchInstitutionData(), store.dispatch, store.getState);
 
-      expect(store.getState().main.classes.data)
+      expect(store.getState().main.institutions.data)
         .toEqual(mockResponse);
 
-      expect(store.getState().main.classes.status)
+      expect(store.getState().main.institutions.status)
         .toEqual('success');
-    });
-
-    test('Should fail fetch classes data', async () => {
-      const classesApiUrl = `${process.env.COURSE_OPERATIONS_API_V2_BASE_URL}/classes/`;
-      const instructor = 'instructor01';
-      axiosMock.onGet(classesApiUrl)
-        .reply(500);
-
-      expect(store.getState().main.classes.status)
-        .toEqual('initial');
-
-      await executeThunk(fetchClassAuthorization(instructor), store.dispatch, store.getState);
-
-      expect(store.getState().main.classes.data)
-        .toEqual([]);
-
-      expect(store.getState().main.classes.status)
-        .toEqual('error');
     });
   });
 });

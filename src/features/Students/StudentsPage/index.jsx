@@ -22,7 +22,7 @@ const StudentsPage = () => {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   useEffect(() => {
-    if (username) {
+    if (username && institution?.id) {
       dispatch(fetchStudentsData(username, {
         page: currentPage,
         institution_id: institution?.id,

@@ -4,11 +4,7 @@ import { sortAlphabetically } from 'react-paragon-topaz';
 import { getInstitutionName } from 'features/Main/data/api';
 import {
   updateSelectedInstitutions,
-  updateRequestClassStatus,
-  updateClasses,
-  updateClassError,
 } from 'features/Main/data/slice';
-import { getClassesByInstructor } from 'features/Common/data/api';
 import { RequestStatus } from 'features/constants';
 
 function fetchInstitutionData() {
@@ -25,34 +21,6 @@ function fetchInstitutionData() {
   };
 }
 
-/* Fetch all classes by instructor username to allow authorization in portal
- *
- * @param {string} username - The username of the instructor.
- *
- * @returns {Promise} - A promise that resolves to the response from the API.
- */
-function fetchClassAuthorization(username) {
-  return async (dispatch) => {
-    dispatch(updateRequestClassStatus(RequestStatus.LOADING));
-
-    try {
-      const params = {
-        limit: false,
-      };
-      const response = camelCaseObject(
-        await getClassesByInstructor(username, params),
-      );
-      dispatch(updateClasses(response.data));
-      dispatch(updateRequestClassStatus(RequestStatus.SUCCESS));
-    } catch (error) {
-      dispatch(updateRequestClassStatus(RequestStatus.ERROR));
-      dispatch(updateClassError(error?.customAttributes?.httpErrorStatus));
-      logError(error);
-    }
-  };
-}
-
 export {
   fetchInstitutionData,
-  fetchClassAuthorization,
 };

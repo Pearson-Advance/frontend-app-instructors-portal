@@ -84,7 +84,7 @@ const StudentsFilters = () => {
   };
 
   useEffect(() => {
-    if (instructorUserName) {
+    if (instructorUserName && institution?.id) {
       dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
     }
   }, [dispatch, instructorUserName, institution]);

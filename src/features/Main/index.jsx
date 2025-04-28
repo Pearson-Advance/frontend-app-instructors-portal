@@ -29,7 +29,7 @@ import Profile from 'features/Instructor/Profile';
 import UnauthorizedPage from 'features/Main/UnauthorizedPage';
 
 import { fetchInstructorProfile } from 'features/Instructor/data';
-import { fetchInstitutionData, fetchClassAuthorization } from 'features/Main/data/thunks';
+import { fetchInstitutionData } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
 
 import { INSTITUTION_QUERY_ID, RequestStatus } from 'features/constants';
@@ -45,12 +45,11 @@ const Main = () => {
 
   const institutions = useSelector((state) => state.main.institutions.data);
   const institution = useSelector((state) => state.main.institution);
-  const username = useSelector((state) => state.main.username);
-  const classes = useSelector((state) => state.main.classes);
 
   const bannerText = getConfig().MAINTENANCE_BANNER_TEXT || '';
 
-  const isLoadingClasses = classes.status === RequestStatus.LOADING || classes.status === RequestStatus.INITIAL;
+  const statusInstitutions = useSelector((state) => state.main.institution.status);
+  const isLoadingInstitutions = statusInstitutions === RequestStatus.LOADING;
   const isAuthorizedUser = roles.includes(USER_ROLES.INSTRUCTOR);
 
   const searchParams = new URLSearchParams(location.search);
@@ -61,13 +60,7 @@ const Main = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (username) {
-      dispatch(fetchClassAuthorization(username));
-    }
-  }, [dispatch, username]);
-
-  useEffect(() => {
-    if (instructorEmail) {
+    if (instructorEmail && institution?.id) {
       dispatch(fetchInstructorProfile(instructorEmail, { institution_id: institution?.id }));
     }
   }, [instructorEmail, dispatch, institution]);
@@ -97,7 +90,7 @@ const Main = () => {
         <Banner variant="warning" iconWarning text={bannerText} />
       )}
       <main className="d-flex pageWrapper">
-        {isLoadingClasses && (
+        {isLoadingInstitutions && (
           <div className="w-100 h-100 d-flex justify-content-center align-items-center mt-4">
             <Spinner
               animation="border"
@@ -106,8 +99,8 @@ const Main = () => {
             />
           </div>
         )}
-        {!isLoadingClasses && !isAuthorizedUser && <UnauthorizedPage />}
-        {!isLoadingClasses && isAuthorizedUser && (
+        {!isLoadingInstitutions && !isAuthorizedUser && <UnauthorizedPage />}
+        {!isLoadingInstitutions && isAuthorizedUser && (
           <>
             <Sidebar />
             <Container>

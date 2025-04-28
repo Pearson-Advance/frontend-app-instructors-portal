@@ -74,12 +74,14 @@ const StudentsDetails = () => {
   };
 
   useEffect(() => {
-    const studentParams = {
-      learner_email: decodedEmail,
-      institution_id: institution?.id,
-    };
+    if (institution?.id) {
+      const studentParams = {
+        learner_email: decodedEmail,
+        institution_id: institution?.id,
+      };
 
-    dispatch(fetchStudentProfile(instructorUserName, studentParams));
+      dispatch(fetchStudentProfile(instructorUserName, studentParams));
+    }
 
     return () => {
       dispatch(resetStudent());
@@ -88,7 +90,7 @@ const StudentsDetails = () => {
   }, [dispatch, instructorUserName, decodedEmail, institution?.id]);
 
   useEffect(() => {
-    if (instructorUserName) {
+    if (instructorUserName && institution?.id) {
       const requestParams = {
         institution_id: institution?.id,
         limit: true,
