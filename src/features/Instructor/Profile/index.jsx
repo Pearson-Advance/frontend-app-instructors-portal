@@ -16,7 +16,6 @@ import Availability from 'features/Instructor/Availability';
 
 import Table from 'features/Main/Table';
 import { getClasses } from 'features/Classes/data';
-import { fetchInstructorProfile } from 'features/Instructor/data';
 import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slice';
 
 import { columns } from 'features/Instructor/Profile/columns';
@@ -50,12 +49,6 @@ const Profile = () => {
     setCurrentPage(targetPage);
     dispatch(updateCurrentPage(targetPage));
   };
-
-  useEffect(() => {
-    if (instructorEmail) {
-      dispatch(fetchInstructorProfile(instructorEmail, { institution_id: institution?.id }));
-    }
-  }, [instructorEmail, dispatch, instructorUserName, institution]);
 
   useEffect(() => {
     if (instructorEmail) {

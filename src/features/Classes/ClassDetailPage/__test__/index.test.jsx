@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -137,5 +137,51 @@ describe('ClassDetailPage', () => {
         'noopener,noreferrer',
       );
     });
+  });
+});
+
+describe('Enrollment access', () => {
+  test('Should hide enroll student button if the instructor does not have the privilege', () => {
+    const state = {
+      ...mockStore,
+      instructor: {
+        info: {
+          hasEnrollmentPrivilege: false,
+        },
+      },
+    };
+
+    renderWithProviders(
+      <MemoryRouter initialEntries={[`/classes/${classId}`]}>
+        <Route path="/classes/:classId">
+          <ClassDetailPage />
+        </Route>
+      </MemoryRouter>,
+      { preloadedState: state },
+    );
+
+    expect(screen.queryByText('Invite student to enroll')).not.toBeInTheDocument();
+  });
+
+  test('Should display enroll student button if the instructor has the privilege', () => {
+    const state = {
+      ...mockStore,
+      instructor: {
+        info: {
+          hasEnrollmentPrivilege: true,
+        },
+      },
+    };
+
+    renderWithProviders(
+      <MemoryRouter initialEntries={[`/classes/${classId}`]}>
+        <Route path="/classes/:classId">
+          <ClassDetailPage />
+        </Route>
+      </MemoryRouter>,
+      { preloadedState: state },
+    );
+
+    expect(screen.getByText('Invite student to enroll')).toBeInTheDocument();
   });
 });
