@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatUTCDate } from 'react-paragon-topaz';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
+import { Toast } from '@edx/paragon';
 
-import { useInstitutionIdQueryParam } from 'hooks';
+import { useInstitutionIdQueryParam, useToast } from 'hooks';
 
+import { fetchLabSummaryLink } from 'features/Classes/data/thunks';
 import EnrollStudent from 'features/Classes/EnrollStudent';
 import ActionsDropdown from 'features/Main/ActionsDropdown';
 
@@ -73,11 +75,18 @@ const columns = [
       const {
         className,
         classId,
-        labSummaryUrl,
+        labSummaryTag,
       } = row.original;
 
+      const dispatch = useDispatch();
       const gradebookUrl = getConfig().GRADEBOOK_MICROFRONTEND_URL || getConfig().LMS_BASE_URL;
       const { hasEnrollmentPrivilege = false } = useSelector((state) => state.instructor.info);
+      const {
+        isVisible,
+        message,
+        showToast,
+        hideToast,
+      } = useToast();
 
       const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
@@ -86,8 +95,10 @@ const columns = [
         window.open(`${gradebookUrl}/gradebook/${decodedClassId}`, '_blank', 'noopener,noreferrer');
       };
 
-      const handleLabButton = () => {
-        window.open(labSummaryUrl, '_blank', 'noopener,noreferrer');
+      const handleLabSummary = () => {
+        dispatch(fetchLabSummaryLink(classId, labSummaryTag, (dashboardMessage) => {
+          showToast(dashboardMessage);
+        }));
       };
 
       const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
@@ -100,10 +111,10 @@ const columns = [
           visible: true,
         },
         {
-          handleClick: handleLabButton,
+          handleClick: handleLabSummary,
           iconSrc: <i className="fa-regular fa-rectangle-list mr-3" />,
-          label: 'Lab summary',
-          visible: !!labSummaryUrl,
+          label: 'Lab Dashboard',
+          visible: !!labSummaryTag,
         },
         {
           handleClick: handleEnrollStudentModal,
@@ -115,6 +126,14 @@ const columns = [
 
       return (
         <>
+          <Toast
+            onClose={hideToast}
+            show={isVisible}
+            className="toast-message"
+            data-testid="toast-message"
+          >
+            {message}
+          </Toast>
           <EnrollStudent
             isOpen={isEnrollModalOpen}
             onClose={handleEnrollStudentModal}

@@ -64,7 +64,7 @@ const mockStore = {
           maxStudents: 200,
           startDate: '2024-04-03T00:00:00Z',
           endDate: null,
-          labSummaryUrl: 'https: //',
+          labSummaryTag: 'skillable-dashboard',
         },
       ],
     },
@@ -118,7 +118,7 @@ describe('ClassDetailPage', () => {
     fireEvent.click(dropdownToggle);
 
     expect(component.getByText('Gradebook')).toBeInTheDocument();
-    expect(component.getByText('Lab summary')).toBeInTheDocument();
+    expect(component.getByText('Lab Dashboard')).toBeInTheDocument();
   });
 
   test('opens Gradebook in a new tab', async () => {
