@@ -1,5 +1,5 @@
 import {
-  handleEnrollments, getMessages,
+  handleEnrollments, getMessages, handleSkillableDashboard, handleXtremeLabsDashboard,
 } from 'features/Classes/data/api';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
@@ -54,6 +54,58 @@ describe('getMessages', () => {
     expect(httpClientMock.get).toHaveBeenCalledTimes(1);
     expect(httpClientMock.get).toHaveBeenCalledWith(
       'http://localhost:18000/pearson_course_operation/api/messages/get-messages/',
+    );
+  });
+});
+
+describe('handleSkillableDashboard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should call getAuthenticatedHttpClient with the correct parameters', () => {
+    const httpClientMock = {
+      post: jest.fn().mockResolvedValue({}),
+    };
+    const courseId = 'course456';
+
+    getAuthenticatedHttpClient.mockReturnValue(httpClientMock);
+
+    handleSkillableDashboard(courseId);
+
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledTimes(1);
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledWith();
+
+    expect(httpClientMock.post).toHaveBeenCalledTimes(1);
+    expect(httpClientMock.post).toHaveBeenCalledWith(
+      'http://localhost:18000/skillable_plugin/course-tab/api/v1/instructor-dashboard-launch/',
+      { class_id: courseId },
+    );
+  });
+});
+
+describe('handleXtremeLabsDashboard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should call getAuthenticatedHttpClient with the correct parameters', () => {
+    const httpClientMock = {
+      post: jest.fn().mockResolvedValue({}),
+    };
+    const courseId = 'course789';
+
+    getAuthenticatedHttpClient.mockReturnValue(httpClientMock);
+
+    handleXtremeLabsDashboard(courseId);
+
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledTimes(1);
+    expect(getAuthenticatedHttpClient).toHaveBeenCalledWith();
+
+    expect(httpClientMock.post).toHaveBeenCalledTimes(1);
+    expect(httpClientMock.post).toHaveBeenCalledWith(
+      'http://localhost:18000/xtreme_labs_plugin/course-tab/api/v1/instructor-dashboard-launch/',
+      { class_id: courseId },
     );
   });
 });

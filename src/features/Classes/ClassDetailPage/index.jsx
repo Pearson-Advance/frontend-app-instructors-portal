@@ -8,9 +8,11 @@ import { Button } from 'react-paragon-topaz';
 import {
   Container,
   Pagination,
+  Toast,
 } from '@edx/paragon';
 
-import { useInstitutionIdQueryParam } from 'hooks';
+import { useInstitutionIdQueryParam, useToast } from 'hooks';
+import { fetchLabSummaryLink } from 'features/Classes/data/thunks';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
 import EnrollStudent from 'features/Classes/EnrollStudent';
 
@@ -36,6 +38,12 @@ const ClassDetailPage = () => {
   const username = useSelector((state) => state.main.username);
   const institution = useSelector((state) => state.main.institution);
   const [classInfo] = useSelector((state) => state.common.allClasses?.data);
+  const {
+    isVisible,
+    message,
+    showToast,
+    hideToast,
+  } = useToast();
 
   // Set to 'true' by default to maintain normal behavior.
   const enableEnrollmentPrivilege = getConfig()?.SHOW_INSTRUCTOR_FEATURES || true;
@@ -94,8 +102,10 @@ const ClassDetailPage = () => {
     window.open(`${gradebookUrl}/gradebook/${classId}`, '_blank', 'noopener,noreferrer');
   };
 
-  const handleLabButton = () => {
-    window.open(classInfo?.labSummaryUrl, '_blank', 'noopener,noreferrer');
+  const handleLabSummary = () => {
+    dispatch(fetchLabSummaryLink(classId, classInfo?.labSummaryTag, (dashboardMessage) => {
+      showToast(dashboardMessage);
+    }));
   };
 
   const extraOptions = [
@@ -106,15 +116,23 @@ const ClassDetailPage = () => {
       visible: true,
     },
     {
-      handleClick: handleLabButton,
+      handleClick: handleLabSummary,
       iconSrc: <i className="fa-regular fa-rectangle-list mr-3" />,
-      label: 'Lab summary',
-      visible: !!classInfo?.labSummaryUrl,
+      label: 'Lab Dashboard',
+      visible: !!classInfo?.labSummaryTag,
     },
   ];
 
   return (
     <>
+      <Toast
+        onClose={hideToast}
+        show={isVisible}
+        className="toast-message"
+        data-testid="toast-message"
+      >
+        {message}
+      </Toast>
       {!classInfo && (
         <Container size="xl" className="px-4 mt-3 page-content-container d-flex justify-content-center">
           <p>You must be an instructor in this class to see the information.</p>
