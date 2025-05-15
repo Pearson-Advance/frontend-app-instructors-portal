@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { startOfMonth, endOfMonth, endOfDay } from 'date-fns';
-import { Button, CalendarExpanded, AddEventModal } from 'react-paragon-topaz';
+import {
+  Button, CalendarExpanded, AddEventModal, parseUTCDateWithoutTZ,
+} from 'react-paragon-topaz';
 import { logError } from '@edx/frontend-platform/logging';
 
 import { fetchEventsData } from 'features/Instructor/data';
@@ -137,16 +139,26 @@ const Availability = () => {
   }, [rangeDates, dispatch, institution]);
 
   useEffect(() => {
-    if (events.length > 0) {
-      const list = events?.map(event => ({
+    if (!Array.isArray(events) || events.length === 0) { return; }
+
+    const list = events.map(event => {
+      const { start, end, isClass } = event;
+
+      if (isClass) {
+        return {
+          ...event,
+          start: parseUTCDateWithoutTZ(start),
+          end: endOfDay(parseUTCDateWithoutTZ(end)),
+        };
+      }
+
+      return {
         ...event,
-        start: new Date(event.start),
-        end: new Date(event.end),
-      }));
-      setEventsList(list);
-    } else {
-      setEventsList([]);
-    }
+        start: new Date(start),
+        end: new Date(end),
+      };
+    });
+    setEventsList(list);
   }, [events]);
 
   return (
