@@ -1,5 +1,9 @@
 import {
-  emailValidationMessages, setTimeInUTC, eventManager, stringToDateType,
+  emailValidationMessages,
+  setTimeInUTC,
+  eventManager,
+  stringToDateType,
+  isInvalidUserOrInstitution,
 } from 'helpers';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
@@ -126,5 +130,32 @@ describe('stringToDateType', () => {
     const date = '2024-09-01';
     const result = stringToDateType(date);
     expect(result).toEqual(new Date(2024, 8, 1));
+  });
+});
+
+describe('isInvalidUserOrInstitution', () => {
+  test('returns true when username is missing', () => {
+    expect(isInvalidUserOrInstitution('', { id: 1 })).toBe(true);
+    expect(isInvalidUserOrInstitution(null, { id: 1 })).toBe(true);
+    expect(isInvalidUserOrInstitution(undefined, { id: 1 })).toBe(true);
+  });
+
+  test('returns true when institution is null or undefined', () => {
+    expect(isInvalidUserOrInstitution('user', null)).toBe(true);
+    expect(isInvalidUserOrInstitution('user', undefined)).toBe(true);
+  });
+
+  test('returns true when institution is missing id', () => {
+    expect(isInvalidUserOrInstitution('user', {})).toBe(true);
+    expect(isInvalidUserOrInstitution('user', { name: 'Test' })).toBe(true);
+  });
+
+  test('returns false when username and institution with valid id are provided', () => {
+    expect(isInvalidUserOrInstitution('user', { id: 1 })).toBe(false);
+    expect(isInvalidUserOrInstitution('user', { id: null })).toBe(false);
+  });
+
+  test('returns false when id exists (even if null)', () => {
+    expect(isInvalidUserOrInstitution('user', { id: null })).toBe(false);
   });
 });

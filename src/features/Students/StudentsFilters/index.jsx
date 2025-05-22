@@ -13,6 +13,7 @@ import { updateFilters } from 'features/Students/data/slice';
 import { fetchAllCourses, fetchAllClassesData } from 'features/Common/data';
 
 import { RequestStatus } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 const examReadyOptions = [
   { value: true, label: 'Yes' },
@@ -84,9 +85,9 @@ const StudentsFilters = () => {
   };
 
   useEffect(() => {
-    if (instructorUserName && institution?.id) {
-      dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
-    }
+    if (isInvalidUserOrInstitution(instructorUserName, institution)) { return; }
+
+    dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
   }, [dispatch, instructorUserName, institution]);
 
   useEffect(() => {

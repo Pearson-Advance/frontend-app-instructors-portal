@@ -89,6 +89,7 @@ export const MAX_TABLE_RECORDS = 200;
 export const allInstitutionsOption = {
   label: 'All my institutions',
   value: 'all_institutions',
+  id: null,
 };
 
 /**

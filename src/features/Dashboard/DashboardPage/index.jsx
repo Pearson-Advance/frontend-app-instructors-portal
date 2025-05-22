@@ -8,6 +8,7 @@ import WeeklySchedule from 'features/Dashboard/WeeklySchedule';
 import AssignedClasses from 'features/Dashboard/AssignedClasses';
 
 import { fetchAllClassesData } from 'features/Common/data';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -16,9 +17,9 @@ const DashboardPage = () => {
   const institution = useSelector((state) => state.main.institution);
 
   useEffect(() => {
-    if (userName && institution?.id) {
-      dispatch(fetchAllClassesData(userName, { institution_id: institution?.id }));
-    }
+    if (isInvalidUserOrInstitution(userName, institution)) { return; }
+
+    dispatch(fetchAllClassesData(userName, { institution_id: institution?.id }));
   }, [userName, dispatch, institution]);
 
   return (
