@@ -6,6 +6,7 @@ import { Schedule, formatDateRange } from 'react-paragon-topaz';
 
 import { useInstitutionIdQueryParam } from 'hooks';
 import { fetchAllClassesData } from 'features/Common/data';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 import 'features/Dashboard/WeeklySchedule/index.scss';
 
@@ -38,9 +39,9 @@ const WeeklySchedule = () => {
   };
 
   useEffect(() => {
-    if (username && institution?.id) {
-      dispatch(fetchAllClassesData(username, { institution_id: institution?.id }));
-    }
+    if (isInvalidUserOrInstitution(username, institution)) { return; }
+
+    dispatch(fetchAllClassesData(username, { institution_id: institution?.id }));
   }, [username, dispatch, institution]);
 
   useEffect(() => {

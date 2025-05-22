@@ -12,6 +12,7 @@ import StudentsTable from 'features/Students/StudentsTable';
 import StudentsFilters from 'features/Students/StudentsFilters';
 
 import { initialPage } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 const StudentsPage = () => {
   const dispatch = useDispatch();
@@ -22,14 +23,16 @@ const StudentsPage = () => {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   useEffect(() => {
-    if (username && institution?.id) {
-      dispatch(fetchStudentsData(username, {
-        page: currentPage,
-        institution_id: institution?.id,
-        limit: true,
-        ...filters,
-      }));
-    }
+    if (isInvalidUserOrInstitution(username, institution)) { return () => {}; }
+
+    const requestParams = {
+      page: currentPage,
+      limit: true,
+      institution_id: institution.id,
+      ...filters,
+    };
+
+    dispatch(fetchStudentsData(username, requestParams));
 
     return () => {
       dispatch(resetStudentsTable());

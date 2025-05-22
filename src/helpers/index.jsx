@@ -97,3 +97,18 @@ export const getMessageUnauthorized = () => {
     </p>
   );
 };
+
+/**
+ * Validates whether the username and institution are valid for data fetching.
+ * @param {string} username - The username of the current user.
+ * @param {Object} institution - The selected institution object.
+ * @param {number|null} institution.id - The institution ID (can be null or number).
+ * @returns {boolean} Returns `true` if username is missing or institution is invalid.
+ */
+export const isInvalidUserOrInstitution = (username, institution) => {
+  const hasValidInstitutionId = institution
+    && typeof institution === 'object'
+    && institution.id !== undefined;
+
+  return !username || !hasValidInstitutionId;
+};

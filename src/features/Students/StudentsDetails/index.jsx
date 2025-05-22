@@ -27,6 +27,8 @@ import { resetStudent, resetStudentsTable } from 'features/Students/data/slice';
 import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slice';
 import { columns } from 'features/Students/StudentsDetails/columns';
 
+import { isInvalidUserOrInstitution } from 'helpers';
+
 import './index.scss';
 
 const StudentsDetails = () => {
@@ -74,32 +76,32 @@ const StudentsDetails = () => {
   };
 
   useEffect(() => {
-    if (institution?.id) {
-      const studentParams = {
-        learner_email: decodedEmail,
-        institution_id: institution?.id,
-      };
+    if (isInvalidUserOrInstitution(instructorUserName, institution)) { return () => {}; }
 
-      dispatch(fetchStudentProfile(instructorUserName, studentParams));
-    }
+    const studentParams = {
+      learner_email: decodedEmail,
+      institution_id: institution?.id,
+    };
+
+    dispatch(fetchStudentProfile(instructorUserName, studentParams));
 
     return () => {
       dispatch(resetStudent());
       dispatch(resetStudentsTable());
     };
-  }, [dispatch, instructorUserName, decodedEmail, institution?.id]);
+  }, [dispatch, instructorUserName, decodedEmail, institution]);
 
   useEffect(() => {
-    if (instructorUserName && institution?.id) {
-      const requestParams = {
-        institution_id: institution?.id,
-        limit: true,
-        page: currentPage,
-        student_email: decodedEmail,
-      };
+    if (isInvalidUserOrInstitution(instructorUserName, institution)) { return () => {}; }
 
-      dispatch(getClasses(instructorUserName, requestParams));
-    }
+    const requestParams = {
+      institution_id: institution?.id,
+      limit: true,
+      page: currentPage,
+      student_email: decodedEmail,
+    };
+
+    dispatch(getClasses(instructorUserName, requestParams));
 
     return () => dispatch(resetClassesTable());
   }, [instructorUserName, dispatch, institution, decodedEmail, currentPage]);
