@@ -106,9 +106,7 @@ export const getMessageUnauthorized = () => {
  * @returns {boolean} Returns `true` if username is missing or institution is invalid.
  */
 export const isInvalidUserOrInstitution = (username, institution) => {
-  const hasValidInstitutionId = institution
-    && typeof institution === 'object'
-    && institution.id !== undefined;
+  const hasValidInstitutionId = typeof institution === 'object' && institution?.id !== undefined;
 
   return !username || !hasValidInstitutionId;
 };

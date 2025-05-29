@@ -80,7 +80,7 @@ const ClassDetailPage = () => {
   }, [username, dispatch, currentPage, className, previousPage, institution]);
 
   useEffect(() => {
-    if (!username || (institution && institution.id === undefined)) { return; }
+    if (isInvalidUserOrInstitution(username, institution)) { return; }
 
     const params = {
       class_id: classId,
