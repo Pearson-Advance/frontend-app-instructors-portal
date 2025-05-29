@@ -24,6 +24,7 @@ import { fetchAllClassesData } from 'features/Common/data';
 import ActionsDropdown from 'features/Main/ActionsDropdown';
 import { columns } from 'features/Classes/ClassDetailPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 import 'features/Classes/ClassDetailPage/index.scss';
 
@@ -61,17 +62,17 @@ const ClassDetailPage = () => {
   const addQueryParam = useInstitutionIdQueryParam();
 
   useEffect(() => {
-    if (username && className && institution?.id) {
-      const params = {
-        page: currentPage,
-        class_name: className,
-        institution_id: institution?.id,
-        limit: true,
-      };
-      // Leaves a gap time space to prevent being override by ActiveTabUpdater component
-      setTimeout(() => dispatch(updateActiveTab(previousPage)), 100);
-      dispatch(fetchStudentsData(username, params));
-    }
+    if (isInvalidUserOrInstitution(username, institution)) { return () => {}; }
+
+    const params = {
+      page: currentPage,
+      class_name: className,
+      institution_id: institution?.id,
+      limit: true,
+    };
+    // Leaves a gap time space to prevent being override by ActiveTabUpdater component
+    setTimeout(() => dispatch(updateActiveTab(previousPage)), 100);
+    dispatch(fetchStudentsData(username, params));
 
     return () => {
       dispatch(resetStudentsTable());
@@ -79,14 +80,14 @@ const ClassDetailPage = () => {
   }, [username, dispatch, currentPage, className, previousPage, institution]);
 
   useEffect(() => {
-    if (username && institution?.id) {
-      const params = {
-        class_id: classId,
-        limit: false,
-        institution_id: institution?.id,
-      };
-      dispatch(fetchAllClassesData(username, params));
-    }
+    if (isInvalidUserOrInstitution(username, institution)) { return; }
+
+    const params = {
+      class_id: classId,
+      limit: false,
+      institution_id: institution?.id,
+    };
+    dispatch(fetchAllClassesData(username, params));
   }, [username, classId, dispatch, institution]);
 
   const handlePagination = (targetPage) => {

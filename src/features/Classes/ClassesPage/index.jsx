@@ -10,6 +10,7 @@ import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slic
 
 import { columns } from 'features/Classes/ClassesPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 const ClassesPage = () => {
   const dispatch = useDispatch();
@@ -24,14 +25,16 @@ const ClassesPage = () => {
   const isLoading = classes.status === RequestStatus.LOADING;
 
   useEffect(() => {
-    if (instructorUserName && institution?.id) {
-      dispatch(getClasses(instructorUserName, {
-        page: currentPage,
-        limit: true,
-        institution_id: institution?.id,
-        ...filters,
-      }));
-    }
+    if (isInvalidUserOrInstitution(instructorUserName, institution)) { return () => {}; }
+
+    const requestParams = {
+      page: currentPage,
+      limit: true,
+      institution_id: institution?.id,
+      ...filters,
+    };
+
+    dispatch(getClasses(instructorUserName, requestParams));
 
     return () => {
       dispatch(resetClassesTable());
