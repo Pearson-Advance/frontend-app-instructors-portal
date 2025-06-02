@@ -9,6 +9,7 @@ import { updateCurrentPage, updateFilters } from 'features/Classes/data/slice';
 import { getClasses } from 'features/Classes/data';
 
 import { RequestStatus, initialPage } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 const ClassesFilters = () => {
   const dispatch = useDispatch();
@@ -67,10 +68,10 @@ const ClassesFilters = () => {
   };
 
   useEffect(() => {
-    if (instructorUserName && institution?.id) {
-      dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
-      dispatch(fetchAllClassesData(instructorUserName, { institution_id: institution?.id }));
-    }
+    if (isInvalidUserOrInstitution(instructorUserName, institution)) { return; }
+
+    dispatch(fetchAllCourses(instructorUserName, { institution_id: institution?.id }));
+    dispatch(fetchAllClassesData(instructorUserName, { institution_id: institution?.id }));
   }, [dispatch, instructorUserName, institution]);
 
   return (

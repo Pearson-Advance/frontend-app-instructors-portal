@@ -21,6 +21,7 @@ import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slic
 import { columns } from 'features/Instructor/Profile/columns';
 
 import { RequestStatus, initialPage } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -51,9 +52,15 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (instructorEmail && institution?.id) {
-      dispatch(getClasses(instructorUserName, { institution_id: institution?.id, limit: true, page: currentPage }));
-    }
+    if (isInvalidUserOrInstitution(instructorUserName, institution)) { return () => {}; }
+
+    const requestParams = {
+      institution_id: institution?.id,
+      limit: true,
+      page: currentPage,
+    };
+
+    dispatch(getClasses(instructorUserName, requestParams));
 
     return () => dispatch(resetClassesTable());
   }, [instructorEmail, dispatch, instructorUserName, institution, currentPage]);

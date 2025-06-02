@@ -33,6 +33,7 @@ import { fetchInstitutionData } from 'features/Main/data/thunks';
 import { updateSelectedInstitution } from 'features/Main/data/slice';
 
 import { INSTITUTION_QUERY_ID, RequestStatus } from 'features/constants';
+import { isInvalidUserOrInstitution } from 'helpers';
 
 import './index.scss';
 
@@ -60,9 +61,9 @@ const Main = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (instructorEmail && institution?.id) {
-      dispatch(fetchInstructorProfile(instructorEmail, { institution_id: institution?.id }));
-    }
+    if (isInvalidUserOrInstitution(instructorEmail, institution)) { return; }
+
+    dispatch(fetchInstructorProfile(instructorEmail, { institution_id: institution?.id }));
   }, [instructorEmail, dispatch, institution]);
 
   useEffect(() => {
