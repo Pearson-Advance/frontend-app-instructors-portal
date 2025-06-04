@@ -43,12 +43,13 @@ describe('getColumns', () => {
 
   test('returns an array of columns with correct properties', () => {
     expect(columns).toBeInstanceOf(Array);
-    expect(columns).toHaveLength(8);
+    expect(columns).toHaveLength(9);
 
     const [
       nameColumn,
       emailColumn,
       institutionColumn,
+      statusColumn,
       classNameColumn,
       dateColumn,
       progressColumn,
@@ -64,6 +65,9 @@ describe('getColumns', () => {
     expect(institutionColumn).toHaveProperty('Header', 'Institution');
     expect(institutionColumn).toHaveProperty('accessor', 'institutionName');
 
+    expect(statusColumn).toHaveProperty('Header', 'Status');
+    expect(statusColumn).toHaveProperty('accessor', 'status');
+
     expect(classNameColumn).toHaveProperty('Header', 'Class Name');
     expect(classNameColumn).toHaveProperty('accessor', 'className');
 
@@ -78,7 +82,7 @@ describe('getColumns', () => {
   });
 
   test('Show menu dropdown', async () => {
-    const ActionColumn = () => columns[7].Cell({
+    const ActionColumn = () => columns[8].Cell({
       row: {
         values: {
           classId: 'CCX1',

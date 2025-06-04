@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { MoreHoriz } from '@edx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 
-import { formatUTCDate } from 'react-paragon-topaz';
+import { formatUTCDate, Badge, STUDENT_STATUS_VARIANTS } from 'react-paragon-topaz';
 import { useInstitutionIdQueryParam } from 'hooks';
 
 const columns = [
@@ -45,6 +45,15 @@ const columns = [
   {
     Header: 'Institution',
     accessor: 'institutionName',
+  },
+  {
+    Header: 'Status',
+    accessor: 'status',
+    Cell: ({ row }) => (
+      <Badge variant={STUDENT_STATUS_VARIANTS[row.values.status?.toLowerCase()] || 'success'} light className="text-capitalize">
+        {row.values.status}
+      </Badge>
+    ),
   },
   {
     Header: 'Class Name',
