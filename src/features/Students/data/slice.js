@@ -37,7 +37,7 @@ export const studentsSlice = createSlice({
       const { results, count, numPages } = payload;
       state.table.status = RequestStatus.SUCCESS;
       state.table.data = results;
-      state.table.numPages = numPages;
+      state.table.numPages = numPages || state.table.numPages;
       state.table.count = count;
     },
     updateFilters: (state, { payload }) => {
