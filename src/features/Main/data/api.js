@@ -11,6 +11,17 @@ function getInstitutionName() {
   );
 }
 
+function deleteEnrollment(studentEmail, courseId) {
+  const formData = new FormData();
+  formData.append('identifiers', studentEmail);
+  formData.append('action', 'unenroll');
+
+  return getAuthenticatedHttpClient().post(
+    `${getConfig().COURSE_OPERATIONS_API_V2_BASE_URL}/courses/${courseId}/instructor/api/students_update_enrollment`,
+  );
+}
+
 export {
   getInstitutionName,
+  deleteEnrollment,
 };

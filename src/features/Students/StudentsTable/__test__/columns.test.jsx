@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
 
-import { columns } from 'features/Students/StudentsTable/columns';
+import { getColumns } from 'features/Students/StudentsTable/columns';
 
 describe('getColumns', () => {
   const mockStore = {
@@ -42,8 +42,8 @@ describe('getColumns', () => {
   };
 
   test('returns an array of columns with correct properties', () => {
-    expect(columns).toBeInstanceOf(Array);
-    expect(columns).toHaveLength(8);
+    expect(getColumns()).toBeInstanceOf(Array);
+    expect(getColumns()).toHaveLength(8);
 
     const [
       nameColumn,
@@ -53,7 +53,7 @@ describe('getColumns', () => {
       dateColumn,
       progressColumn,
       examReadyColumn,
-    ] = columns;
+    ] = getColumns();
 
     expect(nameColumn).toHaveProperty('Header', 'Student');
     expect(nameColumn).toHaveProperty('accessor', 'learnerName');
@@ -78,7 +78,7 @@ describe('getColumns', () => {
   });
 
   test('Show menu dropdown', async () => {
-    const ActionColumn = () => columns[7].Cell({
+    const ActionColumn = () => getColumns()[7].Cell({
       row: {
         values: {
           classId: 'CCX1',

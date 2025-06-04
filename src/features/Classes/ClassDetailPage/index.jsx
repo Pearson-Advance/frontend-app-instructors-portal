@@ -22,7 +22,7 @@ import { updateActiveTab } from 'features/Main/data/slice';
 import { fetchAllClassesData } from 'features/Common/data';
 
 import ActionsDropdown from 'features/Main/ActionsDropdown';
-import { columns } from 'features/Classes/ClassDetailPage/columns';
+import { getColumns } from 'features/Classes/ClassDetailPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
 import { isInvalidUserOrInstitution } from 'helpers';
 
@@ -49,7 +49,11 @@ const ClassDetailPage = () => {
   // Set to 'true' by default to maintain normal behavior.
   const enableEnrollmentPrivilege = getConfig()?.SHOW_INSTRUCTOR_FEATURES || true;
   const { hasEnrollmentPrivilege = enableEnrollmentPrivilege } = useSelector((state) => state.instructor.info);
-  const COLUMNS = useMemo(() => columns, []);
+
+  const enableDeleteEnrollment = getConfig()?.SHOW_INSTRUCTOR_FEATURES ? hasEnrollmentPrivilege : false;
+  const COLUMNS = useMemo(() => getColumns({
+    hasEnrollmentPrivilege: enableDeleteEnrollment,
+  }), [enableDeleteEnrollment]);
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);

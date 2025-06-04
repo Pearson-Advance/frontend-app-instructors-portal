@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 
 import Table from 'features/Main/Table';
 
-import { columns } from 'features/Students/StudentsTable/columns';
+import { getColumns } from 'features/Students/StudentsTable/columns';
 import { RequestStatus } from 'features/constants';
 
 const StudentsTable = () => {
   const students = useSelector((state) => state.students.table);
-  const COLUMNS = useMemo(() => columns, []);
+  const { hasEnrollmentPrivilege = false } = useSelector((state) => state.instructor.info);
+  const COLUMNS = useMemo(() => getColumns({ hasEnrollmentPrivilege }), [hasEnrollmentPrivilege]);
   const isLoading = students.status === RequestStatus.LOADING;
 
   return (
