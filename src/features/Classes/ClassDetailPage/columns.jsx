@@ -21,7 +21,7 @@ const badgeVariants = {
   pending: 'warning',
 };
 
-const getColumns = ({ hasEnrollmentPrivilege = false }) => [
+const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
   {
     Header: 'No',
     accessor: 'index',

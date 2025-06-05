@@ -13,7 +13,7 @@ import { formatUTCDate } from 'react-paragon-topaz';
 import { useInstitutionIdQueryParam } from 'hooks';
 import DeleteEnrollment from 'features/Main/DeleteEnrollment';
 
-const getColumns = ({ hasEnrollmentPrivilege = false }) => [
+const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
   {
     Header: 'Student',
     accessor: 'learnerName',
