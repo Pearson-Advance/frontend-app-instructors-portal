@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
 
 import { useInstitutionIdQueryParam } from 'hooks';
+import DeleteEnrollment from 'features/Main/DeleteEnrollment';
 
 const badgeVariants = {
   active: 'success',
@@ -20,7 +21,7 @@ const badgeVariants = {
   pending: 'warning',
 };
 
-const columns = [
+const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
   {
     Header: 'No',
     accessor: 'index',
@@ -82,8 +83,14 @@ const columns = [
     cellClassName: 'dropdownColumn',
     disableSortBy: true,
     Cell: ({ row }) => {
-      const { classId, userId } = row.original;
+      const {
+        classId,
+        userId,
+        learnerEmail,
+        courseId,
+      } = row.original;
       const progressPageLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/progress/${userId}`;
+
       return (
         <Dropdown className="dropdowntpz">
           <Dropdown.Toggle
@@ -105,6 +112,11 @@ const columns = [
               <i className="fa-regular fa-bars-progress mr-2" />
               View progress
             </Dropdown.Item>
+            {
+              hasEnrollmentPrivilege && (
+                <DeleteEnrollment studentEmail={learnerEmail} courseId={courseId} />
+              )
+            }
           </Dropdown.Menu>
         </Dropdown>
       );
@@ -112,4 +124,4 @@ const columns = [
   },
 ];
 
-export { columns };
+export { getColumns };
