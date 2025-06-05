@@ -1,7 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Sidebar as SidebarBase, MenuSection, MenuItem } from 'react-paragon-topaz';
+import {
+  Sidebar as SidebarBase,
+  MenuSection,
+  MenuItem,
+  SIDEBAR_HELP_ITEMS,
+} from 'react-paragon-topaz';
 
 import { useInstitutionIdQueryParam } from 'hooks';
 import { updateActiveTab } from 'features/Main/data/slice';
@@ -56,6 +61,23 @@ export const Sidebar = () => {
                 icon={icon}
               />
             ))
+        }
+      </MenuSection>
+      <MenuSection title="Help and support">
+        {
+          SIDEBAR_HELP_ITEMS.map(({
+            link,
+            label,
+            ...rest
+          }) => (
+            <MenuItem
+              key={link}
+              title={label}
+              as="a"
+              href={link}
+              {...rest}
+            />
+          ))
         }
       </MenuSection>
     </SidebarBase>
