@@ -4,6 +4,7 @@ import { fireEvent } from '@testing-library/react';
 
 import { Sidebar } from 'features/Main/Sidebar';
 import { renderWithProviders } from 'test-utils';
+import * as paragonTopaz from 'react-paragon-topaz';
 
 const mockHistoryPush = jest.fn();
 
@@ -15,6 +16,17 @@ jest.mock('react-router', () => ({
       pathname: '/',
     },
   }),
+}));
+
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: jest.fn(() => ({
+    INSTITUTION_PORTAL_PATH: 'https://institution.example.com',
+  })),
+}));
+
+jest.mock('react-paragon-topaz', () => ({
+  ...jest.requireActual('react-paragon-topaz'),
+  getUserRoles: jest.fn(() => (['INSTRUCTOR'])),
 }));
 
 describe('Sidebar', () => {
@@ -46,5 +58,17 @@ describe('Sidebar', () => {
     expect(profileButton).toHaveClass('active');
 
     expect(mockHistoryPush).toHaveBeenCalledWith('/my-profile');
+  });
+
+  test('should render Institution Portal item if has role', () => {
+    paragonTopaz.getUserRoles.mockReturnValue(['INSTRUCTOR', 'INSTITUTION_ADMIN']);
+
+    const { getByText } = renderWithProviders(
+      <Sidebar />,
+    );
+
+    const portalLink = getByText('Skilling Administrator');
+
+    expect(portalLink).toBeInTheDocument();
   });
 });
