@@ -12,7 +12,9 @@ import { getConfig } from '@edx/frontend-platform';
 import { formatUTCDate, Badge, STUDENT_STATUS_VARIANTS } from 'react-paragon-topaz';
 import { useInstitutionIdQueryParam } from 'hooks';
 
-const columns = [
+import DeleteEnrollment from 'features/Main/DeleteEnrollment';
+
+const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
   {
     Header: 'Student',
     accessor: 'learnerName',
@@ -97,7 +99,14 @@ const columns = [
     cellClassName: 'dropdownColumn',
     disableSortBy: true,
     Cell: ({ row }) => {
-      const { classId, userId } = row.original;
+      const {
+        status,
+        classId,
+        userId,
+        courseId,
+        learnerEmail,
+      } = row.original;
+
       const progressPageLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/progress/${userId}`;
       return (
         <Dropdown className="dropdowntpz">
@@ -120,6 +129,11 @@ const columns = [
               <i className="fa-regular fa-bars-progress mr-2" />
               View progress
             </Dropdown.Item>
+            {
+              (hasEnrollmentPrivilege && status?.toLowerCase() !== 'expired') && (
+                <DeleteEnrollment studentEmail={learnerEmail} courseId={courseId} />
+              )
+            }
           </Dropdown.Menu>
         </Dropdown>
       );
@@ -127,4 +141,4 @@ const columns = [
   },
 ];
 
-export { columns };
+export { getColumns };

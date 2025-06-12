@@ -11,6 +11,20 @@ function getInstitutionName() {
   );
 }
 
+function deleteEnrollment(studentEmail, courseId) {
+  const BASE_URL = getConfig().LMS_BASE_URL;
+
+  const formData = new FormData();
+  formData.append('identifiers', studentEmail);
+  formData.append('action', 'unenroll');
+
+  return getAuthenticatedHttpClient().post(
+    `${BASE_URL}/courses/${courseId}/instructor/api/students_update_enrollment`,
+    formData,
+  );
+}
+
 export {
   getInstitutionName,
+  deleteEnrollment,
 };
