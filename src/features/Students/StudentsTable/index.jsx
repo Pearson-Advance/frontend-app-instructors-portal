@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { getConfig } from '@edx/frontend-platform';
 
 import Table from 'features/Main/Table';
 
@@ -9,7 +10,11 @@ import { RequestStatus } from 'features/constants';
 const StudentsTable = () => {
   const students = useSelector((state) => state.students.table);
   const { hasEnrollmentPrivilege = false } = useSelector((state) => state.instructor.info);
-  const COLUMNS = useMemo(() => getColumns({ hasEnrollmentPrivilege }), [hasEnrollmentPrivilege]);
+
+  const enableDeleteEnrollment = getConfig()?.SHOW_INSTRUCTOR_FEATURES ? hasEnrollmentPrivilege : false;
+  const COLUMNS = useMemo(() => getColumns({
+    hasEnrollmentPrivilege: enableDeleteEnrollment,
+  }), [enableDeleteEnrollment]);
   const isLoading = students.status === RequestStatus.LOADING;
 
   return (

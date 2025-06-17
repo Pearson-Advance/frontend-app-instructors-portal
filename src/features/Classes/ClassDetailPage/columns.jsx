@@ -81,7 +81,6 @@ const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
         classId,
         userId,
         learnerEmail,
-        courseId,
       } = row.original;
       const progressPageLink = `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/progress/${userId}`;
 
@@ -108,7 +107,7 @@ const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
             </Dropdown.Item>
             {
               (hasEnrollmentPrivilege && status?.toLowerCase() !== 'expired') && (
-                <DeleteEnrollment studentEmail={learnerEmail} courseId={courseId} />
+                <DeleteEnrollment studentEmail={learnerEmail} classId={classId} />
               )
             }
           </Dropdown.Menu>
