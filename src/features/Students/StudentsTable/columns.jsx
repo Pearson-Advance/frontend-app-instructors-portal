@@ -103,7 +103,6 @@ const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
         status,
         classId,
         userId,
-        courseId,
         learnerEmail,
       } = row.original;
 
@@ -131,7 +130,7 @@ const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
             </Dropdown.Item>
             {
               (hasEnrollmentPrivilege && status?.toLowerCase() !== 'expired') && (
-                <DeleteEnrollment studentEmail={learnerEmail} courseId={courseId} />
+                <DeleteEnrollment studentEmail={learnerEmail} classId={classId} />
               )
             }
           </Dropdown.Menu>
