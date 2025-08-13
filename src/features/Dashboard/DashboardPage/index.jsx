@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
+import { AppContext } from '@edx/frontend-platform/react';
 import { Container, Col, Row } from '@edx/paragon';
 
 import WeeklySchedule from 'features/Dashboard/WeeklySchedule';
@@ -13,6 +14,7 @@ import { isInvalidUserOrInstitution } from 'helpers';
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const userName = useSelector((state) => state.main.username);
+  const { authenticatedUser: { name } } = useContext(AppContext);
   const imageDashboard = getConfig().IMAGE_DASHBOARD_INSTRUCTORS_URL;
   const institution = useSelector((state) => state.main.institution);
 
@@ -25,7 +27,7 @@ const DashboardPage = () => {
   return (
     <Container size="xl" className="px-4 pt-3">
       <h2 className="title-page mt-3 mb-3">
-        {`Welcome ${userName}` }
+        {`Welcome ${name?.split?.(' ')[0] || userName}` }
       </h2>
       <Row className="schedule-section">
         <Col lg="9" xs="12">

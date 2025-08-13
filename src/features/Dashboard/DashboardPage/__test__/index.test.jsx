@@ -1,8 +1,11 @@
 import React from 'react';
-import DashboardPage from 'features/Dashboard/DashboardPage';
 import '@testing-library/jest-dom/extend-expect';
 import { renderWithProviders } from 'test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
+
+import { AppContext } from '@edx/frontend-platform/react';
+
+import DashboardPage from 'features/Dashboard/DashboardPage';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -32,19 +35,30 @@ describe('DashboardPage component', () => {
     },
   };
 
+  const authenticatedUser = {
+    name: 'Sam Smith',
+    email: 'test@example.com',
+  };
+
+  const config = {
+    LMS_BASE_URL: 'http://localhost:1990',
+  };
+
   const component = renderWithProviders(
-    <MemoryRouter initialEntries={['/dashboard']}>
-      <Route path="/dashboard">
-        <DashboardPage />
-      </Route>
-    </MemoryRouter>,
+    <AppContext.Provider value={{ authenticatedUser, config }}>
+      <MemoryRouter initialEntries={['/dashboard']}>
+        <Route path="/dashboard">
+          <DashboardPage />
+        </Route>
+      </MemoryRouter>,
+    </AppContext.Provider>,
     { preloadedState: mockStore },
   );
 
   test('renders components', () => {
     const { getByText } = component;
 
-    expect(getByText('Welcome User')).toBeInTheDocument();
+    expect(getByText('Welcome Sam')).toBeInTheDocument();
     expect(getByText('Class schedule')).toBeInTheDocument();
     expect(getByText('No classes scheduled at this time')).toBeInTheDocument();
   });
