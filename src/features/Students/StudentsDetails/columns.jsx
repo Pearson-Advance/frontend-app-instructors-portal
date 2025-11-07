@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ProgressBar } from '@edx/paragon';
 import { Badge, formatUTCDate } from 'react-paragon-topaz';
 
 import { useInstitutionIdQueryParam } from 'hooks';
@@ -46,14 +45,16 @@ const columns = [
     ),
   },
   {
-    Header: 'Courseware Progress',
+    Header: 'Current Grade',
     accessor: 'completePercentage',
     Cell: ({ row }) => {
       const addQueryParam = useInstitutionIdQueryParam();
 
       return (
         <div className="d-flex w-100 align-items-center justify-content-center">
-          <ProgressBar now={row.values.completePercentage} variant="primary" className="mr-3 w-50 custom-progress" />
+          <span className="course-progress mr-3 w-50">
+            {row.values.completePercentage}%
+          </span>
           <Link to={addQueryParam(`/classes/${row.original.classId}?previous=students`)}>
             Class details
           </Link>
