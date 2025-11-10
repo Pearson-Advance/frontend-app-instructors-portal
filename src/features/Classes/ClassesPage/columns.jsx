@@ -59,12 +59,12 @@ const columns = [
     accessor: 'minStudentsAllowed',
   },
   {
-    Header: 'Students enrolled',
-    accessor: 'numberOfStudents',
-  },
-  {
     Header: 'Max',
     accessor: 'maxStudents',
+  },
+  {
+    Header: 'Students enrolled',
+    accessor: 'numberOfStudents',
   },
   {
     Header: '',
