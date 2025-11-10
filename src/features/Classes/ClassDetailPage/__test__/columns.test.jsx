@@ -1,12 +1,12 @@
-import { MemoryRouter, Route } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
 import { fireEvent } from '@testing-library/react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
 
-import { getColumns } from 'features/Classes/ClassDetailPage/columns';
+import { getColumns } from 'features/Students/StudentsTable/columns';
 
-describe('columns', () => {
+describe('getColumns', () => {
   const mockStore = {
     main: {
       selectedInstitution: {
@@ -21,7 +21,7 @@ describe('columns', () => {
         numPages: 1,
         currentPage: 1,
         start: 0,
-        results: [
+        data: [
           {
             learnerName: 'Test User',
             learnerEmail: 'testuser@example.com',
@@ -29,129 +29,363 @@ describe('columns', () => {
             courseName: 'Demo Course 1',
             classId: 'ccx-v1:demo+demo1+2020+ccx@3',
             className: 'test ccx1',
+            institutionName: 'Test Institution',
             created: '2024-02-13T18:31:27.399407Z',
             status: 'Active',
-            examReady: false,
+            examReady: {
+              status: 'Complete',
+              lastExamDate: '2024-03-15T10:00:00Z',
+              eppDaysLeft: 45,
+            },
             startDate: '2024-02-13T17:42:22Z',
-            endDate: null,
-            completePercentage: 0.0,
+            endDate: '2024-12-31T23:59:59Z',
+            completePercentage: 75.5,
+            userId: 'user123',
           },
         ],
       },
     },
   };
 
-  test('Should return an array of columns with correct properties', () => {
+  test('returns an array of columns with correct properties', () => {
     expect(getColumns()).toBeInstanceOf(Array);
-    expect(getColumns()).toHaveLength(7);
+    expect(getColumns()).toHaveLength(11);
 
     const [
-      number,
-      student,
-      learnerEmail,
-      status,
-      completePercentage,
-      examReady,
+      nameColumn,
+      emailColumn,
+      institutionColumn,
+      statusColumn,
+      classNameColumn,
+      dateColumn,
+      progressColumn,
+      examReadyColumn,
+      lastExamDateColumn,
+      eppDaysLeftColumn,
+      actionsColumn,
     ] = getColumns();
 
-    expect(number).toHaveProperty('Header', 'No');
-    expect(number).toHaveProperty('accessor', 'index');
+    expect(nameColumn).toHaveProperty('Header', 'Student');
+    expect(nameColumn).toHaveProperty('accessor', 'learnerName');
 
-    expect(student).toHaveProperty('Header', 'Student');
-    expect(student).toHaveProperty('accessor', 'learnerName');
+    expect(emailColumn).toHaveProperty('Header', 'Email');
+    expect(emailColumn).toHaveProperty('accessor', 'learnerEmail');
 
-    expect(learnerEmail).toHaveProperty('Header', 'Email');
-    expect(learnerEmail).toHaveProperty('accessor', 'learnerEmail');
+    expect(institutionColumn).toHaveProperty('Header', 'Institution');
+    expect(institutionColumn).toHaveProperty('accessor', 'institutionName');
 
-    expect(status).toHaveProperty('Header', 'Status');
-    expect(status).toHaveProperty('accessor', 'status');
+    expect(statusColumn).toHaveProperty('Header', 'Status');
+    expect(statusColumn).toHaveProperty('accessor', 'status');
 
-    expect(completePercentage).toHaveProperty('Header', 'Courseware Progress');
-    expect(completePercentage).toHaveProperty('accessor', 'completePercentage');
+    expect(classNameColumn).toHaveProperty('Header', 'Class Name');
+    expect(classNameColumn).toHaveProperty('accessor', 'className');
 
-    expect(examReady).toHaveProperty('Header', 'Exam ready');
-    expect(examReady).toHaveProperty('accessor', 'examReady');
+    expect(dateColumn).toHaveProperty('Header', 'Start - End Date');
+    expect(dateColumn).toHaveProperty('accessor', 'startDate');
+
+    expect(progressColumn).toHaveProperty('Header', 'Progress');
+    expect(progressColumn).toHaveProperty('accessor', 'completePercentage');
+
+    expect(examReadyColumn).toHaveProperty('Header', 'Exam Ready');
+    expect(examReadyColumn).toHaveProperty('accessor', 'examReady');
+
+    expect(lastExamDateColumn).toHaveProperty('Header', 'Last exam date');
+    expect(lastExamDateColumn).toHaveProperty('accessor', 'examReady.lastExamDate');
+
+    expect(eppDaysLeftColumn).toHaveProperty('accessor', 'examReady.eppDaysLeft');
+
+    expect(actionsColumn).toHaveProperty('Header', '');
+    expect(actionsColumn).toHaveProperty('accessor', 'classId');
+    expect(actionsColumn).toHaveProperty('disableSortBy', true);
   });
 
-  test('Show student info', async () => {
-    const StudentColumn = () => getColumns()[1].Cell({
+  test('renders Student column with link', () => {
+    const StudentCell = () => getColumns()[0].Cell({
       row: {
-        values: {
-          learnerName: 'Test User',
-        },
+        values: { learnerName: 'Test User' },
+        original: { learnerEmail: 'testuser@example.com' },
       },
     });
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <StudentColumn />
+      <MemoryRouter initialEntries={['/students/']}>
+        <Route path="/students/">
+          <StudentCell />
         </Route>
       </MemoryRouter>,
       { preloadedState: mockStore },
     );
 
-    expect(getByText('Test User')).toBeInTheDocument();
+    const link = getByText('Test User');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveClass('link');
   });
 
-  test('Show status info', async () => {
-    const StatusColumn = () => getColumns()[3].Cell({
+  test('renders Email column with mailto link', () => {
+    const EmailCell = () => getColumns()[1].Cell({
       row: {
-        values: {
-          status: 'Active',
-        },
+        values: { learnerEmail: 'testuser@example.com' },
       },
     });
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <StatusColumn />
+      <MemoryRouter>
+        <EmailCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const link = getByText('testuser@example.com');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', 'mailto:testuser@example.com');
+  });
+
+  test('renders Institution column', () => {
+    const columns = getColumns();
+    expect(columns[2]).toHaveProperty('Header', 'Institution');
+    expect(columns[2]).toHaveProperty('accessor', 'institutionName');
+  });
+
+  test('renders Status column with correct badge', () => {
+    const StatusCell = () => getColumns()[3].Cell({
+      row: {
+        values: { status: 'Active' },
+      },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter>
+        <StatusCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const badge = getByText('Active');
+    expect(badge).toBeInTheDocument();
+    expect(badge).toHaveClass('text-capitalize');
+  });
+
+  test('renders Class Name column with link', () => {
+    const ClassNameCell = () => getColumns()[4].Cell({
+      row: {
+        values: { className: 'test ccx1' },
+        original: { classId: 'ccx-v1:demo+demo1+2020+ccx@3' },
+      },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter initialEntries={['/students/']}>
+        <Route path="/students/">
+          <ClassNameCell />
         </Route>
       </MemoryRouter>,
       { preloadedState: mockStore },
     );
 
-    expect(getByText('Active')).toBeInTheDocument();
+    const link = getByText('test ccx1');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveClass('link');
   });
 
-  test('Show exam ready info', async () => {
-    const ExamColumn = () => getColumns()[5].Cell({
+  test('renders Start - End Date column with formatted dates', () => {
+    const DateCell = () => getColumns()[5].Cell({
+      row: {
+        original: {
+          startDate: '2024-02-13T17:42:22Z',
+          endDate: '2024-12-31T23:59:59Z',
+        },
+      },
+    });
+
+    const { container } = renderWithProviders(
+      <MemoryRouter>
+        <DateCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(container.textContent).toContain('02/13/24 - 12/31/24');
+  });
+
+  test('renders Start - End Date column with empty dates', () => {
+    const DateCell = () => getColumns()[5].Cell({
+      row: {
+        original: {
+          startDate: null,
+          endDate: null,
+        },
+      },
+    });
+
+    const { container } = renderWithProviders(
+      <MemoryRouter>
+        <DateCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(container.textContent).toBe(' - ');
+  });
+
+  test('renders Progress column with ProgressBar', () => {
+    const ProgressCell = () => getColumns()[6].Cell({
+      row: {
+        values: { completePercentage: 75.5 },
+      },
+    });
+
+    const { container } = renderWithProviders(
+      <MemoryRouter>
+        <ProgressCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const progressBar = container.querySelector('.progress-bar');
+    expect(progressBar).toBeInTheDocument();
+  });
+
+  test('renders Exam Ready column with ProgressSteps', () => {
+    const ExamReadyCell = () => getColumns()[7].Cell({
       row: {
         values: {
-          examReady: false,
+          examReady: {
+            status: 'Complete',
+          },
+        },
+      },
+    });
+
+    const { container } = renderWithProviders(
+      <MemoryRouter>
+        <ExamReadyCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  test('renders Last exam date with formatted date', () => {
+    const LastExamDateCell = () => getColumns()[8].Cell({
+      row: {
+        values: {
+          examReady: {
+            lastExamDate: '2024-03-15T10:00:00Z',
+          },
         },
       },
     });
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <ExamColumn />
-        </Route>
+      <MemoryRouter>
+        <LastExamDateCell />
       </MemoryRouter>,
       { preloadedState: mockStore },
     );
 
-    expect(getByText('No')).toBeInTheDocument();
+    expect(getByText('03/15/24')).toBeInTheDocument();
   });
 
-  test('Show menu dropdown', async () => {
-    const ActionColumn = () => getColumns()[6].Cell({
+  test('renders Last exam date with placeholder when null', () => {
+    const LastExamDateCell = () => getColumns()[8].Cell({
       row: {
         values: {
-          classId: 'CCX1',
+          examReady: {
+            lastExamDate: null,
+          },
+        },
+      },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter>
+        <LastExamDateCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('renders EPP days left header with tooltip', () => {
+    const HeaderComponent = () => {
+      const columns = getColumns();
+      const { Header } = columns[9];
+      return <Header />;
+    };
+
+    const { getByText, container } = renderWithProviders(
+      <MemoryRouter>
+        <HeaderComponent />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('Epp days left')).toBeInTheDocument();
+    expect(container.querySelector('.fa-circle-info')).toBeInTheDocument();
+  });
+
+  test('renders EPP days left value', () => {
+    const EppDaysLeftCell = () => getColumns()[9].Cell({
+      row: {
+        values: {
+          examReady: {
+            eppDaysLeft: 45,
+          },
+        },
+      },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter>
+        <EppDaysLeftCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('45')).toBeInTheDocument();
+  });
+
+  test('renders EPP days left with placeholder when null', () => {
+    const EppDaysLeftCell = () => getColumns()[9].Cell({
+      row: {
+        values: {
+          examReady: {
+            eppDaysLeft: null,
+          },
+        },
+      },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter>
+        <EppDaysLeftCell />
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('shows menu dropdown with View progress link', () => {
+    const ActionColumn = () => getColumns()[10].Cell({
+      row: {
+        values: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
         },
         original: {
-          classId: 'CCX1',
-          userId: '1',
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+          userId: 'user123',
+          status: 'Active',
+          learnerEmail: 'testuser@example.com',
         },
       },
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
+      <MemoryRouter initialEntries={['/students/']}>
+        <Route path="/students/">
           <ActionColumn />
         </Route>
       </MemoryRouter>,
@@ -160,6 +394,99 @@ describe('columns', () => {
 
     const button = component.getByTestId('droprown-action');
     fireEvent.click(button);
+
+    const viewProgressLink = component.getByText('View progress');
+    expect(viewProgressLink).toBeInTheDocument();
+    expect(viewProgressLink).toHaveAttribute('target', '_blank');
+  });
+
+  test('shows DeleteEnrollment option when hasEnrollmentPrivilege is true and status is not expired', () => {
+    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+      row: {
+        values: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+        },
+        original: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+          userId: 'user123',
+          status: 'Active',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(
+      <MemoryRouter initialEntries={['/students/']}>
+        <Route path="/students/">
+          <ActionColumn />
+        </Route>
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const button = component.getByTestId('droprown-action');
+    fireEvent.click(button);
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
+  });
+
+  test('does not show DeleteEnrollment option when status is expired', () => {
+    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+      row: {
+        values: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+        },
+        original: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+          userId: 'user123',
+          status: 'Expired',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(
+      <MemoryRouter initialEntries={['/students/']}>
+        <Route path="/students/">
+          <ActionColumn />
+        </Route>
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const button = component.getByTestId('droprown-action');
+    fireEvent.click(button);
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
+  });
+
+  test('does not show DeleteEnrollment option when hasEnrollmentPrivilege is false', () => {
+    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: false })[10].Cell({
+      row: {
+        values: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+        },
+        original: {
+          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+          userId: 'user123',
+          status: 'Active',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(
+      <MemoryRouter initialEntries={['/students/']}>
+        <Route path="/students/">
+          <ActionColumn />
+        </Route>
+      </MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const button = component.getByTestId('droprown-action');
+    fireEvent.click(button);
+
     expect(component.getByText('View progress')).toBeInTheDocument();
   });
 });
