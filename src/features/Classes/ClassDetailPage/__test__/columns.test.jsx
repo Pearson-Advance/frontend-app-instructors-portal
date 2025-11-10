@@ -1,165 +1,273 @@
-import { MemoryRouter, Route } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
 import { fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
+import { getColumns } from 'features/Students/StudentsTable/columns';
 
-import { getColumns } from 'features/Classes/ClassDetailPage/columns';
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: jest.fn(() => ({
+    LEARNING_MICROFRONTEND_URL: 'http://localhost:2000',
+  })),
+}));
 
-describe('columns', () => {
+describe('getColumns', () => {
   const mockStore = {
     main: {
-      selectedInstitution: {
-        id: 1,
-      },
+      selectedInstitution: { id: 1 },
     },
     students: {
       table: {
-        next: null,
-        previous: null,
-        count: 1,
-        numPages: 1,
-        currentPage: 1,
-        start: 0,
-        results: [
+        data: [
           {
             learnerName: 'Test User',
             learnerEmail: 'testuser@example.com',
-            courseId: 'course-v1:demo+demo1+2020',
-            courseName: 'Demo Course 1',
-            classId: 'ccx-v1:demo+demo1+2020+ccx@3',
+            institutionName: 'Test Institution',
+            classId: 'ccx-1',
             className: 'test ccx1',
-            created: '2024-02-13T18:31:27.399407Z',
             status: 'Active',
-            examReady: false,
+            examReady: {
+              status: 'Complete',
+              lastExamDate: '2024-03-15T10:00:00Z',
+              eppDaysLeft: 45,
+            },
             startDate: '2024-02-13T17:42:22Z',
-            endDate: null,
-            completePercentage: 0.0,
+            endDate: '2024-12-31T23:59:59Z',
+            completePercentage: 75.5,
+            userId: 'user123',
           },
         ],
       },
     },
   };
 
-  test('Should return an array of columns with correct properties', () => {
-    expect(getColumns()).toBeInstanceOf(Array);
-    expect(getColumns()).toHaveLength(7);
+  test('returns an array of 11 columns with correct headers', () => {
+    const cols = getColumns();
 
-    const [
-      number,
-      student,
-      learnerEmail,
-      status,
-      completePercentage,
-      examReady,
-    ] = getColumns();
+    expect(cols).toHaveLength(11);
 
-    expect(number).toHaveProperty('Header', 'No');
-    expect(number).toHaveProperty('accessor', 'index');
-
-    expect(student).toHaveProperty('Header', 'Student');
-    expect(student).toHaveProperty('accessor', 'learnerName');
-
-    expect(learnerEmail).toHaveProperty('Header', 'Email');
-    expect(learnerEmail).toHaveProperty('accessor', 'learnerEmail');
-
-    expect(status).toHaveProperty('Header', 'Status');
-    expect(status).toHaveProperty('accessor', 'status');
-
-    expect(completePercentage).toHaveProperty('Header', 'Current Grade');
-    expect(completePercentage).toHaveProperty('accessor', 'completePercentage');
-
-    expect(examReady).toHaveProperty('Header', 'Exam ready');
-    expect(examReady).toHaveProperty('accessor', 'examReady');
+    expect(cols[0]).toHaveProperty('Header', 'Student');
+    expect(cols[1]).toHaveProperty('Header', 'Email');
+    expect(cols[2]).toHaveProperty('Header', 'Institution');
+    expect(cols[3]).toHaveProperty('Header', 'Status');
+    expect(cols[4]).toHaveProperty('Header', 'Class Name');
+    expect(cols[5]).toHaveProperty('Header', 'Start - End Date');
+    expect(cols[6]).toHaveProperty('Header', 'Current Grade');
+    expect(cols[7]).toHaveProperty('Header', 'Exam Ready');
+    expect(cols[8]).toHaveProperty('Header', 'Last exam date');
+    expect(cols[9]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
+    expect(cols[10]).toHaveProperty('accessor', 'classId');
   });
 
-  test('Show student info', async () => {
-    const StudentColumn = () => getColumns()[1].Cell({
+  test('renders Student link', () => {
+    const Cell = () => getColumns()[0].Cell({
       row: {
-        values: {
-          learnerName: 'Test User',
-        },
+        values: { learnerName: 'Test User' },
+        original: { learnerEmail: 'testuser@example.com' },
       },
     });
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <StudentColumn />
-        </Route>
-      </MemoryRouter>,
+      <MemoryRouter><Cell /></MemoryRouter>,
       { preloadedState: mockStore },
     );
 
-    expect(getByText('Test User')).toBeInTheDocument();
+    const link = getByText('Test User');
+    expect(link).toBeInTheDocument();
+    expect(link.tagName).toBe('A');
   });
 
-  test('Show status info', async () => {
-    const StatusColumn = () => getColumns()[3].Cell({
-      row: {
-        values: {
-          status: 'Active',
-        },
-      },
+  test('renders Email mailto link', () => {
+    const Cell = () => getColumns()[1].Cell({
+      row: { values: { learnerEmail: 'testuser@example.com' } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <StatusColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    const link = getByText('testuser@example.com');
+    expect(link).toHaveAttribute('href', 'mailto:testuser@example.com');
+  });
+
+  test('renders Status badge', () => {
+    const Cell = () => getColumns()[3].Cell({
+      row: { values: { status: 'Active' } },
+    });
+
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
 
     expect(getByText('Active')).toBeInTheDocument();
   });
 
-  test('Show exam ready info', async () => {
-    const ExamColumn = () => getColumns()[5].Cell({
+  test('renders Class Name with link', () => {
+    const Cell = () => getColumns()[4].Cell({
       row: {
-        values: {
-          examReady: false,
-        },
+        values: { className: 'test ccx1' },
+        original: { classId: 'ccx-1' },
       },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <ExamColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
 
-    expect(getByText('No')).toBeInTheDocument();
+    const link = getByText('test ccx1');
+    expect(link).toBeInTheDocument();
+    expect(link.tagName).toBe('A');
   });
 
-  test('Show menu dropdown', async () => {
-    const ActionColumn = () => getColumns()[6].Cell({
+  test('renders formatted Start - End Date', () => {
+    const Cell = () => getColumns()[5].Cell({
       row: {
-        values: {
-          classId: 'CCX1',
-        },
         original: {
-          classId: 'CCX1',
-          userId: '1',
+          startDate: '2024-02-13T17:42:22Z',
+          endDate: '2024-12-31T23:59:59Z',
         },
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/courses/Demo%20Course%201/test%20ccx1?classId=ccx-v1:demo+demo1+2020+ccx@3']}>
-        <Route path="/courses/:courseName/:className">
-          <ActionColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { container } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
 
-    const button = component.getByTestId('droprown-action');
-    fireEvent.click(button);
+    expect(container.textContent).toContain('02/13/24 - 12/31/24');
+  });
+
+  test('renders Current Grade correctly', () => {
+    const Cell = () => getColumns()[6].Cell({
+      row: { values: { completePercentage: 75.5 } },
+    });
+
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    expect(getByText('75%')).toBeInTheDocument();
+  });
+
+  test('renders Exam Ready with ProgressSteps', () => {
+    const Cell = () => getColumns()[7].Cell({
+      row: { values: { examReady: { status: 'Complete' } } },
+    });
+
+    const { container } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  test('renders Last exam date formatted', () => {
+    const Cell = () => getColumns()[8].Cell({
+      row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
+    });
+
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    expect(getByText('03/15/24')).toBeInTheDocument();
+  });
+
+  test('renders Last exam date placeholder', () => {
+    const Cell = () => getColumns()[8].Cell({
+      row: { values: { examReady: { lastExamDate: null } } },
+    });
+
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('renders EPP days left', () => {
+    const Cell = () => getColumns()[9].Cell({
+      row: { values: { examReady: { eppDaysLeft: 45 } } },
+    });
+
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    expect(getByText('45')).toBeInTheDocument();
+  });
+
+  test('renders EPP placeholder when null', () => {
+    const Cell = () => getColumns()[9].Cell({
+      row: { values: { examReady: { eppDaysLeft: null } } },
+    });
+
+    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('action dropdown shows View progress', () => {
+    const Cell = () => getColumns()[10].Cell({
+      row: {
+        original: {
+          classId: 'ccx-1',
+          userId: 'user123',
+          status: 'Active',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    fireEvent.click(component.getByTestId('droprown-action'));
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
+  });
+
+  test('shows DeleteEnrollment when privileged and not expired', () => {
+    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+      row: {
+        original: {
+          classId: 'ccx-1',
+          userId: 'user123',
+          status: 'Active',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    fireEvent.click(component.getByTestId('droprown-action'));
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
+  });
+
+  test('does NOT show DeleteEnrollment when expired', () => {
+    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+      row: {
+        original: {
+          classId: 'ccx-1',
+          userId: 'user123',
+          status: 'Expired',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+      preloadedState: mockStore,
+    });
+
+    fireEvent.click(component.getByTestId('droprown-action'));
+
     expect(component.getByText('View progress')).toBeInTheDocument();
   });
 });

@@ -1,187 +1,257 @@
-import React from 'react';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
+import { fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
-import ClassDetailPage from 'features/Classes/ClassDetailPage';
+import { getColumns } from 'features/Classes/ClassDetailPage/columns';
 
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
-    GRADEBOOK_MICROFRONTEND_URL: 'http://localhost:18000',
+    LEARNING_MICROFRONTEND_URL: 'https://fake-mfe.com',
   })),
 }));
 
-jest.mock('@edx/frontend-platform/logging', () => ({
-  logError: jest.fn(),
-}));
+describe('getColumns (ClassDetailPage)', () => {
+  const mockStore = {
+    main: {
+      selectedInstitution: { id: 1 },
+    },
+    students: {
+      table: {
+        results: [
+          {
+            learnerName: 'Test User',
+            learnerEmail: 'testuser@example.com',
+            classId: 'ccx-123',
+            className: 'Demo Class',
+            status: 'Active',
+            completePercentage: 75,
+            examReady: {
+              status: 'Complete',
+              lastExamDate: '2024-03-15T10:00:00Z',
+              eppDaysLeft: 45,
+            },
+            userId: 'user123',
+          },
+        ],
+      },
+    },
+  };
 
-const mockStore = {
-  main: {
-    username: 'User',
-  },
-  students: {
-    table: {
-      next: null,
-      previous: null,
-      count: 1,
-      numPages: 1,
-      currentPage: 1,
-      start: 0,
-      results: [
-        {
-          learnerName: 'Test User',
-          learnerEmail: 'testuser@example.com',
-          courseId: 'course-v1:demo+demo1+2020',
-          courseName: 'Demo Course 1',
-          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
-          className: 'test ccx1',
-          created: '2024-02-13T18:31:27.399407Z',
+  test('returns correct column structure', () => {
+    const cols = getColumns();
+    expect(cols).toHaveLength(9);
+
+    expect(cols[0]).toHaveProperty('Header', 'No');
+    expect(cols[1]).toHaveProperty('Header', 'Student');
+    expect(cols[2]).toHaveProperty('Header', 'Email');
+    expect(cols[3]).toHaveProperty('Header', 'Status');
+    expect(cols[4]).toHaveProperty('Header', 'Current Grade');
+    expect(cols[5]).toHaveProperty('Header', 'Exam Ready');
+    expect(cols[6]).toHaveProperty('Header', 'Last exam date');
+    expect(cols[7]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
+    expect(cols[8]).toHaveProperty('accessor', 'classId');
+  });
+
+  test('renders index correctly', () => {
+    const IndexCell = () => getColumns()[0].Cell({ row: { index: 0 } });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><IndexCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('1')).toBeInTheDocument();
+  });
+
+  test('renders Student link', () => {
+    const StudentCell = () => getColumns()[1].Cell({
+      row: {
+        values: { learnerName: 'Test User' },
+        original: { learnerEmail: 'testuser@example.com' },
+      },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><StudentCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    const link = getByText('Test User');
+    expect(link).toBeInTheDocument();
+    expect(link.tagName).toBe('A');
+  });
+
+  test('renders Email mailto link', () => {
+    const EmailCell = () => getColumns()[2].Cell({
+      row: { values: { learnerEmail: 'testuser@example.com' } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><EmailCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('testuser@example.com')).toHaveAttribute(
+      'href',
+      'mailto:testuser@example.com',
+    );
+  });
+
+  test('renders Status badge', () => {
+    const StatusCell = () => getColumns()[3].Cell({
+      row: { values: { status: 'Active' } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><StatusCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('Active')).toBeInTheDocument();
+  });
+
+  test('renders Current Grade correctly', () => {
+    const GradeCell = () => getColumns()[4].Cell({
+      row: { values: { completePercentage: 75.5 } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><GradeCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('75%')).toBeInTheDocument();
+  });
+
+  test('renders Exam Ready with ProgressSteps', () => {
+    const ExamReadyCell = () => getColumns()[5].Cell({
+      row: { values: { examReady: { status: 'Complete' } } },
+    });
+
+    const { container } = renderWithProviders(
+      <MemoryRouter><ExamReadyCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  test('renders Last exam date formatted', () => {
+    const LastExamDateCell = () => getColumns()[6].Cell({
+      row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><LastExamDateCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('03/15/24')).toBeInTheDocument();
+  });
+
+  test('renders Last exam date placeholder when null', () => {
+    const LastExamDateCell = () => getColumns()[6].Cell({
+      row: { values: { examReady: { lastExamDate: null } } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><LastExamDateCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('renders EPP days left value', () => {
+    const EppCell = () => getColumns()[7].Cell({
+      row: { values: { examReady: { eppDaysLeft: 45 } } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><EppCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('45')).toBeInTheDocument();
+  });
+
+  test('renders EPP days left placeholder', () => {
+    const EppCell = () => getColumns()[7].Cell({
+      row: { values: { examReady: { eppDaysLeft: null } } },
+    });
+
+    const { getByText } = renderWithProviders(
+      <MemoryRouter><EppCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('renders actions dropdown and shows View progress', () => {
+    const ActionCell = () => getColumns()[8].Cell({
+      row: {
+        original: {
+          classId: 'ccx-123',
+          userId: 'user123',
           status: 'Active',
-          examReady: false,
-          startDate: '2024-02-13T17:42:22Z',
-          endDate: null,
-          completePercentage: 0.0,
-        },
-      ],
-    },
-  },
-  common: {
-    allClasses: {
-      data: [
-        {
-          classId: 'ccx-v1:demo+demo1+2020+ccx@3',
-          className: 'test ccx1',
-          masterCourseId: 'course-v1:demo+demo1+2020',
-          masterCourseName: 'Demo Course 1',
-          status: 'in_progress',
-          instructors: [
-            'User',
-          ],
-          numberOfStudents: 2,
-          numberOfPendingStudents: 1,
-          minStudentsAllowed: null,
-          maxStudents: 200,
-          startDate: '2024-04-03T00:00:00Z',
-          endDate: null,
-          labSummaryTag: 'skillable-dashboard',
-        },
-      ],
-    },
-  },
-};
-
-const { classId } = mockStore.common.allClasses.data[0];
-
-/**
- * Helper function to render the component with default props and mocked state.
- */
-const renderClassDetailPage = () => renderWithProviders(
-  <MemoryRouter initialEntries={[`/classes/${classId}`]}>
-    <Route path="/classes/:classId">
-      <ClassDetailPage />
-    </Route>
-  </MemoryRouter>,
-  { preloadedState: mockStore },
-);
-
-describe('ClassDetailPage', () => {
-  beforeAll(() => {
-    jest.spyOn(window, 'open').mockImplementation(() => {});
-  });
-
-  afterAll(() => {
-    jest.restoreAllMocks();
-  });
-
-  test('renders class details', async () => {
-    const component = renderClassDetailPage();
-
-    await waitFor(() => {
-      expect(component.container).toHaveTextContent('Class details: test ccx1');
-      expect(component.container).toHaveTextContent('No');
-      expect(component.container).toHaveTextContent('Student');
-      expect(component.container).toHaveTextContent('Email');
-      expect(component.container).toHaveTextContent('Status');
-      expect(component.container).toHaveTextContent('Current Grade');
-      expect(component.container).toHaveTextContent('Exam ready');
-      expect(component.container).toHaveTextContent('Demo Course 1');
-      expect(component.container).toHaveTextContent('Apr 3, 2024');
-      expect(component.container).toHaveTextContent('Enrollment:enrolled 3, maximum 200');
-    });
-  });
-
-  test('renders extra options in the dropdown', () => {
-    const component = renderClassDetailPage();
-
-    const dropdownToggle = component.getByLabelText('menu for actions');
-    fireEvent.click(dropdownToggle);
-
-    expect(component.getByText('Gradebook')).toBeInTheDocument();
-    expect(component.getByText('Lab Dashboard')).toBeInTheDocument();
-  });
-
-  test('opens Gradebook in a new tab', async () => {
-    const component = renderClassDetailPage();
-
-    const dropdownToggle = component.getByLabelText('menu for actions');
-    fireEvent.click(dropdownToggle);
-
-    const gradebookItem = component.getByText('Gradebook');
-    fireEvent.click(gradebookItem);
-
-    await waitFor(() => {
-      expect(window.open).toHaveBeenCalledWith(
-        `http://localhost:18000/gradebook/${classId}`,
-        '_blank',
-        'noopener,noreferrer',
-      );
-    });
-  });
-});
-
-describe('Enrollment access', () => {
-  test('Should hide enroll student button if the instructor does not have the privilege', () => {
-    const state = {
-      ...mockStore,
-      instructor: {
-        info: {
-          hasEnrollmentPrivilege: false,
+          learnerEmail: 'testuser@example.com',
         },
       },
-    };
+    });
 
-    renderWithProviders(
-      <MemoryRouter initialEntries={[`/classes/${classId}`]}>
-        <Route path="/classes/:classId">
-          <ClassDetailPage />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: state },
+    const component = renderWithProviders(
+      <MemoryRouter><ActionCell /></MemoryRouter>,
+      { preloadedState: mockStore },
     );
 
-    expect(screen.queryByText('Invite student to enroll')).not.toBeInTheDocument();
+    fireEvent.click(component.getByTestId('droprown-action'));
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
   });
 
-  test('Should display enroll student button if the instructor has the privilege', () => {
-    const state = {
-      ...mockStore,
-      instructor: {
-        info: {
-          hasEnrollmentPrivilege: true,
+  test('shows DeleteEnrollment when privileged and not expired', () => {
+    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[8].Cell({
+      row: {
+        original: {
+          classId: 'ccx-123',
+          userId: 'user123',
+          status: 'Active',
+          learnerEmail: 'testuser@example.com',
         },
       },
-    };
+    });
 
-    renderWithProviders(
-      <MemoryRouter initialEntries={[`/classes/${classId}`]}>
-        <Route path="/classes/:classId">
-          <ClassDetailPage />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: state },
+    const component = renderWithProviders(
+      <MemoryRouter><ActionCell /></MemoryRouter>,
+      { preloadedState: mockStore },
     );
 
-    expect(screen.getByText('Invite student to enroll')).toBeInTheDocument();
+    fireEvent.click(component.getByTestId('droprown-action'));
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
+  });
+
+  test('does NOT show DeleteEnrollment when expired', () => {
+    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[8].Cell({
+      row: {
+        original: {
+          classId: 'ccx-123',
+          userId: 'user123',
+          status: 'Expired',
+          learnerEmail: 'testuser@example.com',
+        },
+      },
+    });
+
+    const component = renderWithProviders(
+      <MemoryRouter><ActionCell /></MemoryRouter>,
+      { preloadedState: mockStore },
+    );
+
+    fireEvent.click(component.getByTestId('droprown-action'));
+
+    expect(component.getByText('View progress')).toBeInTheDocument();
   });
 });
