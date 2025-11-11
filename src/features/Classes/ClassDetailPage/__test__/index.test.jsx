@@ -103,7 +103,7 @@ describe('ClassDetailPage', () => {
       expect(component.container).toHaveTextContent('Student');
       expect(component.container).toHaveTextContent('Email');
       expect(component.container).toHaveTextContent('Status');
-      expect(component.container).toHaveTextContent('Courseware Progress');
+      expect(component.container).toHaveTextContent('Current Grade');
       expect(component.container).toHaveTextContent('Exam ready');
       expect(component.container).toHaveTextContent('Demo Course 1');
       expect(component.container).toHaveTextContent('Apr 3, 2024');

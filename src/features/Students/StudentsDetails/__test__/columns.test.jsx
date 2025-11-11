@@ -15,6 +15,7 @@ describe('Columns of student profile', () => {
       course,
       dates,
       status,
+      currentGrade,
     ] = columns;
 
     expect(className).toHaveProperty('Header', 'Class');
@@ -29,8 +30,8 @@ describe('Columns of student profile', () => {
     expect(status).toHaveProperty('Header', 'Status');
     expect(status).toHaveProperty('accessor', 'status');
 
-    expect(status).toHaveProperty('Header', 'Courseware Progress');
-    expect(status).toHaveProperty('accessor', 'completePercentage');
+    expect(currentGrade).toHaveProperty('Header', 'Current Grade');
+    expect(currentGrade).toHaveProperty('accessor', 'completePercentage');
   });
 
   test('Should render the class title into a link', async () => {
@@ -93,7 +94,7 @@ describe('Columns of student profile', () => {
     const linkElement = getByText('Example class');
 
     expect(linkElement).toBeInTheDocument();
-    expect(linkElement.getAttribute('href')).toBe('/classes/demo+example+class+id?previous=my-profile');
+    expect(linkElement.getAttribute('href')).toBe('/classes/demo+example+class+id?previous=students');
   });
 
   test('Should show the course title', async () => {

@@ -10,9 +10,13 @@
 @import "react-paragon-topaz/src/styles/shared.scss";
 
 body {
-    font-family: $font-family-base;
+  font-family: $font-family-base;
 }
 
 .dropdownColumn.pgn__data-table-cell-wrap {
-    overflow: visible;
-  }
+  overflow: visible;
+}
+
+.course-progress {
+  color: $gray-70;
+}
