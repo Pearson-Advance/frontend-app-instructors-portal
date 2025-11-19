@@ -49,11 +49,18 @@ const columns = [
     accessor: 'completePercentage',
     Cell: ({ row }) => {
       const addQueryParam = useInstitutionIdQueryParam();
+      const raw = row?.values?.completePercentage;
+
+      const safeNumber = Number(raw);
+
+      const percentage = Number.isFinite(safeNumber)
+        ? Math.min(100, Math.max(0, Math.floor(safeNumber)))
+        : 0;
 
       return (
         <div className="d-flex w-100 align-items-center justify-content-center">
           <span className="course-progress mr-3 w-50">
-            {row.values.completePercentage}%
+            {percentage}%
           </span>
           <Link to={addQueryParam(`/classes/${row.original.classId}?previous=students`)}>
             Class details
