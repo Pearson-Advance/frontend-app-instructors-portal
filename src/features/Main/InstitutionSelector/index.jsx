@@ -6,7 +6,7 @@ import React, {
 import { Row, Col } from '@edx/paragon';
 import { Select, formatSelectOptions } from 'react-paragon-topaz';
 
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { INSTITUTION_QUERY_ID, allInstitutionsOption } from 'features/constants';
@@ -23,7 +23,7 @@ const selectorStyles = {
 const InstitutionSelector = () => {
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const institutions = useSelector((state) => state.main.institutions.data);
   const selectedInstitution = useSelector((state) => state.main.institution);
@@ -35,7 +35,7 @@ const InstitutionSelector = () => {
   const updateQueryParam = (value) => {
     const { id = '' } = value;
     searchParams.set(INSTITUTION_QUERY_ID, id);
-    history.push({ search: searchParams.toString() });
+    navigate({ search: searchParams.toString() });
 
     dispatch(updateSelectedInstitution({ data: value }));
   };

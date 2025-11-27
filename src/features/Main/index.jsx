@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   BrowserRouter,
   Route,
-  Switch,
-  Redirect,
-  useHistory,
+  Routes,
+  Navigate,
+  useNavigate,
   useLocation,
 } from 'react-router-dom';
 
@@ -38,7 +38,7 @@ import { isInvalidUserOrInstitution } from 'helpers';
 import './index.scss';
 
 const Main = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const roles = getUserRoles();
@@ -69,7 +69,7 @@ const Main = () => {
   useEffect(() => {
     if (institutions?.length === 1) {
       searchParams.set(INSTITUTION_QUERY_ID, institutions[0]?.id);
-      history.push({ search: searchParams.toString() });
+      navigate({ search: searchParams.toString() });
 
       dispatch(updateSelectedInstitution({ data: institutions[0] }));
     }
@@ -108,10 +108,8 @@ const Main = () => {
               <Container size="xl" className="px-4">
                 {institutions?.length > 1 && (<InstitutionSelector />)}
               </Container>
-              <Switch>
-                <Route exact path="/">
-                  <Redirect to="/dashboard" />
-                </Route>
+              <Routes>
+                <Route exact path="/" element={<Navigate replace to="/dashboard"/>} />
                 {routes.map(({ path, exact, component: Component }) => (
                   <Route
                     key={path}
@@ -124,7 +122,7 @@ const Main = () => {
                     )}
                   />
                 ))}
-              </Switch>
+              </Routes>
             </Container>
           </>
         )}

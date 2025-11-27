@@ -10,7 +10,7 @@ const mockHistoryPush = jest.fn();
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
-  useHistory: () => ({
+  useNavigate: () => ({
     push: mockHistoryPush,
     location: {
       pathname: '/',
