@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
 
 import Table from 'features/Main/Table';
@@ -30,7 +30,7 @@ import 'features/Classes/ClassDetailPage/index.scss';
 
 const ClassDetailPage = () => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { classId } = useParams();
   const queryParams = new URLSearchParams(location.search);
@@ -99,7 +99,7 @@ const ClassDetailPage = () => {
     dispatch(updateCurrentPage(targetPage));
   };
 
-  const handleBackButton = () => (previousPage ? history.push(addQueryParam(`/${previousPage}`)) : history.push(addQueryParam('/classes')));
+  const handleBackButton = () => (previousPage ? navigate(addQueryParam(`/${previousPage}`)) : navigate(addQueryParam('/classes')));
 
   const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 

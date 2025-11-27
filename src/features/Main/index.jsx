@@ -5,7 +5,7 @@ import {
   Route,
   Switch,
   Redirect,
-  useHistory,
+  useNavigate,
   useLocation,
 } from 'react-router-dom';
 
@@ -38,7 +38,7 @@ import { isInvalidUserOrInstitution } from 'helpers';
 import './index.scss';
 
 const Main = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const roles = getUserRoles();
@@ -69,7 +69,7 @@ const Main = () => {
   useEffect(() => {
     if (institutions?.length === 1) {
       searchParams.set(INSTITUTION_QUERY_ID, institutions[0]?.id);
-      history.push({ search: searchParams.toString() });
+      navigate({ search: searchParams.toString() });
 
       dispatch(updateSelectedInstitution({ data: institutions[0] }));
     }
