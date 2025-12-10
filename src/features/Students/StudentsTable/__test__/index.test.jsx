@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import StudentsTable from 'features/Students/StudentsTable';
 import { renderWithProviders } from 'test-utils';
 
@@ -23,12 +23,11 @@ describe('Student Table', () => {
       },
     };
     renderWithProviders(
-      <MemoryRouter initialEntries={['/students']}>
-        <Route path="/students">
-          <StudentsTable />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<StudentsTable />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students'],
+      },
     );
     const emptyTableText = screen.getByText('No students found.');
     expect(emptyTableText).toBeInTheDocument();
@@ -99,12 +98,11 @@ describe('Student Table', () => {
     };
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students']}>
-        <Route path="/students">
-          <StudentsTable />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<StudentsTable />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students'],
+      },
     );
 
     expect(component.container).toHaveTextContent('Student 1');
@@ -169,12 +167,11 @@ describe('Student Table', () => {
     };
 
     renderWithProviders(
-      <MemoryRouter initialEntries={['/students']}>
-        <Route path="/students">
-          <StudentsTable />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<StudentsTable />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students'],
+      },
     );
 
     expect(screen.getByText('Student')).toBeInTheDocument();
@@ -227,12 +224,11 @@ describe('Student Table', () => {
     };
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students']}>
-        <Route path="/students">
-          <StudentsTable />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<StudentsTable />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students'],
+      },
     );
 
     expect(component.container).toHaveTextContent('--');

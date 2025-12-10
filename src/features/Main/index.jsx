@@ -109,7 +109,7 @@ const Main = () => {
                 {institutions?.length > 1 && (<InstitutionSelector />)}
               </Container>
               <Routes>
-                <Route exact path="/" element={<Navigate replace to="/dashboard"/>} />
+                <Route exact path="/" element={<Navigate replace to="/dashboard" />} />
                 {routes.map(({ path, exact, component: Component }) => (
                   <Route
                     key={path}

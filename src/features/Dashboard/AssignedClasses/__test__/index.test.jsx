@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { renderWithProviders } from 'test-utils';
 import AssignedClasses from 'features/Dashboard/AssignedClasses';
@@ -31,11 +31,7 @@ describe('Instructor Assign component', () => {
   };
 
   const component = renderWithProviders(
-    <MemoryRouter initialEntries={['/']}>
-      <Route path="/">
-        <AssignedClasses />
-      </Route>
-    </MemoryRouter>,
+    <Route path="/" element={<AssignedClasses />} />,
     { preloadedState: mockStore },
   );
 

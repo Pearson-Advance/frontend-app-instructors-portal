@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { renderWithProviders } from 'test-utils';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { AppContext } from '@edx/frontend-platform/react';
 
@@ -45,14 +45,18 @@ describe('DashboardPage component', () => {
   };
 
   const component = renderWithProviders(
-    <AppContext.Provider value={{ authenticatedUser, config }}>
-      <MemoryRouter initialEntries={['/dashboard']}>
-        <Route path="/dashboard">
+    <Route
+      path="/dashboard"
+      element={(
+        <AppContext.Provider value={{ authenticatedUser, config }}>
           <DashboardPage />
-        </Route>
-      </MemoryRouter>,
-    </AppContext.Provider>,
-    { preloadedState: mockStore },
+        </AppContext.Provider>
+  )}
+    />,
+    {
+      initialEntries: ['/dashboard'],
+      preloadedState: mockStore,
+    },
   );
 
   test('renders components', () => {

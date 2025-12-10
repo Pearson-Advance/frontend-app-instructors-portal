@@ -6,16 +6,11 @@ import { Sidebar } from 'features/Main/Sidebar';
 import { renderWithProviders } from 'test-utils';
 import * as paragonTopaz from 'react-paragon-topaz';
 
-const mockHistoryPush = jest.fn();
+const mockNavigate = jest.fn();
 
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: () => ({
-    push: mockHistoryPush,
-    location: {
-      pathname: '/',
-    },
-  }),
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
 }));
 
 jest.mock('@edx/frontend-platform', () => ({
@@ -31,9 +26,7 @@ jest.mock('react-paragon-topaz', () => ({
 
 describe('Sidebar', () => {
   test('Should render the sidebar with all options', () => {
-    const { getByText } = renderWithProviders(
-      <Sidebar />,
-    );
+    const { getByText } = renderWithProviders(<Sidebar />);
 
     const homeButton = getByText('Home');
     const studentsButton = getByText('Students');
@@ -47,9 +40,7 @@ describe('Sidebar', () => {
   });
 
   test('Should change selection on click in any item', () => {
-    const { getByRole } = renderWithProviders(
-      <Sidebar />,
-    );
+    const { getByRole } = renderWithProviders(<Sidebar />);
 
     const profileButton = getByRole('button', { name: /my profile/i });
     expect(profileButton).toBeInTheDocument();
@@ -57,15 +48,13 @@ describe('Sidebar', () => {
     fireEvent.click(profileButton);
     expect(profileButton).toHaveClass('active');
 
-    expect(mockHistoryPush).toHaveBeenCalledWith('/my-profile');
+    expect(mockNavigate).toHaveBeenCalledWith('/my-profile');
   });
 
   test('should render Institution Portal item if has role', () => {
     paragonTopaz.getUserRoles.mockReturnValue(['INSTRUCTOR', 'INSTITUTION_ADMIN']);
 
-    const { getByText } = renderWithProviders(
-      <Sidebar />,
-    );
+    const { getByText } = renderWithProviders(<Sidebar />);
 
     const portalLink = getByText('Skilling Administrator');
 

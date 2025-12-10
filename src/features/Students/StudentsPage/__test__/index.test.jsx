@@ -2,7 +2,7 @@ import React from 'react';
 import StudentsPage from 'features/Students/StudentsPage';
 import { waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { renderWithProviders } from 'test-utils';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
@@ -59,13 +59,12 @@ const mockStore = {
 
 describe('StudentsPage', () => {
   test('Should render the student filters', () => {
-    const { getByPlaceholderText, getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/students']}>
-        <Route path="/students">
-          <StudentsPage />,
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+    const { getByText, getByPlaceholderText } = renderWithProviders(
+      <Route path="/students" element={<StudentsPage />} />,
+      {
+        initialEntries: ['/students'],
+        preloadedState: mockStore,
+      },
     );
 
     waitFor(() => {
@@ -79,12 +78,11 @@ describe('StudentsPage', () => {
 
   test('Should render students data and pagination', async () => {
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students']}>
-        <Route path="/students">
-          <StudentsPage />,
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students" element={<StudentsPage />} />,
+      {
+        initialEntries: ['/students'],
+        preloadedState: mockStore,
+      },
     );
 
     waitFor(() => {

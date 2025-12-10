@@ -1,7 +1,7 @@
 import React from 'react';
 import { waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { renderWithProviders } from 'test-utils';
 
@@ -69,12 +69,11 @@ const mockStore = {
 describe('StudentsDetails', () => {
   test('Should render the options', () => {
     const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/student123']}>
-        <Route path="/students/:learnerName">
-          <StudentsDetails />,
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/:learnerName" element={<StudentsDetails />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/student123'],
+      },
     );
 
     waitFor(() => {
