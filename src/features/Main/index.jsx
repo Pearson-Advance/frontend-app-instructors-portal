@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  BrowserRouter,
   Route,
   Routes,
   Navigate,
@@ -76,16 +75,16 @@ const Main = () => {
   }, [institutions, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const routes = [
-    { path: '/dashboard', component: DashboardPage, exact: true },
-    { path: '/students', component: StudentsPage, exact: true },
-    { path: '/students/:learnerEmail', component: StudentsDetails, exact: true },
-    { path: '/classes/:classId', component: ClassDetailPage, exact: true },
-    { path: '/classes', component: ClassesPage, exact: true },
-    { path: '/my-profile', component: Profile, exact: true },
+    { path: '/dashboard', element: <DashboardPage /> },
+    { path: '/students', element: <StudentsPage /> },
+    { path: '/students/:learnerEmail', element: <StudentsDetails /> },
+    { path: '/classes/:classId', element: <ClassDetailPage /> },
+    { path: '/classes', element: <ClassesPage /> },
+    { path: '/my-profile', element: <Profile /> },
   ];
 
   return (
-    <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
+    <>
       <Header />
       {bannerText && (
         <Banner variant="warning" iconWarning text={bannerText} />
@@ -109,17 +108,16 @@ const Main = () => {
                 {institutions?.length > 1 && (<InstitutionSelector />)}
               </Container>
               <Routes>
-                <Route exact path="/" element={<Navigate replace to="/dashboard" />} />
-                {routes.map(({ path, exact, component: Component }) => (
+                <Route path="/" element={<Navigate replace to="/dashboard" />} />
+                {routes.map(({ path, element }) => (
                   <Route
                     key={path}
                     path={path}
-                    exact={exact}
-                    render={() => (
+                    element={(
                       <ActiveTabUpdater path={path}>
-                        <Component />
+                        {element}
                       </ActiveTabUpdater>
-                    )}
+      )}
                   />
                 ))}
               </Routes>
@@ -128,7 +126,7 @@ const Main = () => {
         )}
       </main>
       <Footer />
-    </BrowserRouter>
+    </>
   );
 };
 

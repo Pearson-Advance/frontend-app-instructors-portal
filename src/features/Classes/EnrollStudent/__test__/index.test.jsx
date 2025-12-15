@@ -23,11 +23,17 @@ jest.mock('@edx/frontend-platform/logging', () => ({
 }));
 
 jest.mock('@edx/paragon', () => {
+  /* eslint-disable react/prop-types */
   const actual = jest.requireActual('@edx/paragon');
+
+  const Toast = ({ children, show }) => (show ? <div data-testid="toast-message">{children}</div> : null);
+
+  const Spinner = () => <div data-testid="spinner" />;
+
   return {
     ...actual,
-    Toast: ({ children, show }) => (show ? <div data-testid="toast-message">{children}</div> : null),
-    Spinner: () => <div data-testid="spinner" />,
+    Toast,
+    Spinner,
   };
 });
 
