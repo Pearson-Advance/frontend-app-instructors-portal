@@ -6,7 +6,7 @@ import {
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import { IntlProvider } from 'react-intl';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 
 import Main from 'features/Main';
 import { store } from './store';
@@ -15,19 +15,21 @@ import appMessages from './i18n';
 
 import './index.scss';
 
+const container = document.getElementById('root');
+const root = createRoot(container);
+
 subscribe(APP_READY, () => {
-  ReactDOM.render(
+  root.render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <Main />
       </AppProvider>
-    </IntlProvider>,
-    document.getElementById('root'),
+    </IntlProvider>
   );
 });
 
 subscribe(APP_INIT_ERROR, (error) => {
-  ReactDOM.render(<ErrorPage message={error.message} />, document.getElementById('root'));
+  root.render(<ErrorPage message={error.message} />);
 });
 
 initialize({

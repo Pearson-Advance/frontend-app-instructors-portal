@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container } from '@edx/paragon';
+import { Container } from '@openedx/paragon';
 
 import { getMessageUnauthorized } from 'helpers';
 

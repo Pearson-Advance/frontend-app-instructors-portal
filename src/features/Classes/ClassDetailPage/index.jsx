@@ -9,7 +9,7 @@ import {
   Container,
   Pagination,
   Toast,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 
 import { useInstitutionIdQueryParam, useToast } from 'hooks';
 import { fetchLabSummaryLink } from 'features/Classes/data/thunks';

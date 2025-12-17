@@ -8,7 +8,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 
-import { Container, Spinner } from '@edx/paragon';
+import { Container, Spinner } from '@openedx/paragon';
 import { getConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
 

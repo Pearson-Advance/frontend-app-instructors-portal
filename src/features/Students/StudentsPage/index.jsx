@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Pagination,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 
 import { fetchStudentsData } from 'features/Students/data';
 import { resetStudentsTable, updateCurrentPage } from 'features/Students/data/slice';

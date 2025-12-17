@@ -1,5 +1,5 @@
-import { Dropdown, Icon, IconButton } from '@edx/paragon';
-import { MoreHoriz, MoreVert } from '@edx/paragon/icons';
+import { Dropdown, Icon, IconButton } from '@openedx/paragon';
+import { MoreHoriz, MoreVert } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import Option from './Option';

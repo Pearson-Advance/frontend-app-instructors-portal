@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Col } from '@edx/paragon';
+import { Col } from '@openedx/paragon';
 
 import { formatDateRange } from 'react-paragon-topaz';
 

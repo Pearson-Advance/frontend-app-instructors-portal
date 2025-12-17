@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { formatDateRange } from 'react-paragon-topaz';
-import { Spinner, ProgressBar } from '@edx/paragon';
+import { Spinner, ProgressBar } from '@openedx/paragon';
 
 import { RequestStatus } from 'features/constants';
 

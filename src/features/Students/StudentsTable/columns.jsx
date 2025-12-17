@@ -4,9 +4,9 @@ import {
   IconButton,
   Icon,
   Overlay,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { Link } from 'react-router-dom';
-import { MoreHoriz } from '@edx/paragon/icons';
+import { MoreHoriz } from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 import React from 'react';
 

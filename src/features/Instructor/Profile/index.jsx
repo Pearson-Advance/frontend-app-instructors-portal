@@ -9,7 +9,7 @@ import {
   Tab,
   Container,
   Pagination,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { ProfileCard, formatUTCDate } from 'react-paragon-topaz';
 
 import Availability from 'features/Instructor/Availability';
