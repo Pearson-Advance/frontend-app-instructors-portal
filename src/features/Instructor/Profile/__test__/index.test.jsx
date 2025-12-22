@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { waitFor } from '@testing-library/react';
 import { AppContext } from '@edx/frontend-platform/react';
 
@@ -85,14 +85,18 @@ describe('Instructor Profile', () => {
 
   test('Should render the component', () => {
     const { getByText } = renderWithProviders(
-      <AppContext.Provider value={{ authenticatedUser, config }}>
-        <MemoryRouter initialEntries={['/']}>
-          <Route path="/">
+      <Route
+        path="/"
+        element={(
+          <AppContext.Provider value={{ authenticatedUser, config }}>
             <Profile />
-          </Route>
-        </MemoryRouter>
-      </AppContext.Provider>,
-      { preloadedState: mockStore },
+          </AppContext.Provider>
+      )}
+      />,
+      {
+        initialEntries: ['/'],
+        preloadedState: mockStore,
+      },
     );
 
     waitFor(() => {

@@ -1,4 +1,4 @@
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 
 import { renderWithProviders } from 'test-utils';
@@ -79,11 +79,7 @@ describe('Columns of instructor profile', () => {
     };
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter initialEntries={['/']}>
-        <Route path="/">
-          <ClassColumn />
-        </Route>
-      </MemoryRouter>,
+      <Route path="/" element={<ClassColumn />} />,
       { preloadedState: mockStore },
     );
 

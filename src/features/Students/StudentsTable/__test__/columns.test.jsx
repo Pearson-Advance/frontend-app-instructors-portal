@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
@@ -108,12 +108,11 @@ describe('getColumns', () => {
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/?institutionId=1']}>
-        <Route path="/students/">
-          <StudentCell />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<StudentCell />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/?institutionId=1'],
+      },
     );
 
     const link = component.getByText('Test User');
@@ -129,12 +128,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <EmailCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<EmailCell />, { preloadedState: mockStore });
 
     const link = component.getByText('testuser@example.com');
     expect(link).toBeInTheDocument();
@@ -148,12 +142,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <StatusCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<StatusCell />, { preloadedState: mockStore });
 
     const badge = component.getByText('Active');
     expect(badge).toBeInTheDocument();
@@ -169,12 +158,11 @@ describe('getColumns', () => {
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/?institutionId=1']}>
-        <Route path="/students/">
-          <ClassNameCell />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<ClassNameCell />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/?institutionId=1'],
+      },
     );
 
     const link = component.getByText('test ccx1');
@@ -193,12 +181,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <DateCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<DateCell />, { preloadedState: mockStore });
 
     expect(component.container.textContent).toContain('02/13/24 - 12/31/24');
   });
@@ -213,12 +196,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <DateCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<DateCell />, { preloadedState: mockStore });
 
     expect(component.container.textContent).toBe(' - ');
   });
@@ -230,12 +208,7 @@ describe('getColumns', () => {
       },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter>
-        <ProgressCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<ProgressCell />, { preloadedState: mockStore });
 
     expect(getByText('75%')).toBeInTheDocument();
   });
@@ -251,12 +224,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <ExamReadyCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<ExamReadyCell />, { preloadedState: mockStore });
 
     expect(component.container.firstChild).toBeInTheDocument();
   });
@@ -272,12 +240,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <LastExamDateCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<LastExamDateCell />, { preloadedState: mockStore });
 
     expect(component.getByText('03/15/24')).toBeInTheDocument();
   });
@@ -293,12 +256,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <LastExamDateCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<LastExamDateCell />, { preloadedState: mockStore });
 
     expect(component.getByText('--')).toBeInTheDocument();
   });
@@ -310,12 +268,7 @@ describe('getColumns', () => {
       return <Header />;
     };
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <HeaderComponent />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<HeaderComponent />, { preloadedState: mockStore });
 
     expect(component.getByText('Epp days left')).toBeInTheDocument();
     expect(component.container.querySelector('.fa-circle-info')).toBeInTheDocument();
@@ -332,12 +285,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <EppDaysLeftCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<EppDaysLeftCell />, { preloadedState: mockStore });
 
     expect(component.getByText('45')).toBeInTheDocument();
   });
@@ -353,12 +301,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter>
-        <EppDaysLeftCell />
-      </MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<EppDaysLeftCell />, { preloadedState: mockStore });
 
     expect(component.getByText('--')).toBeInTheDocument();
   });
@@ -379,12 +322,11 @@ describe('getColumns', () => {
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/']}>
-        <Route path="/students/">
-          <ActionColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<ActionColumn />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/'],
+      },
     );
 
     const button = component.getByTestId('droprown-action');
@@ -411,12 +353,11 @@ describe('getColumns', () => {
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/']}>
-        <Route path="/students/">
-          <ActionColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<ActionColumn />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/'],
+      },
     );
 
     const button = component.getByTestId('droprown-action');
@@ -441,12 +382,11 @@ describe('getColumns', () => {
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/']}>
-        <Route path="/students/">
-          <ActionColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<ActionColumn />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/'],
+      },
     );
 
     const button = component.getByTestId('droprown-action');
@@ -471,12 +411,11 @@ describe('getColumns', () => {
     });
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/students/']}>
-        <Route path="/students/">
-          <ActionColumn />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/students/" element={<ActionColumn />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/students/'],
+      },
     );
 
     const button = component.getByTestId('droprown-action');

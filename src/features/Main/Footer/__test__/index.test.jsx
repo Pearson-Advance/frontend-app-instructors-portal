@@ -1,25 +1,32 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import { Footer } from 'features/Main/Footer';
 
-describe('Footer Component', () => {
-  test('Should render the component', async () => {
-    render(<Footer />);
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: () => ({
+    FOOTER_PRIVACY_POLICY_LINK: 'https://privacy.test',
+    FOOTER_TERMS_OF_SERVICE_LINK: 'https://terms.test',
+  }),
+}));
 
-    await waitFor(() => {
-      const footerElement = screen.getByRole('contentinfo');
-      expect(footerElement).toBeInTheDocument();
-    });
+describe('Footer Component', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('Should render two footer links', async () => {
+  test('Should render the component', () => {
     render(<Footer />);
 
-    await waitFor(() => {
-      const linkElements = screen.getAllByRole('link');
-      expect(linkElements).toHaveLength(2);
-    });
+    const footerElement = screen.getByRole('contentinfo');
+    expect(footerElement).toBeInTheDocument();
+  });
+
+  test('Should render two footer links', () => {
+    render(<Footer />);
+
+    const linkElements = screen.getAllByRole('link');
+    expect(linkElements).toHaveLength(2);
   });
 });

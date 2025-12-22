@@ -1,11 +1,10 @@
 import React, { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  BrowserRouter,
   Route,
-  Switch,
-  Redirect,
-  useHistory,
+  Routes,
+  Navigate,
+  useNavigate,
   useLocation,
 } from 'react-router-dom';
 
@@ -38,7 +37,7 @@ import { isInvalidUserOrInstitution } from 'helpers';
 import './index.scss';
 
 const Main = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const roles = getUserRoles();
@@ -69,23 +68,23 @@ const Main = () => {
   useEffect(() => {
     if (institutions?.length === 1) {
       searchParams.set(INSTITUTION_QUERY_ID, institutions[0]?.id);
-      history.push({ search: searchParams.toString() });
+      navigate({ search: searchParams.toString() });
 
       dispatch(updateSelectedInstitution({ data: institutions[0] }));
     }
   }, [institutions, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const routes = [
-    { path: '/dashboard', component: DashboardPage, exact: true },
-    { path: '/students', component: StudentsPage, exact: true },
-    { path: '/students/:learnerEmail', component: StudentsDetails, exact: true },
-    { path: '/classes/:classId', component: ClassDetailPage, exact: true },
-    { path: '/classes', component: ClassesPage, exact: true },
-    { path: '/my-profile', component: Profile, exact: true },
+    { path: '/dashboard', element: <DashboardPage /> },
+    { path: '/students', element: <StudentsPage /> },
+    { path: '/students/:learnerEmail', element: <StudentsDetails /> },
+    { path: '/classes/:classId', element: <ClassDetailPage /> },
+    { path: '/classes', element: <ClassesPage /> },
+    { path: '/my-profile', element: <Profile /> },
   ];
 
   return (
-    <BrowserRouter basename={getConfig().INSTRUCTOR_PORTAL_PATH}>
+    <>
       <Header />
       {bannerText && (
         <Banner variant="warning" iconWarning text={bannerText} />
@@ -108,29 +107,26 @@ const Main = () => {
               <Container size="xl" className="px-4">
                 {institutions?.length > 1 && (<InstitutionSelector />)}
               </Container>
-              <Switch>
-                <Route exact path="/">
-                  <Redirect to="/dashboard" />
-                </Route>
-                {routes.map(({ path, exact, component: Component }) => (
+              <Routes>
+                <Route path="/" element={<Navigate replace to="/dashboard" />} />
+                {routes.map(({ path, element }) => (
                   <Route
                     key={path}
                     path={path}
-                    exact={exact}
-                    render={() => (
+                    element={(
                       <ActiveTabUpdater path={path}>
-                        <Component />
+                        {element}
                       </ActiveTabUpdater>
-                    )}
+      )}
                   />
                 ))}
-              </Switch>
+              </Routes>
             </Container>
           </>
         )}
       </main>
       <Footer />
-    </BrowserRouter>
+    </>
   );
 };
 

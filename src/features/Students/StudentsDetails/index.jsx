@@ -12,7 +12,7 @@ import {
 import {
   Link,
   useParams,
-  useHistory,
+  useNavigate,
   useLocation,
 } from 'react-router-dom';
 
@@ -32,7 +32,7 @@ import { isInvalidUserOrInstitution } from 'helpers';
 import './index.scss';
 
 const StudentsDetails = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const { learnerEmail } = useParams();
@@ -63,7 +63,7 @@ const StudentsDetails = () => {
   const queryParams = new URLSearchParams(location.search);
   const previousPage = queryParams.get('previous') || 'students';
 
-  const handleBackButton = () => (history.push(`/${previousPage}`));
+  const handleBackButton = () => (navigate(`/${previousPage}`));
 
   const originDomain = getConfig().BASE_URL;
   const studentImage = userImageUrl && userImageUrl.startsWith('/') ? `https://${originDomain}${userImageUrl}` : userImageUrl;

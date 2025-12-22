@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
@@ -68,7 +67,7 @@ describe('getColumns', () => {
     });
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter><Cell /></MemoryRouter>,
+      <Cell />,
       { preloadedState: mockStore },
     );
 
@@ -82,7 +81,7 @@ describe('getColumns', () => {
       row: { values: { learnerEmail: 'testuser@example.com' } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -95,7 +94,7 @@ describe('getColumns', () => {
       row: { values: { status: 'Active' } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -110,7 +109,7 @@ describe('getColumns', () => {
       },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -129,7 +128,7 @@ describe('getColumns', () => {
       },
     });
 
-    const { container } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { container } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -141,7 +140,7 @@ describe('getColumns', () => {
       row: { values: { completePercentage: 75.5 } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -153,7 +152,7 @@ describe('getColumns', () => {
       row: { values: { examReady: { status: 'Complete' } } },
     });
 
-    const { container } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { container } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -165,7 +164,7 @@ describe('getColumns', () => {
       row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -177,7 +176,7 @@ describe('getColumns', () => {
       row: { values: { examReady: { lastExamDate: null } } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -189,7 +188,7 @@ describe('getColumns', () => {
       row: { values: { examReady: { eppDaysLeft: 45 } } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -201,7 +200,7 @@ describe('getColumns', () => {
       row: { values: { examReady: { eppDaysLeft: null } } },
     });
 
-    const { getByText } = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const { getByText } = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -220,7 +219,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const component = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -241,7 +240,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const component = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 
@@ -262,7 +261,7 @@ describe('getColumns', () => {
       },
     });
 
-    const component = renderWithProviders(<MemoryRouter><Cell /></MemoryRouter>, {
+    const component = renderWithProviders(<Cell />, {
       preloadedState: mockStore,
     });
 

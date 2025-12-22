@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import { renderWithProviders } from 'test-utils';
 
@@ -75,12 +75,11 @@ describe('Classes page', () => {
     };
 
     const component = renderWithProviders(
-      <MemoryRouter initialEntries={['/classes']}>
-        <Route path="/classes">
-          <ClassesPage />
-        </Route>
-      </MemoryRouter>,
-      { preloadedState: mockStore },
+      <Route path="/classes" element={<ClassesPage />} />,
+      {
+        preloadedState: mockStore,
+        initialEntries: ['/classes'],
+      },
     );
 
     expect(component.container).toHaveTextContent('Classes');

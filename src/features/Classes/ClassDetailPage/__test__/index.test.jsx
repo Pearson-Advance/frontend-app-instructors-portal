@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
@@ -57,7 +56,7 @@ describe('getColumns (ClassDetailPage)', () => {
     const IndexCell = () => getColumns()[0].Cell({ row: { index: 0 } });
 
     const { getByText } = renderWithProviders(
-      <MemoryRouter><IndexCell /></MemoryRouter>,
+      <IndexCell />,
       { preloadedState: mockStore },
     );
 
@@ -72,10 +71,7 @@ describe('getColumns (ClassDetailPage)', () => {
       },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><StudentCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<StudentCell />, { preloadedState: mockStore });
 
     const link = getByText('Test User');
     expect(link).toBeInTheDocument();
@@ -87,10 +83,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { learnerEmail: 'testuser@example.com' } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><EmailCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<EmailCell />, { preloadedState: mockStore });
 
     expect(getByText('testuser@example.com')).toHaveAttribute(
       'href',
@@ -103,10 +96,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { status: 'Active' } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><StatusCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<StatusCell />, { preloadedState: mockStore });
 
     expect(getByText('Active')).toBeInTheDocument();
   });
@@ -116,10 +106,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { completePercentage: 75.5 } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><GradeCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<GradeCell />, { preloadedState: mockStore });
 
     expect(getByText('75%')).toBeInTheDocument();
   });
@@ -129,10 +116,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { examReady: { status: 'Complete' } } },
     });
 
-    const { container } = renderWithProviders(
-      <MemoryRouter><ExamReadyCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { container } = renderWithProviders(<ExamReadyCell />, { preloadedState: mockStore });
 
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -142,10 +126,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><LastExamDateCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<LastExamDateCell />, { preloadedState: mockStore });
 
     expect(getByText('03/15/24')).toBeInTheDocument();
   });
@@ -155,10 +136,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { examReady: { lastExamDate: null } } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><LastExamDateCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<LastExamDateCell />, { preloadedState: mockStore });
 
     expect(getByText('--')).toBeInTheDocument();
   });
@@ -168,10 +146,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { examReady: { eppDaysLeft: 45 } } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><EppCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<EppCell />, { preloadedState: mockStore });
 
     expect(getByText('45')).toBeInTheDocument();
   });
@@ -181,10 +156,7 @@ describe('getColumns (ClassDetailPage)', () => {
       row: { values: { examReady: { eppDaysLeft: null } } },
     });
 
-    const { getByText } = renderWithProviders(
-      <MemoryRouter><EppCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const { getByText } = renderWithProviders(<EppCell />, { preloadedState: mockStore });
 
     expect(getByText('--')).toBeInTheDocument();
   });
@@ -201,10 +173,7 @@ describe('getColumns (ClassDetailPage)', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter><ActionCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<ActionCell />, { preloadedState: mockStore });
 
     fireEvent.click(component.getByTestId('droprown-action'));
 
@@ -223,10 +192,7 @@ describe('getColumns (ClassDetailPage)', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter><ActionCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<ActionCell />, { preloadedState: mockStore });
 
     fireEvent.click(component.getByTestId('droprown-action'));
 
@@ -245,10 +211,7 @@ describe('getColumns (ClassDetailPage)', () => {
       },
     });
 
-    const component = renderWithProviders(
-      <MemoryRouter><ActionCell /></MemoryRouter>,
-      { preloadedState: mockStore },
-    );
+    const component = renderWithProviders(<ActionCell />, { preloadedState: mockStore });
 
     fireEvent.click(component.getByTestId('droprown-action'));
 

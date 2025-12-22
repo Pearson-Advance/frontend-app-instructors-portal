@@ -1,5 +1,4 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
 import { fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -24,64 +23,47 @@ jest.mock('react-select', () => function reactSelect({ options, currentValue, on
   );
 });
 
-describe('InstitutionSelector', () => {
-  let history;
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
 
+describe('InstitutionSelector', () => {
   beforeEach(() => {
-    history = {
-      location: { search: '' },
-      push: jest.fn(),
-      replace: jest.fn(),
-      listen: jest.fn(),
-      createHref: jest.fn(),
-    };
+    mockNavigate.mockClear();
   });
 
-  test('Should render the select options and handle selection', () => {
-    const preloadedState = {
-      main: {
-        institutions: {
-          data: [
-            { id: 1, name: 'Institution 1' },
-            { id: 2, name: 'Institution 2' },
-          ],
-        },
-        institution: null,
+  const preloadedState = {
+    main: {
+      institutions: {
+        data: [
+          { id: 1, name: 'Institution 1' },
+          { id: 2, name: 'Institution 2' },
+        ],
       },
-    };
+      institution: null,
+    },
+  };
 
+  test('Should render the select options and handle selection', () => {
     const { getByText, getByTestId } = renderWithProviders(
-      <Router history={history}>
-        <InstitutionSelector />
-      </Router>,
-      { preloadedState },
+      <InstitutionSelector />,
+      { preloadedState, initialEntries: ['/'] },
     );
 
     expect(getByText('Select an institution')).toBeInTheDocument();
 
-    fireEvent.change(getByTestId('select'), { target: { value: '1', id: '1' } });
+    fireEvent.change(getByTestId('select'), { target: { value: '1' } });
 
     expect(getByText('Institution 1')).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalled();
   });
 
   test('Should render all my institutions option', () => {
-    const preloadedState = {
-      main: {
-        institutions: {
-          data: [
-            { id: 1, name: 'Institution 1' },
-            { id: 2, name: 'Institution 2' },
-          ],
-        },
-        institution: null,
-      },
-    };
-
     const { getByText, getByTestId } = renderWithProviders(
-      <Router history={history}>
-        <InstitutionSelector />
-      </Router>,
-      { preloadedState },
+      <InstitutionSelector />,
+      { preloadedState, initialEntries: ['/'] },
     );
 
     expect(getByText('Select an institution')).toBeInTheDocument();
@@ -89,5 +71,6 @@ describe('InstitutionSelector', () => {
     fireEvent.change(getByTestId('select'), { target: { value: 'all_institutions' } });
 
     expect(getByText('All my institutions')).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalled();
   });
 });
