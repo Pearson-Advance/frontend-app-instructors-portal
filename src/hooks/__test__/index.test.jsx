@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react';
 
-import { renderWithProviders } from 'test-utils';
+import { ProvidersWrapper } from 'test-utils';
 import { useInstitutionIdQueryParam, useToast } from 'hooks';
 import { INSTITUTION_QUERY_ID } from 'features/constants';
 
@@ -12,9 +12,16 @@ describe('useInstitutionIdQueryParam', () => {
       },
     };
 
-    const { result } = renderHook(() => useInstitutionIdQueryParam(), {
-      wrapper: ({ children }) => renderWithProviders(children, { preloadedState }).store,
-    });
+    const { result } = renderHook(
+      () => useInstitutionIdQueryParam(),
+      {
+        wrapper: ({ children }) => (
+          <ProvidersWrapper preloadedState={preloadedState}>
+            {children}
+          </ProvidersWrapper>
+        ),
+      },
+    );
 
     expect(result.current('http://example.com')).toBe('http://example.com');
   });
@@ -27,9 +34,16 @@ describe('useInstitutionIdQueryParam', () => {
       },
     };
 
-    const { result } = renderHook(() => useInstitutionIdQueryParam(), {
-      wrapper: ({ children }) => renderWithProviders(children, { preloadedState }).store,
-    });
+    const { result } = renderHook(
+      () => useInstitutionIdQueryParam(),
+      {
+        wrapper: ({ children }) => (
+          <ProvidersWrapper preloadedState={preloadedState}>
+            {children}
+          </ProvidersWrapper>
+        ),
+      },
+    );
 
     expect(result.current('http://example.com')).toBe(`http://example.com?${INSTITUTION_QUERY_ID}=${institutionId}`);
   });
@@ -42,9 +56,16 @@ describe('useInstitutionIdQueryParam', () => {
       },
     };
 
-    const { result } = renderHook(() => useInstitutionIdQueryParam(), {
-      wrapper: ({ children }) => renderWithProviders(children, { preloadedState }).store,
-    });
+    const { result } = renderHook(
+      () => useInstitutionIdQueryParam(),
+      {
+        wrapper: ({ children }) => (
+          <ProvidersWrapper preloadedState={preloadedState}>
+            {children}
+          </ProvidersWrapper>
+        ),
+      },
+    );
 
     expect(result.current('http://example.com?foo=bar')).toBe(`http://example.com?foo=bar&${INSTITUTION_QUERY_ID}=${institutionId}`);
   });

@@ -1,12 +1,13 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import {
   APP_INIT_ERROR, APP_READY, subscribe, initialize,
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import { IntlProvider } from 'react-intl';
-import {createRoot} from 'react-dom/client';
 
 import Main from 'features/Main';
 import { store } from './store';
@@ -20,11 +21,13 @@ const root = createRoot(container);
 
 subscribe(APP_READY, () => {
   root.render(
-    <IntlProvider locale="en">
-      <AppProvider store={store}>
-        <Main />
-      </AppProvider>
-    </IntlProvider>
+    <StrictMode>
+      <IntlProvider locale="en">
+        <AppProvider store={store}>
+          <Main />
+        </AppProvider>
+      </IntlProvider>
+    </StrictMode>,
   );
 });
 

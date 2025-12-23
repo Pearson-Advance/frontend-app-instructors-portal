@@ -1,5 +1,4 @@
 import React from 'react';
-import '@testing-library/jest-dom/extend-expect';
 import { fireEvent } from '@testing-library/react';
 import { AppContext } from '@edx/frontend-platform/react';
 import { renderWithProviders } from 'test-utils';
