@@ -1,5 +1,4 @@
 import { Route } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
 
 import { renderWithProviders } from 'test-utils';
 

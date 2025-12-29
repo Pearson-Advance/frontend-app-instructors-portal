@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Container, Col, Row } from '@edx/paragon';
+import { Container, Col, Row } from '@openedx/paragon';
 
 import WeeklySchedule from 'features/Dashboard/WeeklySchedule';
 import AssignedClasses from 'features/Dashboard/AssignedClasses';

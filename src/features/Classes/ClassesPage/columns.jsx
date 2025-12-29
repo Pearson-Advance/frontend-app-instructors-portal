@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { formatUTCDate } from 'react-paragon-topaz';
 import { useSelector, useDispatch } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
-import { Toast } from '@edx/paragon';
+import { Toast } from '@openedx/paragon';
 
 import { useInstitutionIdQueryParam, useToast } from 'hooks';
 

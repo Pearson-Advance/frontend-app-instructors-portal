@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Col } from '@edx/paragon';
+import { Col } from '@openedx/paragon';
 
 import { CLASS_LIMIT } from 'features/constants';
 import { useInstitutionIdQueryParam } from 'hooks';

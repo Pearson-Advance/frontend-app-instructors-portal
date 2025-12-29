@@ -1,4 +1,4 @@
-import { Dropdown } from '@edx/paragon';
+import { Dropdown } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 const Option = ({ iconSrc, handleClick, label }) => (

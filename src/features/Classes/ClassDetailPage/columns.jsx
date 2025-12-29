@@ -5,8 +5,8 @@ import {
   IconButton,
   Icon,
   Overlay,
-} from '@edx/paragon';
-import { MoreHoriz } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { MoreHoriz } from '@openedx/paragon/icons';
 import {
   Badge,
   STUDENT_STATUS_VARIANTS,

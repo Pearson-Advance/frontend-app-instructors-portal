@@ -1,6 +1,5 @@
 import React from 'react';
 import { renderWithProviders } from 'test-utils';
-import '@testing-library/jest-dom/extend-expect';
 
 import Availability from 'features/Instructor/Availability';
 import { fireEvent, waitFor } from '@testing-library/react';

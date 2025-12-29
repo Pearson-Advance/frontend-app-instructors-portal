@@ -8,7 +8,7 @@ import {
   Spinner,
   Container,
   Pagination,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   Link,
   useParams,

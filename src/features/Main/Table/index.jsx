@@ -4,7 +4,7 @@ import {
   Row,
   Col,
   DataTable,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 
 const Table = ({
   columns,

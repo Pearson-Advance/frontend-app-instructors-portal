@@ -25,7 +25,7 @@ module.exports = {
     //Fix for match react version in react-paragon-topaz, verify when they have the same version
     '^react$': require.resolve('react'),
     '^react-dom$': require.resolve('react-dom'),
-    '^@edx/paragon$': '<rootDir>/node_modules/@edx/paragon',
+    '^@openedx/paragon$': '<rootDir>/node_modules/@openedx/paragon',
 },
 
 transformIgnorePatterns: [

@@ -3,8 +3,8 @@ import {
   Form,
   Col,
   Icon,
-} from '@edx/paragon';
-import { Search } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Search } from '@openedx/paragon/icons';
 import { Select, Button } from 'react-paragon-topaz';
 import { useDispatch, useSelector } from 'react-redux';
 
