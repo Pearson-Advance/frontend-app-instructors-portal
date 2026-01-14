@@ -1,8 +1,6 @@
-@import 'assets/colors.scss';
-
 nav.nav-tabs,
 nav.nav-tabs .nav-link:hover {
-  border-bottom: 2px solid $primary;
+  border-bottom: 2px solid var(--pgn-color-primary);
 }
 
 a.nav-item.nav-link.active {
@@ -12,7 +10,7 @@ a.nav-item.nav-link.active {
 .text-uppercase,
 .text-base {
   text-transform: uppercase;
-  color: $gray-70;
+  color: var(--pgn-color-gray-800);
   letter-spacing: 1px;
 }
 
@@ -26,16 +24,14 @@ a.nav-item.nav-link.active {
 }
 
 .text-primary {
-  color: $primary;
+  color: var(--pgn-color-primary);
 }
 
 .student-image {
-  $size: 72px;
-
-  min-height: $size;
-  min-width: $size;
-  max-width: $size;
-  max-height: $size;
+  min-height: var(--pgn-size-profile-student-image);
+  min-width: var(--pgn-size-profile-student-image);
+  max-width: var(--pgn-size-profile-student-image);
+  max-height: var(--pgn-size-profile-student-image);
   object-fit: cover;
   border-radius: 50%;
 }
@@ -45,5 +41,5 @@ a.nav-item.nav-link.active {
 }
 
 .info-divider {
-  border-top: 1px solid $gray-20;
+  border-top: 1px solid var(--pgn-color-gray-200);
 }

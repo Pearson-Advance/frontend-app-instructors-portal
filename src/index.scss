@@ -1,43 +1,8 @@
-@import "react-paragon-topaz/src/variables.scss";
-@import "assets/variables.scss";
+//Check if coudl be removed when paragon plugin is enabled
 @import "@edx/brand/paragon/fonts.scss";
 @import "@edx/brand/paragon/variables.scss";
-@import "@openedx/paragon/scss/core/core.scss";
 @import "@edx/brand/paragon/overrides.scss";
 @import "react-paragon-topaz/src/styles/DataTable/DataTable.scss";
 @import "react-paragon-topaz/src/styles/Form/Form.scss";
 @import "react-paragon-topaz/src/styles/Pagination/Pagination.scss";
 @import "react-paragon-topaz/src/styles/shared.scss";
-
-body {
-  font-family: $font-family-base;
-}
-
-.dropdownColumn.pgn__data-table-cell-wrap {
-  overflow: visible;
-}
-
-.course-progress {
-  color: $gray-70;
-}
-
-.epp-header {
-  cursor: pointer;
-}
-
-.epp-overlay {
-  background-color: $overlay-bg;
-  color: $white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  max-width: 320px;
-  box-shadow: 0 4px 12px $overlay-shadow;
-  z-index: 9999;
-  line-height: 1.4;
-}
-
-a.epp-link {
-  color: $blue-50;
-  text-decoration: underline;
-}
