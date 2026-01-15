@@ -12,8 +12,6 @@ import { updateDatesCalendar, updateEvents } from 'features/Instructor/data/slic
 
 import { setTimeInUTC, stringToDateType } from 'helpers';
 
-import 'features/Instructor/Availability/index.scss';
-
 const initialState = {
   start_date: startOfMonth(new Date()).toISOString(),
   end_date: endOfMonth(new Date()).toISOString(),
