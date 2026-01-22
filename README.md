@@ -9,7 +9,7 @@ This MFE application for instructors offers an extensive range of features and a
 - Stat openedx services.
 - Run `npm install`.
 - Run `npm start`
-- Visit `http://localhost:1990`
+- Visit `http://localhost:1970`
 
 ## Testing
 

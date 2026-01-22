@@ -11,7 +11,7 @@ const config = createConfig('webpack-dev', {
   },
 });
 
-// Allow access via local.openedx.io:1990
+// Allow access via local.openedx.io:1970
 config.devServer = config.devServer || {};
 config.devServer.allowedHosts = ['local.openedx.io'];
 // (optional, but nice if you want LAN access)
