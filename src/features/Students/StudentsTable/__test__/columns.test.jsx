@@ -1,6 +1,5 @@
 import { fireEvent } from '@testing-library/react';
 import { Route } from 'react-router-dom';
-import '@testing-library/jest-dom';
 
 import { renderWithProviders } from 'test-utils';
 

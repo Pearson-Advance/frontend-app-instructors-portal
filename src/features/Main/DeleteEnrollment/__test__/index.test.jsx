@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 
 import { renderWithProviders } from 'test-utils';

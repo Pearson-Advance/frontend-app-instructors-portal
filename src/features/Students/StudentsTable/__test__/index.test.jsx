@@ -1,5 +1,4 @@
 import React from 'react';
-import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 import { Route } from 'react-router-dom';
 import StudentsTable from 'features/Students/StudentsTable';

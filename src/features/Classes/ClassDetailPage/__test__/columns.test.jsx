@@ -1,6 +1,4 @@
 import { fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-
 import { renderWithProviders } from 'test-utils';
 import { getColumns } from 'features/Students/StudentsTable/columns';
 
