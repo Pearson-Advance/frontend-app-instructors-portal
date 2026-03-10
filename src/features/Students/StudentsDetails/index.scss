@@ -1,6 +1,6 @@
 nav.nav-tabs,
 nav.nav-tabs .nav-link:hover {
-  border-bottom: 2px solid var(--pgn-color-primary);
+  border-bottom: 2px solid var(--pgn-color-primary-base);
 }
 
 a.nav-item.nav-link.active {
@@ -10,7 +10,7 @@ a.nav-item.nav-link.active {
 .text-uppercase,
 .text-base {
   text-transform: uppercase;
-  color: var(--pgn-color-gray-800);
+  color: var(--pgn-color-gray-vue-600);
   letter-spacing: 1px;
 }
 
@@ -24,7 +24,7 @@ a.nav-item.nav-link.active {
 }
 
 .text-primary {
-  color: var(--pgn-color-primary);
+  color: var(--pgn-color-primary-base);
 }
 
 .student-image {
@@ -41,5 +41,5 @@ a.nav-item.nav-link.active {
 }
 
 .info-divider {
-  border-top: 1px solid var(--pgn-color-gray-200);
+  border-top: 1px solid var(--pgn-color-gray-vue-200);
 }
