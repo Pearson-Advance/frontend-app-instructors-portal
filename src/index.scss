@@ -1,8 +1,1 @@
-//Check if coudl be removed when paragon plugin is enabled
-@import "@edx/brand/paragon/fonts.scss";
-@import "@edx/brand/paragon/variables.scss";
-@import "@edx/brand/paragon/overrides.scss";
-@import "react-paragon-topaz/src/styles/DataTable/DataTable.scss";
-@import "react-paragon-topaz/src/styles/Form/Form.scss";
-@import "react-paragon-topaz/src/styles/Pagination/Pagination.scss";
-@import "react-paragon-topaz/src/styles/shared.scss";
+@use "react-paragon-topaz/src/index.scss"

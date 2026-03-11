@@ -16,6 +16,6 @@ config.devServer = config.devServer || {};
 config.devServer.allowedHosts = ['local.openedx.io'];
 // (optional, but nice if you want LAN access)
 config.devServer.host = '0.0.0.0';
-config.devServer.port = process.env.PORT || 1990;
+config.devServer.port = process.env.PORT || 1970;
 
 module.exports = config;
