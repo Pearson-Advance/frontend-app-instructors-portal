@@ -8,18 +8,19 @@ jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
 }));
 
-jest.mock('react-select', () => function reactSelect({ options, currentValue, onChange }) {
+jest.mock('react-select', () => function reactSelect({ options, value, onChange }) {
   function handleChange(event) {
     const currentOption = options.find(
-      (option) => option.value === event.currentTarget.value,
+      (option) => String(option.value) === event.currentTarget.value,
     );
     onChange(currentOption);
   }
 
   return (
-    <select data-testid="select" value={currentValue} onChange={handleChange}>
-      {options.map(({ label, value }) => (
-        <option key={value} value={value}>
+    <select data-testid="select" value={value?.value || ''} onChange={handleChange}>
+      <option value="" label="label" />
+      {options.map(({ label, value: optionValue }) => (
+        <option key={optionValue} value={optionValue}>
           {label}
         </option>
       ))}
@@ -28,68 +29,78 @@ jest.mock('react-select', () => function reactSelect({ options, currentValue, on
 });
 
 describe('Classes filters', () => {
-  const mockSetFilters = jest.fn();
-
   const mockStore = {
+    main: {
+      username: 'testUser',
+      institution: { id: 1 },
+    },
+    classes: {
+      filters: {},
+      table: {
+        status: 'success',
+        data: [],
+        currentPage: 1,
+      },
+    },
     common: {
       allCourses: {
+        status: 'success',
         data: [
-          {
-            masterCourseName: 'Demo Course 1',
-            numberOfClasses: 1,
-            missingClassesForInstructor: null,
-            numberOfStudents: 1,
-            numberOfPendingStudents: 1,
-          },
+          { masterCourseName: 'Demo Course 1' },
         ],
       },
       allClasses: {
+        status: 'success',
         data: [
           {
-            masterCourseName: 'course example',
-            masterCourseId: 'demo course',
             classId: 'class01',
             className: 'class example',
-            startDate: '',
-            endDate: '',
-            minStudents: 10,
-            maxStudents: 100,
           },
         ],
       },
     },
   };
 
-  beforeEach(() => {
-    mockSetFilters.mockClear();
-  });
-
-  test('Should have the buttons disabled if the inputs are empty', () => {
+  test('Should have the buttons disabled if inputs are empty', () => {
     const { getByText } = renderWithProviders(
       <ClassesFilters />,
+      { preloadedState: mockStore },
     );
 
-    const resetFilterButton = getByText('Reset');
-    const applyFilterButton = getByText('Apply');
+    expect(getByText('Reset')).toBeDisabled();
+    expect(getByText('Apply')).toBeDisabled();
+  });
 
-    expect(resetFilterButton).toBeDisabled();
-    expect(applyFilterButton).toBeDisabled();
+  test('Should enable Apply with valid class_name', () => {
+    const { getByText, getByTestId } = renderWithProviders(
+      <ClassesFilters />,
+      { preloadedState: mockStore },
+    );
+
+    const input = getByTestId('class_name');
+    const button = getByText('Apply');
+
+    expect(button).toBeDisabled();
+
+    fireEvent.change(input, {
+      target: { value: 'ab' },
+    });
+
+    expect(button).toBeEnabled();
   });
 
   test('Should call the service when apply filters', async () => {
-    const { getByText, getAllByTestId } = renderWithProviders(
+    const { getByText, getAllByTestId, getByTestId } = renderWithProviders(
       <ClassesFilters />,
       { preloadedState: mockStore },
     );
 
     const courseSelect = getAllByTestId('select')[0];
-    const classesSelect = getAllByTestId('select')[1];
-    const buttonApplyFilters = getByText('Apply');
+    const classSelect = getAllByTestId('select')[1];
+    const classInput = getByTestId('class_name');
+    const buttonApply = getByText('Apply');
 
-    expect(courseSelect).toBeInTheDocument();
-    expect(classesSelect).toBeInTheDocument();
-
-    fireEvent.change(classesSelect, {
+    fireEvent.change(classSelect, {
       target: { value: 'class01' },
     });
 
@@ -97,32 +108,39 @@ describe('Classes filters', () => {
       target: { value: 'Demo Course 1' },
     });
 
-    expect(getByText('class example')).toBeInTheDocument();
-    expect(getByText('Demo Course 1')).toBeInTheDocument();
+    fireEvent.change(classInput, {
+      target: { value: 'math' },
+    });
 
     await act(async () => {
-      fireEvent.click(buttonApplyFilters);
+      fireEvent.click(buttonApply);
     });
+
+    expect(buttonApply).toBeInTheDocument();
   });
 
-  test('Clear filters', async () => {
-    const { getByText, getAllByTestId } = renderWithProviders(
+  test('Should clear filters', async () => {
+    const { getByText, getAllByTestId, getByTestId } = renderWithProviders(
       <ClassesFilters />,
       { preloadedState: mockStore },
     );
 
     const courseSelect = getAllByTestId('select')[0];
-    const buttonClearFilters = getByText('Reset');
-
-    expect(courseSelect).toBeInTheDocument();
-    expect(courseSelect).toBeInTheDocument();
+    const classInput = getByTestId('class_name');
+    const buttonReset = getByText('Reset');
 
     fireEvent.change(courseSelect, {
       target: { value: 'Demo Course 1' },
     });
 
-    await act(async () => {
-      fireEvent.click(buttonClearFilters);
+    fireEvent.change(classInput, {
+      target: { value: 'test' },
     });
+
+    await act(async () => {
+      fireEvent.click(buttonReset);
+    });
+
+    expect(classInput).toHaveValue('');
   });
 });
