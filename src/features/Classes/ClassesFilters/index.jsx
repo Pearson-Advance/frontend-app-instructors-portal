@@ -35,8 +35,10 @@ const ClassesFilters = () => {
     classesOptions?.find((classElement) => classElement.value === filters?.class_id)
     || null,
   );
+  const [classFilter, setClassFilter] = useState('');
 
-  const isButtonDisabled = courseSelected === null && classSelected === null;
+  const isValidClassFilter = classFilter.trim().length > 1;
+  const isButtonDisabled = courseSelected === null && classSelected === null && !isValidClassFilter;
 
   const initialRequestParams = {
     limit: true,
@@ -53,6 +55,7 @@ const ClassesFilters = () => {
       class_id: classSelected?.value,
       course_name: courseSelected?.value,
       institution_id: institution?.id,
+      class_name: classFilter || '',
     };
 
     dispatch(updateFilters(filtersParams));
@@ -64,6 +67,7 @@ const ClassesFilters = () => {
     dispatch(getClasses(instructorUserName, { institution_id: institution?.id, ...initialRequestParams }));
     setClassSelected(null);
     setCourseSelected(null);
+    setClassFilter('');
     dispatch(updateFilters({}));
   };
 
@@ -76,6 +80,19 @@ const ClassesFilters = () => {
 
   return (
     <Form onSubmit={handleSelectFilters} className="w-100 px-4 d-flex flex-column align-items-center">
+      <Form.Row className="px-0 d-flex flex-wrap w-100 mr-0">
+        <Form.Group as={Col} className="mr-0 w-100 px-0">
+          <Form.Control
+            className="w-100 mr-0"
+            type="text"
+            floatingLabel="Class name"
+            name="class_name"
+            data-testid="class_name"
+            onChange={(e) => setClassFilter(e.target.value)}
+            value={classFilter}
+          />
+        </Form.Group>
+      </Form.Row>
       <Form.Row className="px-0 d-flex flex-wrap w-100">
         <Form.Group as={Col} className="px-0 w-50">
           <Select
