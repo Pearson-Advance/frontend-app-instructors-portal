@@ -90,6 +90,42 @@ describe('Classes filters', () => {
     expect(button).toBeEnabled();
   });
 
+  test('Should enable Apply when start_date is set', () => {
+    const { getByText, getByTestId } = renderWithProviders(
+      <ClassesFilters />,
+      { preloadedState: mockStore },
+    );
+
+    const startDateInput = getByTestId('start_date');
+    const button = getByText('Apply');
+
+    expect(button).toBeDisabled();
+
+    fireEvent.change(startDateInput, {
+      target: { value: '2024-01-15' },
+    });
+
+    expect(button).toBeEnabled();
+  });
+
+  test('Should enable Apply when end_date is set', () => {
+    const { getByText, getByTestId } = renderWithProviders(
+      <ClassesFilters />,
+      { preloadedState: mockStore },
+    );
+
+    const endDateInput = getByTestId('end_date');
+    const button = getByText('Apply');
+
+    expect(button).toBeDisabled();
+
+    fireEvent.change(endDateInput, {
+      target: { value: '2024-02-15' },
+    });
+
+    expect(button).toBeEnabled();
+  });
+
   test('Should call the service when apply filters', async () => {
     const { getByText, getAllByTestId, getByTestId } = renderWithProviders(
       <ClassesFilters />,
@@ -99,6 +135,8 @@ describe('Classes filters', () => {
     const courseSelect = getAllByTestId('select')[0];
     const classSelect = getAllByTestId('select')[1];
     const classInput = getByTestId('class_name');
+    const startDateInput = getByTestId('start_date');
+    const endDateInput = getByTestId('end_date');
     const buttonApply = getByText('Apply');
 
     fireEvent.change(classSelect, {
@@ -111,6 +149,14 @@ describe('Classes filters', () => {
 
     fireEvent.change(classInput, {
       target: { value: 'math' },
+    });
+
+    fireEvent.change(startDateInput, {
+      target: { value: '2024-01-15' },
+    });
+
+    fireEvent.change(endDateInput, {
+      target: { value: '2024-02-15' },
     });
 
     await act(async () => {
@@ -128,6 +174,8 @@ describe('Classes filters', () => {
 
     const courseSelect = getAllByTestId('select')[0];
     const classInput = getByTestId('class_name');
+    const startDateInput = getByTestId('start_date');
+    const endDateInput = getByTestId('end_date');
     const buttonReset = getByText('Reset');
 
     fireEvent.change(courseSelect, {
@@ -138,10 +186,40 @@ describe('Classes filters', () => {
       target: { value: 'test' },
     });
 
+    fireEvent.change(startDateInput, {
+      target: { value: '2024-01-15' },
+    });
+
+    fireEvent.change(endDateInput, {
+      target: { value: '2024-02-15' },
+    });
+
     await act(async () => {
       fireEvent.click(buttonReset);
     });
 
     expect(classInput).toHaveValue('');
+    expect(startDateInput).toHaveValue('');
+    expect(endDateInput).toHaveValue('');
+  });
+
+  test('Should subtract four weeks from start_date before sending to backend', async () => {
+    const { getByText, getByTestId } = renderWithProviders(
+      <ClassesFilters />,
+      { preloadedState: mockStore },
+    );
+
+    const startDateInput = getByTestId('start_date');
+    const buttonApply = getByText('Apply');
+
+    fireEvent.change(startDateInput, {
+      target: { value: '2024-02-12' },
+    });
+
+    await act(async () => {
+      fireEvent.click(buttonApply);
+    });
+
+    expect(startDateInput).toHaveValue('2024-02-12');
   });
 });
