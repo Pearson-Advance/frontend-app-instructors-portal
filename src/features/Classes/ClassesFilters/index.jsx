@@ -36,9 +36,21 @@ const ClassesFilters = () => {
     || null,
   );
   const [classFilter, setClassFilter] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const isValidClassFilter = classFilter.trim().length > 1;
-  const isButtonDisabled = courseSelected === null && classSelected === null && !isValidClassFilter;
+  const isButtonDisabled = courseSelected === null
+  && classSelected === null
+  && !isValidClassFilter
+  && !startDate
+  && !endDate;
+
+  const subtractFourWeeks = (dateStr) => {
+    const date = new Date(dateStr);
+    date.setDate(date.getDate() - 28);
+    return date.toISOString().split('T')[0];
+  };
 
   const initialRequestParams = {
     limit: true,
@@ -56,6 +68,8 @@ const ClassesFilters = () => {
       course_name: courseSelected?.value,
       institution_id: institution?.id,
       class_name: classFilter || '',
+      start_date: startDate ? subtractFourWeeks(startDate) : null,
+      end_date: endDate || null,
     };
 
     dispatch(updateFilters(filtersParams));
@@ -68,6 +82,8 @@ const ClassesFilters = () => {
     setClassSelected(null);
     setCourseSelected(null);
     setClassFilter('');
+    setStartDate('');
+    setEndDate('');
     dispatch(updateFilters({}));
   };
 
@@ -90,6 +106,30 @@ const ClassesFilters = () => {
             data-testid="class_name"
             onChange={(e) => setClassFilter(e.target.value)}
             value={classFilter}
+          />
+        </Form.Group>
+      </Form.Row>
+      <Form.Row className="d-flex flex-wrap w-100 mr-0">
+        <Form.Group as={Col} className="w-50 px-0">
+          <Form.Control
+            type="date"
+            floatingLabel="Search start date"
+            className="my-1 mr-2"
+            name="start_date"
+            data-testid="start_date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group as={Col} className="w-50 px-0">
+          <Form.Control
+            type="date"
+            floatingLabel="Search end date"
+            className="my-1 mr-0"
+            name="end_date"
+            data-testid="end_date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
           />
         </Form.Group>
       </Form.Row>
