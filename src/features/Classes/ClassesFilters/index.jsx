@@ -46,12 +46,6 @@ const ClassesFilters = () => {
   && !startDate
   && !endDate;
 
-  const subtractFourWeeks = (dateStr) => {
-    const date = new Date(dateStr);
-    date.setDate(date.getDate() - 28);
-    return date.toISOString().split('T')[0];
-  };
-
   const initialRequestParams = {
     limit: true,
     page: initialPage,
@@ -68,7 +62,7 @@ const ClassesFilters = () => {
       course_name: courseSelected?.value,
       institution_id: institution?.id,
       class_name: classFilter || '',
-      start_date: startDate ? subtractFourWeeks(startDate) : null,
+      start_date: startDate || null,
       end_date: endDate || null,
     };
 
