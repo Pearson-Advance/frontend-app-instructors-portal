@@ -46,6 +46,7 @@ export const Sidebar = () => {
   const menuItems = [...baseItems];
   const institutionPortalPath = getConfig().INSTITUTION_PORTAL_PATH || '';
   const adminRoles = [USER_ROLES.GLOBAL_STAFF, USER_ROLES.INSTITUTION_ADMIN];
+  const institution = useSelector((state) => state.main.institution);
 
   if (adminRoles.some(role => roles.includes(role)) && institutionPortalPath.length > 0) {
     menuItems.push({
@@ -106,15 +107,21 @@ export const Sidebar = () => {
             link,
             label,
             ...rest
-          }) => (
-            <MenuItem
-              key={link}
-              title={label}
-              as="a"
-              href={link}
-              {...rest}
-            />
-          ))
+          }) => {
+            const resolvedLink = label === 'Contact Support' && institution?.supportLink
+              ? institution.supportLink
+              : link;
+
+            return (
+              <MenuItem
+                key={label}
+                title={label}
+                as="a"
+                href={resolvedLink}
+                {...rest}
+              />
+            );
+          })
         }
       </MenuSection>
     </SidebarBase>
