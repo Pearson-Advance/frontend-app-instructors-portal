@@ -6,6 +6,8 @@ import {
   DataTable,
 } from '@openedx/paragon';
 
+import 'features/Main/Table/index.scss';
+
 const Table = ({
   columns,
   data,
@@ -20,17 +22,19 @@ const Table = ({
   return (
     <Row className={rowClassName}>
       <Col {...colProps}>
-        <DataTable
-          isSortable
-          columns={COLUMNS}
-          itemCount={count}
-          data={data}
-          {...props}
-        >
-          <DataTable.Table />
-          <DataTable.EmptyTable content={emptyText} />
-          <DataTable.TableFooter />
-        </DataTable>
+        <div className="responsive-data-table">
+          <DataTable
+            isSortable
+            columns={COLUMNS}
+            itemCount={count}
+            data={data}
+            {...props}
+          >
+            <DataTable.Table />
+            <DataTable.EmptyTable content={emptyText} />
+            <DataTable.TableFooter />
+          </DataTable>
+        </div>
       </Col>
     </Row>
   );
