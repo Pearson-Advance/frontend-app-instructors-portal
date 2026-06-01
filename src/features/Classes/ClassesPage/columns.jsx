@@ -23,7 +23,7 @@ const columns = [
       return (
         <Link
           to={url}
-          className="text-truncate link"
+          className="link"
         >
           {row.values.className}
         </Link>

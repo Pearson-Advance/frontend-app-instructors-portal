@@ -29,7 +29,7 @@ const ActionsDropdown = ({ options, vertIcon }) => (
       variant="primary"
       alt="menu for actions"
     />
-    <Dropdown.Menu>
+    <Dropdown.Menu popperConfig={{ strategy: 'fixed' }}>
       {options.map((option) => {
         if (option.visible) {
           return <Option key={option.label} {...option} />;
