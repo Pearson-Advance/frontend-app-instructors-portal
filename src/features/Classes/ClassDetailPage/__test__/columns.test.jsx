@@ -41,19 +41,20 @@ describe('getColumns', () => {
   test('returns an array of 11 columns with correct headers', () => {
     const cols = getColumns();
 
-    expect(cols).toHaveLength(11);
+    expect(cols).toHaveLength(12);
 
     expect(cols[0]).toHaveProperty('Header', 'Student');
     expect(cols[1]).toHaveProperty('Header', 'Email');
-    expect(cols[2]).toHaveProperty('Header', 'Institution');
-    expect(cols[3]).toHaveProperty('Header', 'Status');
-    expect(cols[4]).toHaveProperty('Header', 'Class Name');
-    expect(cols[5]).toHaveProperty('Header', 'Start - End Date');
-    expect(cols[6]).toHaveProperty('Header', 'Current Grade');
-    expect(cols[7]).toHaveProperty('Header', 'Exam Ready');
-    expect(cols[8]).toHaveProperty('Header', 'Last exam date');
-    expect(cols[9]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
-    expect(cols[10]).toHaveProperty('accessor', 'classId');
+    expect(cols[2]).toHaveProperty('Header', 'Last access date');
+    expect(cols[3]).toHaveProperty('Header', 'Institution');
+    expect(cols[4]).toHaveProperty('Header', 'Status');
+    expect(cols[5]).toHaveProperty('Header', 'Class Name');
+    expect(cols[6]).toHaveProperty('Header', 'Start - End Date');
+    expect(cols[7]).toHaveProperty('Header', 'Current Grade');
+    expect(cols[8]).toHaveProperty('Header', 'Exam Ready');
+    expect(cols[9]).toHaveProperty('Header', 'Last exam date');
+    expect(cols[10]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
+    expect(cols[11]).toHaveProperty('accessor', 'classId');
   });
 
   test('renders Student link', () => {
@@ -88,7 +89,7 @@ describe('getColumns', () => {
   });
 
   test('renders Status badge', () => {
-    const Cell = () => getColumns()[3].Cell({
+    const Cell = () => getColumns()[4].Cell({
       row: { values: { status: 'Active' } },
     });
 
@@ -100,7 +101,7 @@ describe('getColumns', () => {
   });
 
   test('renders Class Name with link', () => {
-    const Cell = () => getColumns()[4].Cell({
+    const Cell = () => getColumns()[5].Cell({
       row: {
         values: { className: 'test ccx1' },
         original: { classId: 'ccx-1' },
@@ -117,7 +118,7 @@ describe('getColumns', () => {
   });
 
   test('renders formatted Start - End Date', () => {
-    const Cell = () => getColumns()[5].Cell({
+    const Cell = () => getColumns()[6].Cell({
       row: {
         original: {
           startDate: '2024-02-13T17:42:22Z',
@@ -134,7 +135,7 @@ describe('getColumns', () => {
   });
 
   test('renders Current Grade correctly', () => {
-    const Cell = () => getColumns()[6].Cell({
+    const Cell = () => getColumns()[7].Cell({
       row: { values: { completePercentage: 75.5 } },
     });
 
@@ -146,7 +147,7 @@ describe('getColumns', () => {
   });
 
   test('renders Exam Ready with ProgressSteps', () => {
-    const Cell = () => getColumns()[7].Cell({
+    const Cell = () => getColumns()[8].Cell({
       row: { values: { examReady: { status: 'Complete' } } },
     });
 
@@ -158,7 +159,7 @@ describe('getColumns', () => {
   });
 
   test('renders Last exam date formatted', () => {
-    const Cell = () => getColumns()[8].Cell({
+    const Cell = () => getColumns()[9].Cell({
       row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
     });
 
@@ -170,7 +171,7 @@ describe('getColumns', () => {
   });
 
   test('renders Last exam date placeholder', () => {
-    const Cell = () => getColumns()[8].Cell({
+    const Cell = () => getColumns()[9].Cell({
       row: { values: { examReady: { lastExamDate: null } } },
     });
 
@@ -182,7 +183,7 @@ describe('getColumns', () => {
   });
 
   test('renders EPP days left', () => {
-    const Cell = () => getColumns()[9].Cell({
+    const Cell = () => getColumns()[10].Cell({
       row: { values: { examReady: { eppDaysLeft: 45 } } },
     });
 
@@ -194,7 +195,7 @@ describe('getColumns', () => {
   });
 
   test('renders EPP placeholder when null', () => {
-    const Cell = () => getColumns()[9].Cell({
+    const Cell = () => getColumns()[10].Cell({
       row: { values: { examReady: { eppDaysLeft: null } } },
     });
 
@@ -206,7 +207,7 @@ describe('getColumns', () => {
   });
 
   test('action dropdown shows View progress', () => {
-    const Cell = () => getColumns()[10].Cell({
+    const Cell = () => getColumns()[11].Cell({
       row: {
         original: {
           classId: 'ccx-1',
@@ -227,7 +228,7 @@ describe('getColumns', () => {
   });
 
   test('shows DeleteEnrollment when privileged and not expired', () => {
-    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[11].Cell({
       row: {
         original: {
           classId: 'ccx-1',
@@ -248,7 +249,7 @@ describe('getColumns', () => {
   });
 
   test('does NOT show DeleteEnrollment when expired', () => {
-    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[11].Cell({
       row: {
         original: {
           classId: 'ccx-1',
