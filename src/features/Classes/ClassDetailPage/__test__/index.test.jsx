@@ -37,17 +37,18 @@ describe('getColumns (ClassDetailPage)', () => {
 
   test('returns correct column structure', () => {
     const cols = getColumns();
-    expect(cols).toHaveLength(9);
+    expect(cols).toHaveLength(10);
 
     expect(cols[0]).toHaveProperty('Header', 'No');
     expect(cols[1]).toHaveProperty('Header', 'Student');
     expect(cols[2]).toHaveProperty('Header', 'Email');
-    expect(cols[3]).toHaveProperty('Header', 'Status');
-    expect(cols[4]).toHaveProperty('Header', 'Current Grade');
-    expect(cols[5]).toHaveProperty('Header', 'Exam Ready');
-    expect(cols[6]).toHaveProperty('Header', 'Last exam date');
-    expect(cols[7]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
-    expect(cols[8]).toHaveProperty('accessor', 'classId');
+    expect(cols[3]).toHaveProperty('Header', 'Last access date');
+    expect(cols[4]).toHaveProperty('Header', 'Status');
+    expect(cols[5]).toHaveProperty('Header', 'Current Grade');
+    expect(cols[6]).toHaveProperty('Header', 'Exam Ready');
+    expect(cols[7]).toHaveProperty('Header', 'Last exam date');
+    expect(cols[8]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
+    expect(cols[9]).toHaveProperty('accessor', 'classId');
   });
 
   test('renders index correctly', () => {
@@ -89,8 +90,28 @@ describe('getColumns (ClassDetailPage)', () => {
     );
   });
 
+  test('renders Last access date formatted', () => {
+    const LastAccessCell = () => getColumns()[3].Cell({
+      row: { original: { lastAccess: '2024-03-15T10:00:00Z' } },
+    });
+
+    const { getByText } = renderWithProviders(<LastAccessCell />, { preloadedState: mockStore });
+
+    expect(getByText('03/15/24')).toBeInTheDocument();
+  });
+
+  test('renders Last access date placeholder when null', () => {
+    const LastAccessCell = () => getColumns()[3].Cell({
+      row: { original: { lastAccess: null } },
+    });
+
+    const { getByText } = renderWithProviders(<LastAccessCell />, { preloadedState: mockStore });
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
   test('renders Status badge', () => {
-    const StatusCell = () => getColumns()[3].Cell({
+    const StatusCell = () => getColumns()[4].Cell({
       row: { values: { status: 'Active' } },
     });
 
@@ -100,7 +121,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders Current Grade correctly', () => {
-    const GradeCell = () => getColumns()[4].Cell({
+    const GradeCell = () => getColumns()[5].Cell({
       row: { values: { completePercentage: 75.5 } },
     });
 
@@ -110,7 +131,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders Exam Ready with ProgressSteps', () => {
-    const ExamReadyCell = () => getColumns()[5].Cell({
+    const ExamReadyCell = () => getColumns()[6].Cell({
       row: { values: { examReady: { status: 'Complete' } } },
     });
 
@@ -120,7 +141,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders Last exam date formatted', () => {
-    const LastExamDateCell = () => getColumns()[6].Cell({
+    const LastExamDateCell = () => getColumns()[7].Cell({
       row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
     });
 
@@ -130,7 +151,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders Last exam date placeholder when null', () => {
-    const LastExamDateCell = () => getColumns()[6].Cell({
+    const LastExamDateCell = () => getColumns()[7].Cell({
       row: { values: { examReady: { lastExamDate: null } } },
     });
 
@@ -140,7 +161,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders EPP days left value', () => {
-    const EppCell = () => getColumns()[7].Cell({
+    const EppCell = () => getColumns()[8].Cell({
       row: { values: { examReady: { eppDaysLeft: 45 } } },
     });
 
@@ -150,7 +171,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders EPP days left placeholder', () => {
-    const EppCell = () => getColumns()[7].Cell({
+    const EppCell = () => getColumns()[8].Cell({
       row: { values: { examReady: { eppDaysLeft: null } } },
     });
 
@@ -160,7 +181,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders actions dropdown and shows View progress', () => {
-    const ActionCell = () => getColumns()[8].Cell({
+    const ActionCell = () => getColumns()[9].Cell({
       row: {
         original: {
           classId: 'ccx-123',
@@ -179,7 +200,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('shows DeleteEnrollment when privileged and not expired', () => {
-    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[8].Cell({
+    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[9].Cell({
       row: {
         original: {
           classId: 'ccx-123',
@@ -198,7 +219,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('does NOT show DeleteEnrollment when expired', () => {
-    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[8].Cell({
+    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[9].Cell({
       row: {
         original: {
           classId: 'ccx-123',

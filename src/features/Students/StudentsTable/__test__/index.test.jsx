@@ -55,7 +55,7 @@ describe('Student Table', () => {
               startDate: '2023-08-25T19:01:22Z',
               endDate: '2024-08-25T19:01:22Z',
               firstAccess: 'Fri, 25 Aug 2023 19:01:23 GMT',
-              lastAccess: 'Fri, 25 Aug 2023 20:20:22 GMT',
+              lastAccess: '2023-08-25T20:20:22Z',
               status: 'Active',
               completePercentage: 75.5,
               examReady: {
@@ -78,7 +78,7 @@ describe('Student Table', () => {
               startDate: '2023-08-26T19:01:22Z',
               endDate: '2024-08-26T19:01:22Z',
               firstAccess: 'Sat, 26 Aug 2023 19:01:24 GMT',
-              lastAccess: 'Sat, 26 Aug 2023 21:22:22 GMT',
+              lastAccess: '2023-08-26T21:22:22Z',
               status: 'Pending',
               completePercentage: 45.0,
               examReady: {

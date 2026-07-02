@@ -48,6 +48,16 @@ const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
     ),
   },
   {
+    Header: 'Last access date',
+    accessor: 'lastAccess',
+    Cell: ({ row }) => {
+      const lastAccess = row.original.lastAccess
+        ? formatUTCDate(row.original.lastAccess, 'MM/dd/yy')
+        : '--';
+      return <span>{lastAccess}</span>;
+    },
+  },
+  {
     Header: 'Institution',
     accessor: 'institutionName',
   },

@@ -48,11 +48,12 @@ describe('getColumns', () => {
 
   test('returns an array of columns with correct properties', () => {
     expect(getColumns()).toBeInstanceOf(Array);
-    expect(getColumns()).toHaveLength(11);
+    expect(getColumns()).toHaveLength(12);
 
     const [
       nameColumn,
       emailColumn,
+      lastAccessDateColumn,
       institutionColumn,
       statusColumn,
       classNameColumn,
@@ -69,6 +70,9 @@ describe('getColumns', () => {
 
     expect(emailColumn).toHaveProperty('Header', 'Email');
     expect(emailColumn).toHaveProperty('accessor', 'learnerEmail');
+
+    expect(lastAccessDateColumn).toHaveProperty('Header', 'Last access date');
+    expect(lastAccessDateColumn).toHaveProperty('accessor', 'lastAccess');
 
     expect(institutionColumn).toHaveProperty('Header', 'Institution');
     expect(institutionColumn).toHaveProperty('accessor', 'institutionName');
@@ -135,7 +139,7 @@ describe('getColumns', () => {
   });
 
   test('renders Status column with correct badge', () => {
-    const StatusCell = () => getColumns()[3].Cell({
+    const StatusCell = () => getColumns()[4].Cell({
       row: {
         values: { status: 'Active' },
       },
@@ -149,7 +153,7 @@ describe('getColumns', () => {
   });
 
   test('renders Class Name column with correct link', () => {
-    const ClassNameCell = () => getColumns()[4].Cell({
+    const ClassNameCell = () => getColumns()[5].Cell({
       row: {
         values: { className: 'test ccx1' },
         original: { classId: 'ccx-v1:demo+demo1+2020+ccx@3' },
@@ -171,7 +175,7 @@ describe('getColumns', () => {
   });
 
   test('renders Start - End Date column with formatted dates', () => {
-    const DateCell = () => getColumns()[5].Cell({
+    const DateCell = () => getColumns()[6].Cell({
       row: {
         original: {
           startDate: '2024-02-13T17:42:22Z',
@@ -186,7 +190,7 @@ describe('getColumns', () => {
   });
 
   test('renders Start - End Date column with empty dates', () => {
-    const DateCell = () => getColumns()[5].Cell({
+    const DateCell = () => getColumns()[6].Cell({
       row: {
         original: {
           startDate: null,
@@ -201,7 +205,7 @@ describe('getColumns', () => {
   });
 
   test('renders Progress column with percentage text', () => {
-    const ProgressCell = () => getColumns()[6].Cell({
+    const ProgressCell = () => getColumns()[7].Cell({
       row: {
         values: { completePercentage: 75.5 },
       },
@@ -213,7 +217,7 @@ describe('getColumns', () => {
   });
 
   test('renders Exam Ready column with ProgressSteps', () => {
-    const ExamReadyCell = () => getColumns()[7].Cell({
+    const ExamReadyCell = () => getColumns()[8].Cell({
       row: {
         values: {
           examReady: {
@@ -229,7 +233,7 @@ describe('getColumns', () => {
   });
 
   test('renders Last exam date with formatted date', () => {
-    const LastExamDateCell = () => getColumns()[8].Cell({
+    const LastExamDateCell = () => getColumns()[9].Cell({
       row: {
         values: {
           examReady: {
@@ -245,7 +249,7 @@ describe('getColumns', () => {
   });
 
   test('renders Last exam date with placeholder when null', () => {
-    const LastExamDateCell = () => getColumns()[8].Cell({
+    const LastExamDateCell = () => getColumns()[9].Cell({
       row: {
         values: {
           examReady: {
@@ -263,7 +267,7 @@ describe('getColumns', () => {
   test('renders EPP days left header with tooltip', () => {
     const HeaderComponent = () => {
       const columns = getColumns();
-      const { Header } = columns[9];
+      const { Header } = columns[10];
       return <Header />;
     };
 
@@ -274,7 +278,7 @@ describe('getColumns', () => {
   });
 
   test('renders EPP days left value', () => {
-    const EppDaysLeftCell = () => getColumns()[9].Cell({
+    const EppDaysLeftCell = () => getColumns()[10].Cell({
       row: {
         values: {
           examReady: {
@@ -290,7 +294,7 @@ describe('getColumns', () => {
   });
 
   test('renders EPP days left with placeholder when null', () => {
-    const EppDaysLeftCell = () => getColumns()[9].Cell({
+    const EppDaysLeftCell = () => getColumns()[10].Cell({
       row: {
         values: {
           examReady: {
@@ -306,7 +310,7 @@ describe('getColumns', () => {
   });
 
   test('shows menu dropdown with View progress link', () => {
-    const ActionColumn = () => getColumns()[10].Cell({
+    const ActionColumn = () => getColumns()[11].Cell({
       row: {
         values: {
           classId: 'ccx-v1:demo+demo1+2020+ccx@3',
@@ -337,7 +341,7 @@ describe('getColumns', () => {
   });
 
   test('shows DeleteEnrollment option when hasEnrollmentPrivilege is true and status is not expired', () => {
-    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: true })[11].Cell({
       row: {
         values: {
           classId: 'ccx-v1:demo+demo1+2020+ccx@3',
@@ -366,7 +370,7 @@ describe('getColumns', () => {
   });
 
   test('does not show DeleteEnrollment option when status is expired', () => {
-    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: true })[11].Cell({
       row: {
         values: {
           classId: 'ccx-v1:demo+demo1+2020+ccx@3',
@@ -395,7 +399,7 @@ describe('getColumns', () => {
   });
 
   test('does not show DeleteEnrollment option when hasEnrollmentPrivilege is false', () => {
-    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: false })[10].Cell({
+    const ActionColumn = () => getColumns({ hasEnrollmentPrivilege: false })[11].Cell({
       row: {
         values: {
           classId: 'ccx-v1:demo+demo1+2020+ccx@3',
