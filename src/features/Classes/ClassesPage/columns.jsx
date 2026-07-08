@@ -103,7 +103,21 @@ const columns = [
 
       const handleEnrollStudentModal = () => setIsEnrollModalOpen(!isEnrollModalOpen);
 
+      const handleViewClassContent = () => {
+        window.open(
+          `${getConfig().LEARNING_MICROFRONTEND_URL}/course/${classId}/home`,
+          '_blank',
+          'noopener,noreferrer',
+        );
+      };
+
       const extraOptions = [
+        {
+          handleClick: handleViewClassContent,
+          iconSrc: <i className="fa-regular fa-eye mr-3" />,
+          label: 'View class content',
+          visible: true,
+        },
         {
           handleClick: handleGradebookButton,
           iconSrc: <i className="fa-regular fa-book mr-3" />,
