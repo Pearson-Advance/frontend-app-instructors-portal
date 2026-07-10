@@ -110,6 +110,16 @@ describe('getColumns (ClassDetailPage)', () => {
     expect(getByText('--')).toBeInTheDocument();
   });
 
+  test('renders Last access date as -- when enrollment is pending', () => {
+    const LastAccessCell = () => getColumns()[3].Cell({
+      row: { original: { lastAccess: '2024-03-15T10:00:00Z', status: 'pending' } },
+    });
+
+    const { getByText } = renderWithProviders(<LastAccessCell />, { preloadedState: mockStore });
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
   test('renders Status badge', () => {
     const StatusCell = () => getColumns()[4].Cell({
       row: { values: { status: 'Active' } },

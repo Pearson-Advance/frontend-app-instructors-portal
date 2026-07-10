@@ -138,6 +138,36 @@ describe('getColumns', () => {
     expect(link).toHaveAttribute('href', 'mailto:testuser@example.com');
   });
 
+  test('renders Last access date formatted', () => {
+    const LastAccessCell = () => getColumns()[2].Cell({
+      row: { original: { lastAccess: '2024-03-15T10:00:00Z', status: 'Active' } },
+    });
+
+    const { getByText } = renderWithProviders(<LastAccessCell />, { preloadedState: mockStore });
+
+    expect(getByText('03/15/24')).toBeInTheDocument();
+  });
+
+  test('renders Last access date as -- when enrollment is pending', () => {
+    const LastAccessCell = () => getColumns()[2].Cell({
+      row: { original: { lastAccess: '2024-03-15T10:00:00Z', status: 'pending' } },
+    });
+
+    const { getByText } = renderWithProviders(<LastAccessCell />, { preloadedState: mockStore });
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
+  test('renders Last access date as -- when null', () => {
+    const LastAccessCell = () => getColumns()[2].Cell({
+      row: { original: { lastAccess: null, status: 'Active' } },
+    });
+
+    const { getByText } = renderWithProviders(<LastAccessCell />, { preloadedState: mockStore });
+
+    expect(getByText('--')).toBeInTheDocument();
+  });
+
   test('renders Status column with correct badge', () => {
     const StatusCell = () => getColumns()[4].Cell({
       row: {
