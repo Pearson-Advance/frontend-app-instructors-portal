@@ -42,7 +42,7 @@ describe('getColumns (ClassDetailPage)', () => {
     expect(cols[0]).toHaveProperty('Header', 'No');
     expect(cols[1]).toHaveProperty('Header', 'Student');
     expect(cols[2]).toHaveProperty('Header', 'Email');
-    expect(cols[3]).toHaveProperty('Header', 'Last access date');
+    expect(cols[3]).toHaveProperty('Header', 'Last Login');
     expect(cols[4]).toHaveProperty('Header', 'Status');
     expect(cols[5]).toHaveProperty('Header', 'Current Grade');
     expect(cols[6]).toHaveProperty('Header', 'Exam Ready');

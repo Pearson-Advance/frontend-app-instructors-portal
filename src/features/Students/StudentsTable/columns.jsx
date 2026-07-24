@@ -48,7 +48,7 @@ const getColumns = ({ hasEnrollmentPrivilege = false } = {}) => [
     ),
   },
   {
-    Header: 'Last access date',
+    Header: 'Last Login',
     accessor: 'lastAccess',
     Cell: ({ row }) => {
       const isPending = row.original.status?.toLowerCase() === 'pending';
