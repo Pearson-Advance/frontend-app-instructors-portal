@@ -71,7 +71,7 @@ describe('getColumns', () => {
     expect(emailColumn).toHaveProperty('Header', 'Email');
     expect(emailColumn).toHaveProperty('accessor', 'learnerEmail');
 
-    expect(lastAccessDateColumn).toHaveProperty('Header', 'Last access date');
+    expect(lastAccessDateColumn).toHaveProperty('Header', 'Last Login');
     expect(lastAccessDateColumn).toHaveProperty('accessor', 'lastAccess');
 
     expect(institutionColumn).toHaveProperty('Header', 'Institution');
