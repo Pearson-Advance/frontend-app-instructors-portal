@@ -38,4 +38,22 @@ describe('ActionsDropdown', () => {
     expect(optionsMock[0].handleClick).toHaveBeenCalledTimes(1);
     expect(optionsMock[1].handleClick).not.toHaveBeenCalled();
   });
+
+  test('Should not call handleClick when the option is disabled', () => {
+    const disabledOptionsMock = [
+      {
+        handleClick: jest.fn(), label: 'Disabled option', visible: true, disabled: true,
+      },
+    ];
+
+    const { getByLabelText, getByText } = render(<ActionsDropdown options={disabledOptionsMock} />);
+    const toggleButton = getByLabelText('menu for actions');
+
+    fireEvent.click(toggleButton);
+
+    const option = getByText('Disabled option');
+    fireEvent.click(option);
+
+    expect(disabledOptionsMock[0].handleClick).not.toHaveBeenCalled();
+  });
 });

@@ -13,6 +13,7 @@ import Option from './Option';
  *   - `handleClick`: The function to call when the option is clicked.
  *   - `label`: The text to display for the option.
  *   - `visible`: Whether the option is visible
+ *   - `disabled`: Whether the option is disabled
  * @param {boolean} props.vertIcon Whether to use the vertical "more" icon.
  *
  * @returns {ReactElement} The rendered dropdown menu.
@@ -46,6 +47,7 @@ ActionsDropdown.propTypes = {
     handleClick: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
     visible: PropTypes.bool,
+    disabled: PropTypes.bool,
   })).isRequired,
   vertIcon: PropTypes.bool,
 };

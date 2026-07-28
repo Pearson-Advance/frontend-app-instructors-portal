@@ -34,9 +34,16 @@ function handleXtremeLabsDashboard(courseId) {
   );
 }
 
+function fetchGradebookCsv(ccxCourseId) {
+  const GRADEBOOK_CSV_URL = `${getConfig().LMS_BASE_URL}/courses/${ccxCourseId}/ccx_grades.csv`;
+
+  return getAuthenticatedHttpClient().get(GRADEBOOK_CSV_URL, { responseType: 'blob' });
+}
+
 export {
   handleEnrollments,
   getMessages,
   handleSkillableDashboard,
   handleXtremeLabsDashboard,
+  fetchGradebookCsv,
 };

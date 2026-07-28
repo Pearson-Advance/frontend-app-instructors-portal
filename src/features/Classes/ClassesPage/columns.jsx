@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import { formatUTCDate } from 'react-paragon-topaz';
 import { useSelector, useDispatch } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
+import { logError } from '@edx/frontend-platform/logging';
 import { Toast } from '@openedx/paragon';
 
 import { useInstitutionIdQueryParam, useToast } from 'hooks';
+import { downloadFileFromBlob } from 'helpers';
 
 import { fetchLabSummaryLink } from 'features/Classes/data/thunks';
+import { fetchGradebookCsv } from 'features/Classes/data/api';
 import EnrollStudent from 'features/Classes/EnrollStudent';
 import ActionsDropdown from 'features/Main/ActionsDropdown';
 
@@ -89,10 +92,30 @@ const columns = [
       } = useToast();
 
       const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
+      const [isDownloadingGradebook, setIsDownloadingGradebook] = useState(false);
+
+      const decodedClassId = decodeURIComponent(classId);
 
       const handleGradebookButton = () => {
-        const decodedClassId = decodeURIComponent(classId);
         window.open(`${gradebookUrl}/gradebook/${decodedClassId}`, '_blank', 'noopener,noreferrer');
+      };
+
+      const handleDownloadGradebook = async () => {
+        if (isDownloadingGradebook) { return; }
+
+        setIsDownloadingGradebook(true);
+        showToast('Downloading gradebook. This may take a moment, please wait...');
+
+        try {
+          const response = await fetchGradebookCsv(decodedClassId);
+          downloadFileFromBlob(response.data, `${decodedClassId}-ccx-grades.csv`);
+          hideToast();
+        } catch (error) {
+          showToast('An error occurred while downloading the gradebook. Please try again.');
+          logError(error);
+        } finally {
+          setIsDownloadingGradebook(false);
+        }
       };
 
       const handleLabSummary = () => {
@@ -123,6 +146,13 @@ const columns = [
           iconSrc: <i className="fa-regular fa-book mr-3" />,
           label: 'Gradebook',
           visible: true,
+        },
+        {
+          handleClick: handleDownloadGradebook,
+          iconSrc: <i className="fa-solid fa-download mr-3" />,
+          label: 'Download Gradebook',
+          visible: true,
+          disabled: isDownloadingGradebook,
         },
         {
           handleClick: handleLabSummary,

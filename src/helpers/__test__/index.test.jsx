@@ -4,6 +4,7 @@ import {
   eventManager,
   stringToDateType,
   isInvalidUserOrInstitution,
+  downloadFileFromBlob,
 } from 'helpers';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
@@ -157,5 +158,32 @@ describe('isInvalidUserOrInstitution', () => {
 
   test('returns false when id exists (even if null)', () => {
     expect(isInvalidUserOrInstitution('user', { id: null })).toBe(false);
+  });
+});
+
+describe('downloadFileFromBlob', () => {
+  test('creates a temporary link and triggers a download', () => {
+    const createObjectURL = jest.fn(() => 'blob:mock-url');
+    const revokeObjectURL = jest.fn();
+    window.URL.createObjectURL = createObjectURL;
+    window.URL.revokeObjectURL = revokeObjectURL;
+
+    const anchor = document.createElement('a');
+    const clickSpy = jest.spyOn(anchor, 'click').mockImplementation(() => {});
+    const setAttributeSpy = jest.spyOn(anchor, 'setAttribute');
+    const appendChildSpy = jest.spyOn(document.body, 'appendChild');
+    const createElementSpy = jest.spyOn(document, 'createElement').mockReturnValue(anchor);
+
+    downloadFileFromBlob('csv,data', 'gradebook.csv');
+
+    expect(createObjectURL).toHaveBeenCalledTimes(1);
+    expect(createElementSpy).toHaveBeenCalledWith('a');
+    expect(setAttributeSpy).toHaveBeenCalledWith('download', 'gradebook.csv');
+    expect(appendChildSpy).toHaveBeenCalledWith(anchor);
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:mock-url');
+
+    createElementSpy.mockRestore();
+    appendChildSpy.mockRestore();
   });
 });
