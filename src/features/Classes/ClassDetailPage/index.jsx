@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
+import { logError } from '@edx/frontend-platform/logging';
 
 import Table from 'features/Main/Table';
 import { Button } from 'react-paragon-topaz';
@@ -13,6 +14,7 @@ import {
 
 import { useInstitutionIdQueryParam, useToast } from 'hooks';
 import { fetchLabSummaryLink } from 'features/Classes/data/thunks';
+import { fetchGradebookCsv } from 'features/Classes/data/api';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
 import EnrollStudent from 'features/Classes/EnrollStudent';
 
@@ -24,7 +26,7 @@ import { fetchAllClassesData } from 'features/Common/data';
 import ActionsDropdown from 'features/Main/ActionsDropdown';
 import { getColumns } from 'features/Classes/ClassDetailPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
-import { isInvalidUserOrInstitution } from 'helpers';
+import { isInvalidUserOrInstitution, downloadFileFromBlob } from 'helpers';
 
 import 'features/Classes/ClassDetailPage/index.scss';
 
@@ -57,6 +59,7 @@ const ClassDetailPage = () => {
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
+  const [isDownloadingGradebook, setIsDownloadingGradebook] = useState(false);
 
   const isLoading = students.status === RequestStatus.LOADING;
   const className = (classInfo?.className || '');
@@ -107,6 +110,24 @@ const ClassDetailPage = () => {
     window.open(`${gradebookUrl}/gradebook/${classId}`, '_blank', 'noopener,noreferrer');
   };
 
+  const handleDownloadGradebook = async () => {
+    if (isDownloadingGradebook) { return; }
+
+    setIsDownloadingGradebook(true);
+    showToast('Downloading gradebook. This may take a moment, please wait...');
+
+    try {
+      const response = await fetchGradebookCsv(classId);
+      downloadFileFromBlob(response.data, `${classId}-ccx-grades.csv`);
+      hideToast();
+    } catch (error) {
+      showToast('An error occurred while downloading the gradebook. Please try again.');
+      logError(error);
+    } finally {
+      setIsDownloadingGradebook(false);
+    }
+  };
+
   const handleLabSummary = () => {
     dispatch(fetchLabSummaryLink(classId, classInfo?.labSummaryTag, (dashboardMessage) => {
       showToast(dashboardMessage);
@@ -119,6 +140,13 @@ const ClassDetailPage = () => {
       iconSrc: <i className="fa-regular fa-book mr-3" />,
       label: 'Gradebook',
       visible: true,
+    },
+    {
+      handleClick: handleDownloadGradebook,
+      iconSrc: <i className="fa-solid fa-download mr-3" />,
+      label: 'Download Gradebook',
+      visible: true,
+      disabled: isDownloadingGradebook,
     },
     {
       handleClick: handleLabSummary,

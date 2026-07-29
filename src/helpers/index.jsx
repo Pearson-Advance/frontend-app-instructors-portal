@@ -110,3 +110,22 @@ export const isInvalidUserOrInstitution = (username, institution) => {
 
   return !username || !hasValidInstitutionId;
 };
+
+/**
+ * Triggers a browser download for the given file data by creating a temporary
+ * object URL and simulating a click on an anchor element.
+ *
+ * @param {Blob|MediaSource} data - The file content to download.
+ * @param {string} fileName - The name to give the downloaded file.
+ */
+export const downloadFileFromBlob = (data, fileName) => {
+  const url = window.URL.createObjectURL(new Blob([data]));
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.setAttribute('download', fileName);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};
