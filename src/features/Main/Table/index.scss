@@ -16,3 +16,23 @@
 .responsive-data-table th {
   overflow-wrap: anywhere;
 }
+
+.table-wrapper-fix {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.pageWrapper {
+  .pgn__data-table-layout-wrapper{
+    border: none;
+  }
+
+  .pgn__data-table-layout-main {
+    border: 1px solid var(--pgn-color-gray-vue-200);
+    border-radius: 8px;
+  }
+}

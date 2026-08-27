@@ -22,18 +22,20 @@ const Table = ({
   return (
     <Row className={rowClassName}>
       <Col {...colProps}>
-        <div className="responsive-data-table">
-          <DataTable
-            isSortable
-            columns={COLUMNS}
-            itemCount={count}
-            data={data}
-            {...props}
-          >
-            <DataTable.Table />
-            <DataTable.EmptyTable content={emptyText} />
-            <DataTable.TableFooter />
-          </DataTable>
+        <div className="table-wrapper-fix">
+          <div className="responsive-data-table">
+            <DataTable
+              isSortable
+              columns={COLUMNS}
+              itemCount={count}
+              data={data}
+              {...props}
+            >
+              <DataTable.Table />
+              <DataTable.EmptyTable content={emptyText} />
+              <DataTable.TableFooter />
+            </DataTable>
+          </div>
         </div>
       </Col>
     </Row>
