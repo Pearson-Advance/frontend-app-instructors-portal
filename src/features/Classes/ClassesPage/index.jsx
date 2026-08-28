@@ -48,7 +48,7 @@ const ClassesPage = () => {
   };
 
   return (
-    <Container size="xl" className="px-4">
+    <Container className="px-5">
       <h3 className="title-page h2">Classes</h3>
       <section className="page-content-container">
         <ClassesFilters />

@@ -112,7 +112,7 @@ const StudentsDetails = () => {
   });
 
   return (
-    <Container size="xl" className="px-4 mt-3">
+    <Container className="px-5 mt-3">
       <div className="d-flex align-items-center my-4">
         <Button onClick={handleBackButton} className="mr-3 link back-arrow" variant="tertiary">
           <i className="fa-solid fa-arrow-left" />

@@ -25,7 +25,7 @@ const DashboardPage = () => {
   }, [userName, dispatch, institution]);
 
   return (
-    <Container size="xl" className="px-4 pt-3">
+    <Container className="px-5 pt-3">
       <h2 className="title-page mt-3 mb-3">
         {`Welcome ${name?.split?.(' ')[0] || userName}` }
       </h2>
