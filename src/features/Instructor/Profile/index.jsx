@@ -66,7 +66,7 @@ const Profile = () => {
   }, [instructorEmail, dispatch, instructorUserName, institution, currentPage]);
 
   return (
-    <Container size="xl" className="px-4 mt-3">
+    <Container className="px-5 mt-3">
       <div className="d-flex align-items-center my-4">
         <h3 className="h2 mb-0 course-title">{instructorName || instructorUserName}</h3>
       </div>

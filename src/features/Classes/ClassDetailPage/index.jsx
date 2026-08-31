@@ -167,12 +167,12 @@ const ClassDetailPage = () => {
         {message}
       </Toast>
       {!classInfo && (
-        <Container size="xl" className="px-4 mt-3 page-content-container d-flex justify-content-center">
+        <Container className="px-5 mt-3 page-content-container d-flex justify-content-center">
           <p>You must be an instructor in this class to see the information.</p>
         </Container>
       )}
       {classInfo && (
-        <Container size="xl" className="px-4 mt-3">
+        <Container className="px-5 mt-3">
           <div className="d-flex justify-content-between my-4 flex-column flex-sm-row">
             <div className="d-flex align-items-center mb-2">
               <Button onClick={handleBackButton} className="mr-3 link back-arrow" variant="tertiary">
