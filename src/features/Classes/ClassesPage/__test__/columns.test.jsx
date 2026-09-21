@@ -46,7 +46,7 @@ describe('ClassesPage columns', () => {
   });
 
   test('adds View class content as the first action', () => {
-    const ActionColumn = () => columns[8].Cell({
+    const ActionColumn = () => columns[0].Cell({
       row: {
         values: {},
         original: {
@@ -78,7 +78,7 @@ describe('ClassesPage columns', () => {
   });
 
   test('adds Download Gradebook alongside Gradebook action', () => {
-    const ActionColumn = () => columns[8].Cell({
+    const ActionColumn = () => columns[0].Cell({
       row: {
         values: {},
         original: {
@@ -117,7 +117,7 @@ describe('ClassesPage columns', () => {
     let resolveRequest;
     fetchGradebookCsv.mockReturnValue(new Promise((resolve) => { resolveRequest = resolve; }));
 
-    const ActionColumn = () => columns[8].Cell({
+    const ActionColumn = () => columns[0].Cell({
       row: {
         values: {},
         original: {
@@ -165,7 +165,7 @@ describe('ClassesPage columns', () => {
   test('shows an error message when the gradebook download fails', async () => {
     fetchGradebookCsv.mockRejectedValue(new Error('network error'));
 
-    const ActionColumn = () => columns[8].Cell({
+    const ActionColumn = () => columns[0].Cell({
       row: {
         values: {},
         original: {

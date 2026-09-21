@@ -37,9 +37,11 @@ describe('getColumns (ClassDetailPage)', () => {
 
   test('returns correct column structure', () => {
     const cols = getColumns();
-    expect(cols).toHaveLength(11);
+    expect(cols).toHaveLength(10);
 
-    expect(cols[0]).toHaveProperty('Header', 'No');
+    expect(cols[0]).toHaveProperty('Header', '');
+    expect(cols[0]).toHaveProperty('accessor', 'classId');
+
     expect(cols[1]).toHaveProperty('Header', 'Student');
     expect(cols[2]).toHaveProperty('Header', 'Email');
     expect(cols[3]).toHaveProperty('Header', 'Last Login');
@@ -49,18 +51,6 @@ describe('getColumns (ClassDetailPage)', () => {
     expect(cols[7]).toHaveProperty('Header', 'Exam Ready');
     expect(cols[8]).toHaveProperty('Header', 'Last exam date');
     expect(cols[9]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
-    expect(cols[10]).toHaveProperty('accessor', 'classId');
-  });
-
-  test('renders index correctly', () => {
-    const IndexCell = () => getColumns()[0].Cell({ row: { index: 0 } });
-
-    const { getByText } = renderWithProviders(
-      <IndexCell />,
-      { preloadedState: mockStore },
-    );
-
-    expect(getByText('1')).toBeInTheDocument();
   });
 
   test('renders Student link', () => {
@@ -212,7 +202,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('renders actions dropdown and shows View progress', () => {
-    const ActionCell = () => getColumns()[10].Cell({
+    const ActionCell = () => getColumns()[0].Cell({
       row: {
         original: {
           classId: 'ccx-123',
@@ -231,7 +221,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('shows DeleteEnrollment when privileged and not expired', () => {
-    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[0].Cell({
       row: {
         original: {
           classId: 'ccx-123',
@@ -250,7 +240,7 @@ describe('getColumns (ClassDetailPage)', () => {
   });
 
   test('does NOT show DeleteEnrollment when expired', () => {
-    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[10].Cell({
+    const ActionCell = () => getColumns({ hasEnrollmentPrivilege: true })[0].Cell({
       row: {
         original: {
           classId: 'ccx-123',

@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import { renderWithProviders } from 'test-utils';
-import { getColumns } from 'features/Students/StudentsTable/columns';
+import { getColumns } from 'features/Classes/ClassDetailPage/columns';
 
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
@@ -8,7 +8,7 @@ jest.mock('@edx/frontend-platform', () => ({
   })),
 }));
 
-describe('getColumns', () => {
+describe('getColumns (ClassDetailPage)', () => {
   const mockStore = {
     main: {
       selectedInstitution: { id: 1 },
@@ -19,17 +19,13 @@ describe('getColumns', () => {
           {
             learnerName: 'Test User',
             learnerEmail: 'testuser@example.com',
-            institutionName: 'Test Institution',
             classId: 'ccx-1',
-            className: 'test ccx1',
             status: 'Active',
             examReady: {
               status: 'Complete',
               lastExamDate: '2024-03-15T10:00:00Z',
               eppDaysLeft: 45,
             },
-            startDate: '2024-02-13T17:42:22Z',
-            endDate: '2024-12-31T23:59:59Z',
             completePercentage: 75.5,
             userId: 'user123',
           },
@@ -38,28 +34,27 @@ describe('getColumns', () => {
     },
   };
 
-  test('returns an array of 11 columns with correct headers', () => {
+  test('returns an array of 10 columns with correct headers', () => {
     const cols = getColumns();
 
-    expect(cols).toHaveLength(13);
+    expect(cols).toHaveLength(10);
 
-    expect(cols[0]).toHaveProperty('Header', 'Student');
-    expect(cols[1]).toHaveProperty('Header', 'Email');
-    expect(cols[2]).toHaveProperty('Header', 'Last Login');
-    expect(cols[3]).toHaveProperty('Header', 'Last Access');
-    expect(cols[4]).toHaveProperty('Header', 'Institution');
+    expect(cols[0]).toHaveProperty('Header', '');
+    expect(cols[0]).toHaveProperty('accessor', 'classId');
+
+    expect(cols[1]).toHaveProperty('Header', 'Student');
+    expect(cols[2]).toHaveProperty('Header', 'Email');
+    expect(cols[3]).toHaveProperty('Header', 'Last Login');
+    expect(cols[4]).toHaveProperty('Header', 'Last Access');
     expect(cols[5]).toHaveProperty('Header', 'Status');
-    expect(cols[6]).toHaveProperty('Header', 'Class Name');
-    expect(cols[7]).toHaveProperty('Header', 'Start - End Date');
-    expect(cols[8]).toHaveProperty('Header', 'Current Grade');
-    expect(cols[9]).toHaveProperty('Header', 'Exam Ready');
-    expect(cols[10]).toHaveProperty('Header', 'Last exam date');
-    expect(cols[11]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
-    expect(cols[12]).toHaveProperty('accessor', 'classId');
+    expect(cols[6]).toHaveProperty('Header', 'Current Grade');
+    expect(cols[7]).toHaveProperty('Header', 'Exam Ready');
+    expect(cols[8]).toHaveProperty('Header', 'Last exam date');
+    expect(cols[9]).toHaveProperty('accessor', 'examReady.eppDaysLeft');
   });
 
   test('renders Student link', () => {
-    const Cell = () => getColumns()[0].Cell({
+    const Cell = () => getColumns()[1].Cell({
       row: {
         values: { learnerName: 'Test User' },
         original: { learnerEmail: 'testuser@example.com' },
@@ -77,7 +72,7 @@ describe('getColumns', () => {
   });
 
   test('renders Email mailto link', () => {
-    const Cell = () => getColumns()[1].Cell({
+    const Cell = () => getColumns()[2].Cell({
       row: { values: { learnerEmail: 'testuser@example.com' } },
     });
 
@@ -101,42 +96,8 @@ describe('getColumns', () => {
     expect(getByText('Active')).toBeInTheDocument();
   });
 
-  test('renders Class Name with link', () => {
-    const Cell = () => getColumns()[6].Cell({
-      row: {
-        values: { className: 'test ccx1' },
-        original: { classId: 'ccx-1' },
-      },
-    });
-
-    const { getByText } = renderWithProviders(<Cell />, {
-      preloadedState: mockStore,
-    });
-
-    const link = getByText('test ccx1');
-    expect(link).toBeInTheDocument();
-    expect(link.tagName).toBe('A');
-  });
-
-  test('renders formatted Start - End Date', () => {
-    const Cell = () => getColumns()[7].Cell({
-      row: {
-        original: {
-          startDate: '2024-02-13T17:42:22Z',
-          endDate: '2024-12-31T23:59:59Z',
-        },
-      },
-    });
-
-    const { container } = renderWithProviders(<Cell />, {
-      preloadedState: mockStore,
-    });
-
-    expect(container.textContent).toContain('02/13/24 - 12/31/24');
-  });
-
   test('renders Current Grade correctly', () => {
-    const Cell = () => getColumns()[8].Cell({
+    const Cell = () => getColumns()[6].Cell({
       row: { values: { completePercentage: 75.5 } },
     });
 
@@ -148,7 +109,7 @@ describe('getColumns', () => {
   });
 
   test('renders Exam Ready with ProgressSteps', () => {
-    const Cell = () => getColumns()[9].Cell({
+    const Cell = () => getColumns()[7].Cell({
       row: { values: { examReady: { status: 'Complete' } } },
     });
 
@@ -160,7 +121,7 @@ describe('getColumns', () => {
   });
 
   test('renders Last exam date formatted', () => {
-    const Cell = () => getColumns()[10].Cell({
+    const Cell = () => getColumns()[8].Cell({
       row: { values: { examReady: { lastExamDate: '2024-03-15T10:00:00Z' } } },
     });
 
@@ -171,8 +132,8 @@ describe('getColumns', () => {
     expect(getByText('03/15/24')).toBeInTheDocument();
   });
 
-  test('renders Last exam date placeholder', () => {
-    const Cell = () => getColumns()[10].Cell({
+  test('renders Last exam date placeholder when null', () => {
+    const Cell = () => getColumns()[8].Cell({
       row: { values: { examReady: { lastExamDate: null } } },
     });
 
@@ -184,7 +145,7 @@ describe('getColumns', () => {
   });
 
   test('renders EPP days left', () => {
-    const Cell = () => getColumns()[11].Cell({
+    const Cell = () => getColumns()[9].Cell({
       row: { values: { examReady: { eppDaysLeft: 45 } } },
     });
 
@@ -196,7 +157,7 @@ describe('getColumns', () => {
   });
 
   test('renders EPP placeholder when null', () => {
-    const Cell = () => getColumns()[11].Cell({
+    const Cell = () => getColumns()[9].Cell({
       row: { values: { examReady: { eppDaysLeft: null } } },
     });
 
@@ -208,7 +169,7 @@ describe('getColumns', () => {
   });
 
   test('action dropdown shows View progress', () => {
-    const Cell = () => getColumns()[12].Cell({
+    const Cell = () => getColumns()[0].Cell({
       row: {
         original: {
           classId: 'ccx-1',
@@ -229,7 +190,7 @@ describe('getColumns', () => {
   });
 
   test('shows DeleteEnrollment when privileged and not expired', () => {
-    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[12].Cell({
+    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[0].Cell({
       row: {
         original: {
           classId: 'ccx-1',
@@ -250,7 +211,7 @@ describe('getColumns', () => {
   });
 
   test('does NOT show DeleteEnrollment when expired', () => {
-    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[12].Cell({
+    const Cell = () => getColumns({ hasEnrollmentPrivilege: true })[0].Cell({
       row: {
         original: {
           classId: 'ccx-1',
