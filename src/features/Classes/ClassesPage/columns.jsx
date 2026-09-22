@@ -17,59 +17,6 @@ import ActionsDropdown from 'features/Main/ActionsDropdown';
 
 const columns = [
   {
-    Header: 'Class',
-    accessor: 'className',
-    Cell: ({ row }) => {
-      const addQueryParam = useInstitutionIdQueryParam();
-      const url = addQueryParam(`/classes/${row.original.classId}?previous=classes`);
-
-      return (
-        <Link
-          to={url}
-          className="link"
-        >
-          {row.values.className}
-        </Link>
-      );
-    },
-  },
-  {
-    Header: 'Course',
-    accessor: 'masterCourseName',
-  },
-  {
-    Header: 'Institution',
-    accessor: 'institutionName',
-  },
-  {
-    Header: 'Start date',
-    accessor: 'startDate',
-    Cell: ({ row }) => {
-      const startDate = row.original.startDate ? formatUTCDate(row.original.startDate, 'MM/dd/yy') : '-';
-      return <span>{startDate}</span>;
-    },
-  },
-  {
-    Header: 'End date',
-    accessor: 'endDate',
-    Cell: ({ row }) => {
-      const endDate = row.original.endDate ? formatUTCDate(row.original.endDate, 'MM/dd/yy') : '-';
-      return <span>{endDate}</span>;
-    },
-  },
-  {
-    Header: 'Min',
-    accessor: 'minStudentsAllowed',
-  },
-  {
-    Header: 'Max',
-    accessor: 'maxStudents',
-  },
-  {
-    Header: 'Students enrolled',
-    accessor: 'numberOfStudents',
-  },
-  {
     Header: '',
     accessor: 'courseName',
     cellClassName: 'dropdownColumn',
@@ -188,6 +135,59 @@ const columns = [
         </>
       );
     },
+  },
+  {
+    Header: 'Class',
+    accessor: 'className',
+    Cell: ({ row }) => {
+      const addQueryParam = useInstitutionIdQueryParam();
+      const url = addQueryParam(`/classes/${row.original.classId}?previous=classes`);
+
+      return (
+        <Link
+          to={url}
+          className="link"
+        >
+          {row.values.className}
+        </Link>
+      );
+    },
+  },
+  {
+    Header: 'Course',
+    accessor: 'masterCourseName',
+  },
+  {
+    Header: 'Institution',
+    accessor: 'institutionName',
+  },
+  {
+    Header: 'Start date',
+    accessor: 'startDate',
+    Cell: ({ row }) => {
+      const startDate = row.original.startDate ? formatUTCDate(row.original.startDate, 'MM/dd/yy') : '-';
+      return <span>{startDate}</span>;
+    },
+  },
+  {
+    Header: 'End date',
+    accessor: 'endDate',
+    Cell: ({ row }) => {
+      const endDate = row.original.endDate ? formatUTCDate(row.original.endDate, 'MM/dd/yy') : '-';
+      return <span>{endDate}</span>;
+    },
+  },
+  {
+    Header: 'Min',
+    accessor: 'minStudentsAllowed',
+  },
+  {
+    Header: 'Max',
+    accessor: 'maxStudents',
+  },
+  {
+    Header: 'Students enrolled',
+    accessor: 'numberOfStudents',
   },
 ];
 

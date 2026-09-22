@@ -20,7 +20,7 @@ import Option from './Option';
  */
 const ActionsDropdown = ({ options, vertIcon }) => (
   <Dropdown
-    className="dropdowntpz ml-3"
+    className="dropdowntpz"
     style={{ position: 'unset' }}
   >
     <Dropdown.Toggle
