@@ -70,7 +70,7 @@ describe('ClassesPage columns', () => {
     const mockActionsDropdown = require('features/Main/ActionsDropdown').default || require('features/Main/ActionsDropdown');
     const [props] = mockActionsDropdown.mock.calls[0];
 
-    expect(props.options).toHaveLength(5);
+    expect(props.options).toHaveLength(6);
     expect(props.options[0]).toMatchObject({
       label: 'View class content',
       visible: true,
@@ -111,6 +111,49 @@ describe('ClassesPage columns', () => {
       visible: true,
       disabled: false,
     });
+  });
+
+  test('opens the CCX Coach Dashboard in a new tab when Schedule is clicked', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => {});
+
+    const ActionColumn = () => columns[0].Cell({
+      row: {
+        values: {},
+        original: {
+          classId: 'ccx-v1:VUE+cs2026+2026_t1+ccx%40100',
+          className: 'Class 1',
+          labSummaryTag: null,
+        },
+      },
+    });
+
+    renderWithProviders(<ActionColumn />, {
+      preloadedState: {
+        instructor: {
+          info: {},
+        },
+      },
+      initialEntries: ['/classes'],
+    });
+
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    const mockActionsDropdown = require('features/Main/ActionsDropdown').default || require('features/Main/ActionsDropdown');
+    const [props] = mockActionsDropdown.mock.calls[0];
+
+    expect(props.options[3]).toMatchObject({
+      label: 'Schedule',
+      visible: true,
+    });
+
+    props.options[3].handleClick();
+
+    expect(openSpy).toHaveBeenCalledWith(
+      '/courses/ccx-v1:VUE+cs2026+2026_t1+ccx@100/ccx_coach',
+      '_blank',
+      'noopener,noreferrer',
+    );
+
+    openSpy.mockRestore();
   });
 
   test('downloads the gradebook CSV using the decoded class id and blocks duplicate clicks', async () => {
