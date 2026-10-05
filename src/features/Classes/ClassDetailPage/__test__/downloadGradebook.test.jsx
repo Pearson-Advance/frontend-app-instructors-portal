@@ -99,6 +99,26 @@ describe('ClassDetailPage - Download Gradebook action', () => {
     expect(options[1]).toMatchObject({ label: 'Download Gradebook', visible: true, disabled: false });
   });
 
+  test('opens the CCX Coach Dashboard in a new tab when Schedule is clicked', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => {});
+
+    renderPage();
+
+    const options = getLatestOptions();
+
+    expect(options[2]).toMatchObject({ label: 'Schedule', visible: true });
+
+    options[2].handleClick();
+
+    expect(openSpy).toHaveBeenCalledWith(
+      `/courses/${classId}/ccx_coach`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+
+    openSpy.mockRestore();
+  });
+
   test('downloads the gradebook CSV using the ccx course id and blocks duplicate clicks', async () => {
     let resolveRequest;
     fetchGradebookCsv.mockReturnValue(new Promise((resolve) => { resolveRequest = resolve; }));

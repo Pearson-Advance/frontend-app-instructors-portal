@@ -110,6 +110,10 @@ const ClassDetailPage = () => {
     window.open(`${gradebookUrl}/gradebook/${classId}`, '_blank', 'noopener,noreferrer');
   };
 
+  const handleScheduleButton = () => {
+    window.open(`${getConfig().LMS_BASE_URL}/courses/${classId}/ccx_coach`, '_blank', 'noopener,noreferrer');
+  };
+
   const handleDownloadGradebook = async () => {
     if (isDownloadingGradebook) { return; }
 
@@ -147,6 +151,12 @@ const ClassDetailPage = () => {
       label: 'Download Gradebook',
       visible: true,
       disabled: isDownloadingGradebook,
+    },
+    {
+      handleClick: handleScheduleButton,
+      iconSrc: <i className="fa-regular fa-calendar mr-3" />,
+      label: 'Schedule',
+      visible: true,
     },
     {
       handleClick: handleLabSummary,
