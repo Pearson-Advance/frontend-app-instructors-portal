@@ -12,7 +12,7 @@ import {
   Toast,
 } from '@openedx/paragon';
 
-import { useInstitutionIdQueryParam, useToast } from 'hooks';
+import { useInstitutionIdQueryParam, useToast, useProgramsAccess } from 'hooks';
 import { fetchLabSummaryLink } from 'features/Classes/data/thunks';
 import { fetchGradebookCsv } from 'features/Classes/data/api';
 import InstructorCard from 'features/Classes/ClassDetailPage/InstructorCard';
@@ -41,6 +41,7 @@ const ClassDetailPage = () => {
   const username = useSelector((state) => state.main.username);
   const institution = useSelector((state) => state.main.institution);
   const [classInfo] = useSelector((state) => state.common.allClasses?.data);
+  const showSession = useProgramsAccess();
   const {
     isVisible,
     message,
@@ -188,7 +189,12 @@ const ClassDetailPage = () => {
               <Button onClick={handleBackButton} className="mr-3 link back-arrow" variant="tertiary">
                 <i className="fa-solid fa-arrow-left" />
               </Button>
-              <h3 className="h2 mb-0 course-title">Class details: {className}</h3>
+              <div>
+                <h3 className="h2 mb-0 course-title">Class details: {className}</h3>
+                {showSession && classInfo?.sessionName && (
+                  <span className="text-muted small">Session: {classInfo.sessionName}</span>
+                )}
+              </div>
             </div>
             <Button
               as="a"

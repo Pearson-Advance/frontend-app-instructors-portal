@@ -3,7 +3,7 @@ import { act } from '@testing-library/react';
 
 import { renderWithProviders } from 'test-utils';
 
-import { columns } from 'features/Classes/ClassesPage/columns';
+import { columns, getColumns } from 'features/Classes/ClassesPage/columns';
 import { fetchGradebookCsv } from 'features/Classes/data/api';
 import { downloadFileFromBlob } from 'helpers';
 
@@ -238,5 +238,25 @@ describe('ClassesPage columns', () => {
     });
 
     expect(await findByText('An error occurred while downloading the gradebook. Please try again.')).toBeInTheDocument();
+  });
+});
+
+describe('ClassesPage getColumns', () => {
+  test('omits the Session column by default', () => {
+    const result = getColumns();
+
+    expect(result).toBe(columns);
+    expect(result.some((column) => column.accessor === 'sessionName')).toBe(false);
+  });
+
+  test('inserts the Session column after Course when enabled', () => {
+    const result = getColumns(true);
+    const courseIndex = result.findIndex((column) => column.accessor === 'masterCourseName');
+    const sessionIndex = result.findIndex((column) => column.accessor === 'sessionName');
+
+    expect(sessionIndex).toBe(courseIndex + 1);
+    expect(result[sessionIndex].Header).toBe('Session');
+    expect(result[sessionIndex].Cell({ row: { values: {} } }).props.children).toBe('-');
+    expect(result[sessionIndex].Cell({ row: { values: { sessionName: 'Fall 2025 Cohort' } } }).props.children).toBe('Fall 2025 Cohort');
   });
 });

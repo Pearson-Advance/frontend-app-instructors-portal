@@ -8,9 +8,10 @@ import ClassesFilters from 'features/Classes/ClassesFilters';
 import { getClasses } from 'features/Classes/data';
 import { resetClassesTable, updateCurrentPage } from 'features/Classes/data/slice';
 
-import { columns } from 'features/Classes/ClassesPage/columns';
+import { getColumns } from 'features/Classes/ClassesPage/columns';
 import { RequestStatus, initialPage } from 'features/constants';
 import { isInvalidUserOrInstitution } from 'helpers';
+import { useProgramsAccess } from 'hooks';
 
 const ClassesPage = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,8 @@ const ClassesPage = () => {
   const institution = useSelector((state) => state.main.institution);
   const instructorUserName = useSelector((state) => state.main.username);
   const filters = useSelector((state) => state.classes.filters);
-  const COLUMNS = useMemo(() => columns, []);
+  const showSessionColumn = useProgramsAccess();
+  const COLUMNS = useMemo(() => getColumns(showSessionColumn), [showSessionColumn]);
 
   const [currentPage, setCurrentPage] = useState(initialPage);
 
