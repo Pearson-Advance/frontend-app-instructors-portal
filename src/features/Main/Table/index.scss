@@ -11,6 +11,8 @@
   width: 100%;
   overflow-x: auto;
   position: relative;
+  // Keep sticky cells below dropdown menus outside the table.
+  isolation: isolate;
 
   .pgn__data-table-cell-wrap {
     max-width: 15vw;

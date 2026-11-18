@@ -8,19 +8,37 @@ import {
 } from 'features/Classes/data/slice';
 import { getClassesByInstructor } from 'features/Common/data/api';
 import { handleSkillableDashboard, handleXtremeLabsDashboard } from 'features/Classes/data/api';
+import { isOfferingsFlagEnabled, withMockSessionNames, filterBySession } from 'features/Common/data/mocks';
 
 import { RequestStatus } from 'features/constants';
 
 function getClasses(userName, options = {}) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(updateClassesRequestStatus(RequestStatus.LOADING));
 
     try {
       const response = camelCaseObject(await getClassesByInstructor(userName, options));
       const sortedData = sortAlphabetically(response.data.results, 'className');
+
+      const institution = getState()?.main?.institution;
+      const isSessionsEnabled = isOfferingsFlagEnabled() && Boolean(institution?.hasOfferings);
+
+      let results = sortedData;
+      let { count } = response.data;
+
+      if (isSessionsEnabled) {
+        results = withMockSessionNames(sortedData);
+
+        if (options.session_name) {
+          results = filterBySession(results, options.session_name);
+          count = results.length;
+        }
+      }
+
       const classes = {
         ...response.data,
-        results: sortedData,
+        results,
+        count,
       };
 
       dispatch(updateClassesTable(classes));

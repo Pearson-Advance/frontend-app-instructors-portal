@@ -201,4 +201,26 @@ const columns = [
   },
 ];
 
-export { columns };
+const sessionColumn = {
+  Header: 'Session',
+  accessor: 'sessionName',
+  Cell: ({ row }) => <span>{row.values.sessionName || '-'}</span>,
+};
+
+/**
+ * Builds the class list columns, optionally including the Session column.
+ * @param {boolean} [showSession=false] - Whether to include the Session column.
+ */
+const getColumns = (showSession = false) => {
+  if (!showSession) {
+    return columns;
+  }
+
+  const result = [...columns];
+  const courseIndex = result.findIndex((column) => column.accessor === 'masterCourseName');
+  result.splice(courseIndex + 1, 0, sessionColumn);
+
+  return result;
+};
+
+export { columns, getColumns };

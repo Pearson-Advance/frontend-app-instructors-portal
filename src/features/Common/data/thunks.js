@@ -9,6 +9,7 @@ import {
   updateRequestAllCoursesStatus,
 } from 'features/Common/data/slice';
 import { getClassesByInstructor, getCoursesByInstructor } from 'features/Common/data/api';
+import { isOfferingsFlagEnabled, withMockSessionNames } from 'features/Common/data/mocks';
 
 import { RequestStatus } from 'features/constants';
 
@@ -22,7 +23,7 @@ import { RequestStatus } from 'features/constants';
  */
 
 function fetchAllClassesData(userName, options = {}) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(updateRequestAllClassStatus(RequestStatus.LOADING));
 
     try {
@@ -31,7 +32,11 @@ function fetchAllClassesData(userName, options = {}) {
       );
       const sortedData = sortAlphabetically(response.data, 'className');
 
-      dispatch(updateAllClasses(sortedData));
+      const institution = getState()?.main?.institution;
+      const isSessionsEnabled = isOfferingsFlagEnabled() && Boolean(institution?.hasOfferings);
+      const allClasses = isSessionsEnabled ? withMockSessionNames(sortedData) : sortedData;
+
+      dispatch(updateAllClasses(allClasses));
       dispatch(updateRequestAllClassStatus(RequestStatus.SUCCESS));
     } catch (error) {
       dispatch(updateRequestAllClassStatus(RequestStatus.ERROR));

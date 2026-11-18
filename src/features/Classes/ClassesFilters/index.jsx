@@ -7,9 +7,11 @@ import { Select, Button } from 'react-paragon-topaz';
 import { fetchAllCourses, fetchAllClassesData } from 'features/Common/data';
 import { updateCurrentPage, updateFilters } from 'features/Classes/data/slice';
 import { getClasses } from 'features/Classes/data';
+import { getMockSessionOptions } from 'features/Common/data/mocks';
 
 import { RequestStatus, initialPage } from 'features/constants';
 import { isInvalidUserOrInstitution } from 'helpers';
+import { useProgramsAccess } from 'hooks';
 
 const ClassesFilters = () => {
   const dispatch = useDispatch();
@@ -18,6 +20,9 @@ const ClassesFilters = () => {
   const filters = useSelector((state) => state.classes.filters);
   const courses = useSelector((state) => state.common.allCourses);
   const classes = useSelector((state) => state.common.allClasses);
+
+  const showSessionFilter = useProgramsAccess();
+  const sessionsOptions = showSessionFilter ? getMockSessionOptions() : [];
 
   const coursesOptions = courses.data
     .map((course) => ({ label: course.masterCourseName, value: course.masterCourseName }));
@@ -35,6 +40,10 @@ const ClassesFilters = () => {
     classesOptions?.find((classElement) => classElement.value === filters?.class_id)
     || null,
   );
+  const [sessionSelected, setSessionSelected] = useState(
+    sessionsOptions?.find((sessionElement) => sessionElement.value === filters?.session_name)
+    || null,
+  );
   const [classFilter, setClassFilter] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -42,6 +51,7 @@ const ClassesFilters = () => {
   const isValidClassFilter = classFilter.trim().length > 1;
   const isButtonDisabled = courseSelected === null
   && classSelected === null
+  && sessionSelected === null
   && !isValidClassFilter
   && !startDate
   && !endDate;
@@ -60,6 +70,7 @@ const ClassesFilters = () => {
     const filtersParams = {
       class_id: classSelected?.value,
       course_name: courseSelected?.value,
+      session_name: sessionSelected?.value,
       institution_id: institution?.id,
       class_name: classFilter || '',
       start_date: startDate || null,
@@ -75,6 +86,7 @@ const ClassesFilters = () => {
     dispatch(getClasses(instructorUserName, { institution_id: institution?.id, ...initialRequestParams }));
     setClassSelected(null);
     setCourseSelected(null);
+    setSessionSelected(null);
     setClassFilter('');
     setStartDate('');
     setEndDate('');
@@ -152,6 +164,21 @@ const ClassesFilters = () => {
           />
         </Form.Group>
       </Form.Row>
+      {showSessionFilter && (
+        <Form.Row className="px-0 d-flex flex-wrap w-100 mr-0">
+          <Form.Group as={Col} className="px-0 w-100">
+            <Select
+              placeholder="Session"
+              name="session_name"
+              className="mr-0 select"
+              options={sessionsOptions}
+              onChange={option => setSessionSelected(option)}
+              value={sessionSelected}
+              isClearable
+            />
+          </Form.Group>
+        </Form.Row>
+      )}
       <Form.Group className="w-100 d-flex justify-content-end px-0">
         <Button
           onClick={handleCleanFilters}
